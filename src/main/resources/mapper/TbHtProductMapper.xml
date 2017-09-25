@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.transen.tsproject.dao.TbHtProductMapper" >
+  <resultMap id="BaseResultMap" type="com.transen.tsproject.model.TbHtProduct" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="pkid" property="pkid" jdbcType="INTEGER" />
+    <result column="ht_no" property="htNo" jdbcType="VARCHAR" />
+    <result column="product_id" property="productId" jdbcType="VARCHAR" />
+    <result column="output_value" property="outputValue" jdbcType="VARCHAR" />
+    <result column="dep_id" property="depId" jdbcType="VARCHAR" />
+    <result column="subtotal" property="subtotal" jdbcType="DOUBLE" />
+    <result column="decompose" property="decompose" jdbcType="LONGVARCHAR" />
+  </resultMap>
+</mapper>
