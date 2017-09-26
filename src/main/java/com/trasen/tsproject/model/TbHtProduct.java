@@ -1,4 +1,4 @@
-package com.transen.tsproject.model;
+package com.trasen.tsproject.model;
 
 import javax.persistence.*;
 

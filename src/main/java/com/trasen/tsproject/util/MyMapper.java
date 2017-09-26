@@ -1,4 +1,4 @@
-package com.transen.tsproject.util;
+package com.trasen.tsproject.util;
 
 
 import tk.mybatis.mapper.common.Mapper;

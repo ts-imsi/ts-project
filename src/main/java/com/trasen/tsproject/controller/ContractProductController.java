@@ -1,6 +1,6 @@
-package com.transen.tsproject.controller;
+package com.trasen.tsproject.controller;
 
-import com.transen.tsproject.service.ContractProductService;
+import com.trasen.tsproject.service.ContractProductService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

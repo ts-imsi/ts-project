@@ -1,4 +1,4 @@
-package com.transen.tsproject.controller;
+package com.trasen.tsproject.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

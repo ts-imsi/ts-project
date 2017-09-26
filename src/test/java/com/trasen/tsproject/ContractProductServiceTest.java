@@ -1,7 +1,7 @@
-package com.transen.tsproject;
+package com.trasen.tsproject;
 
 
-import com.transen.tsproject.service.ContractProductService;
+import com.trasen.tsproject.service.ContractProductService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

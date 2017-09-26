@@ -1,4 +1,4 @@
-package com.transen.tsproject.util;
+package com.trasen.tsproject.util;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
