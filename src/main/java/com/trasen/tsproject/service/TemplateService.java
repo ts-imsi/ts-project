@@ -1,6 +1,7 @@
 package com.trasen.tsproject.service;
 
 import cn.trasen.commons.util.StringUtil;
+import com.alibaba.fastjson.JSONArray;
 import com.trasen.tsproject.dao.TbTemplateItemMapper;
 import com.trasen.tsproject.dao.TbTemplateMapper;
 import com.trasen.tsproject.model.TbTemplate;
@@ -38,6 +39,10 @@ public class TemplateService {
         TbTemplate tbTemplate = new TbTemplate();
         if(tid!=null){
             tbTemplate = templateMapper.getTemplate(tid);
+            if(tbTemplate.getContent()!=null){
+                JSONArray jsonArray = JSONArray.parseArray(tbTemplate.getContent());
+                tbTemplate.setContentJson(jsonArray);
+            }
         }
         return tbTemplate;
     }

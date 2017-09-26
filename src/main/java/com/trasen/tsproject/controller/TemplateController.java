@@ -6,10 +6,7 @@ import com.trasen.tsproject.model.TbTemplateItem;
 import com.trasen.tsproject.service.TemplateService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -66,6 +63,35 @@ public class TemplateController {
             result.setMessage(e.getMessage());
         }
         return result;
+    }
+
+    /**
+     * 修改级别
+     * */
+    @RequestMapping(value="/saveTemplate", method = RequestMethod.POST)
+    public Result saveTemplate(@RequestBody TbTemplate tbTemplate)  {
+        Result result=new Result();
+        result.setSuccess(false);
+        result.setMessage("保存失败");
+        try {
+            //数据更新
+            if(tbTemplate!=null){
+                result.setSuccess(true);
+                result.setMessage("保存成功");
+
+
+
+
+
+
+            }
+        }catch (Exception e) {
+            logger.error("保存异常" + e.getMessage(), e);
+            result.setSuccess(false);
+            result.setMessage("保存失败");
+        }
+        return  result;
+
     }
 
 

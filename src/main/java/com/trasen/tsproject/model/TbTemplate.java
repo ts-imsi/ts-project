@@ -1,5 +1,7 @@
 package com.trasen.tsproject.model;
 
+import com.alibaba.fastjson.JSONArray;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -41,6 +43,9 @@ public class TbTemplate {
      * 模板元数据
      */
     private String content;
+
+    @Transient
+    private JSONArray contentJson;
 
     /**
      * 获取主键
@@ -166,5 +171,14 @@ public class TbTemplate {
      */
     public void setContent(String content) {
         this.content = content;
+    }
+
+
+    public JSONArray getContentJson() {
+        return contentJson;
+    }
+
+    public void setContentJson(JSONArray contentJson) {
+        this.contentJson = contentJson;
     }
 }
