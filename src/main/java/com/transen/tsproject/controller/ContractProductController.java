@@ -14,7 +14,7 @@ import java.util.Map;
  * @date 2017/9/25
  */
 @RestController
-@RequestMapping(value="/ts-project/con_product")
+@RequestMapping(value="/con_product")
 public class ContractProductController {
     private static final Logger logger = Logger.getLogger(ContractProductController.class);
 
