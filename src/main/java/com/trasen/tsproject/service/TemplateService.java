@@ -4,6 +4,7 @@ import cn.trasen.commons.util.StringUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbTemplateItemMapper;
 import com.trasen.tsproject.dao.TbTemplateMapper;
 import com.trasen.tsproject.model.TbTemplate;
@@ -54,6 +55,20 @@ public class TemplateService {
         List<TbTemplate> tbTemplateList=templateMapper.getTemplateList(tbTemplate);
         PageInfo<TbTemplate> pagehelper = new PageInfo<TbTemplate>(tbTemplateList);
         return pagehelper;
+    }
+
+    public boolean saveTemplate(TbTemplate tbTemplate){
+        boolean boo = false;
+        if(tbTemplate.getPkid()!=null){
+            JSONArray jsonArray = tbTemplate.getContentJson();
+            String content = jsonArray.toJSONString();
+            tbTemplate.setContent(content);
+            tbTemplate.setOperator(VisitInfoHolder.getUserId());
+            templateMapper.updateTemplate(tbTemplate);
+            templateMapper.insertTemplate(tbTemplate);
+            boo = true;
+        }
+        return boo;
     }
 
 

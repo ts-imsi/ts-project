@@ -75,18 +75,11 @@ public class TemplateController {
     public Result saveTemplate(@RequestBody TbTemplate tbTemplate)  {
         Result result=new Result();
         result.setSuccess(false);
-        result.setMessage("保存失败");
         try {
             //数据更新
             if(tbTemplate!=null){
-                result.setSuccess(true);
-                result.setMessage("保存成功");
-
-
-
-
-
-
+                boolean boo = templateService.saveTemplate(tbTemplate);
+                result.setSuccess(boo);
             }
         }catch (Exception e) {
             logger.error("保存异常" + e.getMessage(), e);

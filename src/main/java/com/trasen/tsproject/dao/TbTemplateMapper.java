@@ -10,4 +10,8 @@ public interface TbTemplateMapper extends MyMapper<TbTemplate> {
     TbTemplate getTemplate(Integer tid);
 
     List<TbTemplate> getTemplateList(TbTemplate tbTemplate);
+
+    int updateTemplate(TbTemplate tbTemplate);
+
+    int insertTemplate(TbTemplate tbTemplate);
 }

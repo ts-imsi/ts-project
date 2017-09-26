@@ -10,4 +10,14 @@
         where 1=1
         <if test="name!=null"> and (`name` like CONCAT('%',#{name},'%') or `type` like CONCAT('%',#{type},'%'))</if>
     </select>
+
+
+    <update id="updateTemplate" parameterType="com.trasen.tsproject.model.TbTemplate">
+        update tb_template set content=#{content},updated = now(),operator=#{operator} where pkid=#{pkid}
+    </update>
+
+    <insert id="insertTemplate" parameterType="com.trasen.tsproject.model.TbTemplate">
+        insert into tb_template_log (`name`,`type`,content,remark,updated,operator)
+        values (#{name},#{type},#{content},#{remark},now(),#{operator})
+    </insert>
 </mapper>
