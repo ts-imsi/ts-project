@@ -1,9 +1,19 @@
 package com.trasen.tsproject.util;
 
+import org.apache.commons.logging.LogConfigurationException;
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Properties;
 
 /**
  * @author luoyun
@@ -11,15 +21,79 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
  * @Description: 操作类型
  * @date 2017/9/25
  */
-@Configuration
-@PropertySource(value = {"classpath:/application.properties"},
-        ignoreResourceNotFound = true,encoding = "utf-8")
 public class PropertiesUtils {
-    // PropertySourcesPlaceholderConfigurer这个bean，
-    // 这个bean主要用于解决@value中使用的${…}占位符。
-    // 假如你不使用${…}占位符的话，可以不使用这个bean。
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
+    private static Logger logger = Logger.getLogger(PropertiesUtils.class);
+
+    public static final String[] PROPERTIES = new String[] { "application.properties"};
+
+    private static Properties properties = new Properties();
+
+    static {
+        try {
+            for (String str : PROPERTIES) {
+                properties.load(getResourceAsStream(str));
+            }
+        } catch (IOException e) {
+            logger.error("配置文件加载失败！", e);
+        }
+    }
+
+    private PropertiesUtils() {
+    }
+
+    public static String getProperty(String key) {
+        return properties.getProperty(key);
+    }
+
+    public static String getProperty(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
+    }
+
+    private static ClassLoader getContextClassLoader() {
+        ClassLoader classLoader = null;
+
+        if (classLoader == null) {
+            try {
+                Method method = Thread.class.getMethod("getContextClassLoader", (Class[]) null);
+                try {
+                    classLoader = (ClassLoader) method.invoke(Thread.currentThread(), (Class[]) null);
+                } catch (IllegalAccessException e) {
+                    ; // ignore
+                } catch (InvocationTargetException e) {
+
+                    if (e.getTargetException() instanceof SecurityException) {
+                        ; // ignore
+                    } else {
+                        throw new LogConfigurationException("Unexpected InvocationTargetException",
+                                e.getTargetException());
+                    }
+                }
+            } catch (NoSuchMethodException e) {
+                // Assume we are running on JDK 1.1
+                ; // ignore
+            }
+        }
+
+        if (classLoader == null) {
+            classLoader = PropertiesUtils.class.getClassLoader();
+        }
+
+        // Return the selected class loader
+        return classLoader;
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private static InputStream getResourceAsStream(final String name) {
+        return (InputStream) AccessController.doPrivileged(new PrivilegedAction() {
+            public Object run() {
+                ClassLoader threadCL = getContextClassLoader();
+
+                if (threadCL != null) {
+                    return threadCL.getResourceAsStream(name);
+                } else {
+                    return ClassLoader.getSystemResourceAsStream(name);
+                }
+            }
+        });
     }
 }

@@ -49,7 +49,7 @@ public class Application implements CommandLineRunner {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         CheckLoginFilter checkLoginFilter = new CheckLoginFilter();
         registrationBean.setFilter(checkLoginFilter);
-        registrationBean.addUrlPatterns("/rels");
+        registrationBean.addUrlPatterns("/*");
         return registrationBean;
     }
 }

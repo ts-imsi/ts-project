@@ -1,9 +1,12 @@
 package com.trasen.tsproject.service;
 
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.ContractInfo;
 import com.trasen.tsproject.util.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ import java.util.Map;
  */
 @Service
 public class ContractProductService {
+    private static final Logger logger = LoggerFactory.getLogger(ContractProductService.class);
 
     @Autowired
     private Environment env;
@@ -30,7 +34,6 @@ public class ContractProductService {
     public Map<String,Object> getcontractTransenList(Map<String,String> param){
         Map<String,Object> paramMap=new HashMap<String,Object>();
         String parameterJson = JSONObject.toJSONString(param);
-
         String contract_imis = env.getProperty("contract_imis");
         if(contract_imis==null){
             paramMap.put("success",false);
