@@ -4,4 +4,10 @@
     <select id="getTemplate" parameterType="Integer" resultType="com.trasen.tsproject.model.TbTemplate">
       select * from tb_template where pkid=#{tid}
     </select>
+
+    <select id="getTemplateList" resultType="com.trasen.tsproject.model.TbTemplate" parameterType="com.trasen.tsproject.model.TbTemplate">
+        select * from tb_template
+        where 1=1
+        <if test="name!=null"> and (`name` like CONCAT('%',#{name},'%') or `type` like CONCAT('%',#{type},'%'))</if>
+    </select>
 </mapper>

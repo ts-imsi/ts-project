@@ -2,6 +2,8 @@ package com.trasen.tsproject.service;
 
 import cn.trasen.commons.util.StringUtil;
 import com.alibaba.fastjson.JSONArray;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.dao.TbTemplateItemMapper;
 import com.trasen.tsproject.dao.TbTemplateMapper;
 import com.trasen.tsproject.model.TbTemplate;
@@ -45,6 +47,13 @@ public class TemplateService {
             }
         }
         return tbTemplate;
+    }
+
+    public PageInfo<TbTemplate> getTemplateList(int page, int rows, TbTemplate tbTemplate){
+        PageHelper.startPage(page,rows);
+        List<TbTemplate> tbTemplateList=templateMapper.getTemplateList(tbTemplate);
+        PageInfo<TbTemplate> pagehelper = new PageInfo<TbTemplate>(tbTemplateList);
+        return pagehelper;
     }
 
 

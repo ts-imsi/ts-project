@@ -1,6 +1,7 @@
 package com.trasen.tsproject.controller;
 
 import cn.trasen.core.entity.Result;
+import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.model.TbTemplate;
 import com.trasen.tsproject.model.TbTemplateItem;
 import com.trasen.tsproject.service.TemplateService;
@@ -8,7 +9,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhangxiahui on 17/9/26.
@@ -91,6 +94,32 @@ public class TemplateController {
             result.setMessage("保存失败");
         }
         return  result;
+
+    }
+
+    @RequestMapping(value="/getTemplateList",method = RequestMethod.POST)
+    public Map<String,Object> getTemplateList(@RequestBody Map<String,String> param){
+        Map<String,Object> paramMap=new HashMap<String,Object>();
+        if(param.get("page")==null||param.get("rows")==null){
+            paramMap.put("messges","参数错误");
+            paramMap.put("success",false);
+            return paramMap;
+        }
+        TbTemplate tbTemplate=new TbTemplate();
+        if(param.get("selectName")!=null&&param.get("selectName")!=""){
+            tbTemplate.setName(param.get("selectName"));
+            tbTemplate.setType(param.get("selectName"));
+        }
+        PageInfo<TbTemplate> tbTemplatePageInfo=templateService.getTemplateList(Integer.valueOf(param.get("page")),Integer.valueOf(param.get("rows")),tbTemplate);
+        logger.info("数据查询条数"+tbTemplatePageInfo.getList().size());
+        paramMap.put("totalPages",tbTemplatePageInfo.getPages());
+        paramMap.put("pageNo",tbTemplatePageInfo.getPageNum());
+        paramMap.put("totalCount",tbTemplatePageInfo.getTotal());
+        paramMap.put("pageSize",tbTemplatePageInfo.getPageSize());
+        paramMap.put("list",tbTemplatePageInfo.getList());
+        paramMap.put("success",true);
+        return paramMap;
+
 
     }
 
