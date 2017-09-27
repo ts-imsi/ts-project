@@ -38,10 +38,10 @@ public class TemplateService {
         return list;
     }
 
-    public TbTemplate getTemplate(Integer tid){
+    public TbTemplate getTemplate(String type){
         TbTemplate tbTemplate = new TbTemplate();
-        if(tid!=null){
-            tbTemplate = templateMapper.getTemplate(tid);
+        if(!StringUtil.isEmpty(type)){
+            tbTemplate = templateMapper.getTemplate(type);
             if(tbTemplate.getContent()!=null){
                 JSONArray jsonArray = JSONArray.parseArray(tbTemplate.getContent());
                 tbTemplate.setContentJson(jsonArray);

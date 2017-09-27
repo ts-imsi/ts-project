@@ -47,14 +47,14 @@ public class TemplateController {
         return result;
     }
 
-    @RequestMapping(value="/getTemplate/{tid}",method = RequestMethod.GET)
-    public Result getTemplate(@PathVariable Integer tid){
+    @RequestMapping(value="/getTemplate/{type}",method = RequestMethod.GET)
+    public Result getTemplate(@PathVariable String type){
         //结果集
         Result result = new Result();
         result.setStatusCode(0);
         result.setSuccess(false);
         try {
-            TbTemplate tbTemplate = templateService.getTemplate(tid);
+            TbTemplate tbTemplate = templateService.getTemplate(type);
             result.setObject(tbTemplate);
             result.setSuccess(true);
             result.setStatusCode(1);

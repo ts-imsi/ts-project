@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TbTemplateMapper extends MyMapper<TbTemplate> {
 
-    TbTemplate getTemplate(Integer tid);
+    TbTemplate getTemplate(String type);
 
     List<TbTemplate> getTemplateList(TbTemplate tbTemplate);
 
