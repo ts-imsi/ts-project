@@ -27,7 +27,7 @@
         <javaClientGenerator targetPackage="com.trasen.tsproject.dao" targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
-        <table tableName="tb_template">
+        <table tableName="tb_ht_handover">
             <!--mysql 配置-->
             <generatedKey column="pkid" sqlStatement="Mysql" identity="true"/>
             <!--oracle 配置-->
