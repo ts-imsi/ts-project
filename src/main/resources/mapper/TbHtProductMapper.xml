@@ -1,16 +1,26 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.trasen.tsproject.dao.TbHtProductMapper" >
-  <resultMap id="BaseResultMap" type="com.trasen.tsproject.model.TbHtProduct" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="pkid" property="pkid" jdbcType="INTEGER" />
-    <result column="ht_no" property="htNo" jdbcType="VARCHAR" />
-    <result column="product_id" property="productId" jdbcType="VARCHAR" />
-    <result column="output_value" property="outputValue" jdbcType="VARCHAR" />
-    <result column="dep_id" property="depId" jdbcType="VARCHAR" />
-    <result column="subtotal" property="subtotal" jdbcType="DOUBLE" />
-    <result column="decompose" property="decompose" jdbcType="LONGVARCHAR" />
-  </resultMap>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trasen.tsproject.dao.TbHtProductMapper">
+
+  <select id="selectTbHtProductById" parameterType="String" resultType="com.trasen.tsproject.model.TbHtProduct">
+    select * from tb_ht_product where pkid=#{pkid}
+  </select>
+  <select id="selectTbHtProductByHtNo" parameterType="String" resultType="com.trasen.tsproject.model.TbHtProduct">
+    SELECT
+	hpro.*, pro. NAME AS productName,pri.standard_price as standardPrice,dept.dep_name as depName
+FROM
+	tb_ht_product hpro
+LEFT JOIN tb_product pro ON pro.pkid = hpro.product_id
+LEFT JOIN tb_standard_price pri ON pri.product_id=hpro.product_id
+LEFT JOIN tb_dept dept ON dept.dep_id= hpro.dep_id where ht_no=#{htNo}
+  </select>
+  
+  <insert id="saveTbHtProduct" parameterType="com.trasen.tsproject.model.TbHtProduct" >
+    insert into tb_ht_product(ht_no,product_id,output_value,subtotal,dep_id) value(#{htNo},#{productId},#{outputValue},#{subtotal},#{depId})
+  </insert>
+  
+  <select id="selectStandardPrice" parameterType="com.trasen.tsproject.model.TbStandardPrice" resultType="com.trasen.tsproject.model.TbStandardPrice">
+    select * from tb_standard_price where product_id=#{productId} and hospital_level=#{hospitalLevel}
+  </select>
+  
 </mapper>

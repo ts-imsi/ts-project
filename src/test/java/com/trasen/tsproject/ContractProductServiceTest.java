@@ -1,6 +1,7 @@
 package com.trasen.tsproject;
 
 
+import com.trasen.tsproject.model.TbHtProduct;
 import com.trasen.tsproject.service.ContractProductService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -35,5 +37,16 @@ public class ContractProductServiceTest {
         Map<String,Object> paramMap= contractProductService.getcontractTransenList(param);
 
         System.out.println(paramMap.get("totalPages"));
+    }
+
+    @Test
+    public void getProductByContract(){
+        Map<String,Object> param=contractProductService.getProductByContract("B16080","0",12.38);
+        List<TbHtProduct> tbHtProductList= (List<TbHtProduct>) param.get("list");
+        for(TbHtProduct tbHtProduct:tbHtProductList){
+            System.out.println(tbHtProduct.getHtNo()+","+tbHtProduct.getProductName()+tbHtProduct.getSubtotal()+","+tbHtProduct.getOutputValue());
+        }
+
+
     }
 }

@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,5 +25,25 @@ public class ContractProductController {
     @RequestMapping(value="/getcontractTransenList",method = RequestMethod.POST)
     public Map<String,Object> getcontractTransenList(@RequestBody Map<String,String> param){
         return contractProductService.getcontractTransenList(param);
+    }
+
+    @RequestMapping(value="/getProductByContract",method = RequestMethod.POST)
+    public Map<String,Object> getProductByContract(@RequestBody Map<String,String> param){
+        Map<String,Object> paramMap=new HashMap<String,Object>();
+        if(param.get("contractNo")==null||param.get("contractNo")==""){
+            paramMap.put("message","合同号为空");
+            paramMap.put("succes",false);
+            return paramMap;
+        }
+        if(param.get("hospitalLevel")==null||param.get("hospitalLevel")==""){
+            param.put("hospitalLevel","0");
+        }
+        if(param.get("contractPrice")==null||param.get("contractPrice")==""){
+            paramMap.put("message","合同金额为空，请查看数据是否正确");
+            paramMap.put("succes",false);
+            return paramMap;
+        }
+        Map<String,Object> result=contractProductService.getProductByContract(param.get("contractNo"),param.get("hospitalLevel"),5.0);
+        return result;
     }
 }
