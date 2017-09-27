@@ -134,7 +134,7 @@ public class ContractProductService {
                     tbHtProduct.setPkid(jsonObject.getInteger("ProductId"));
                     tbHtProduct.setHtNo(jsonObject.getString("contractNo"));
                     tbHtProduct.setProductId(String.valueOf(jsonObject.getInteger("ProductId")));
-                    tbHtProduct.set
+                    tbHtProduct.setProductName(jsonObject.getString("productName"));
                     if(jsonObject.getString("imisid")!=null) tbHtProduct.setDepId(jsonObject.getString("imisid"));
                     if(jsonObject.getString("imisname")!=null) tbHtProduct.setDepName(jsonObject.getString("imisname"));
 
