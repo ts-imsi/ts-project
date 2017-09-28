@@ -1,6 +1,7 @@
 package com.trasen.tsproject.service;
 
 import cn.trasen.commons.util.StringUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -43,8 +44,8 @@ public class TemplateService {
         if(!StringUtil.isEmpty(type)){
             tbTemplate = templateMapper.getTemplate(type);
             if(tbTemplate.getContent()!=null){
-                JSONArray jsonArray = JSONArray.parseArray(tbTemplate.getContent());
-                tbTemplate.setContentJson(jsonArray);
+                List<TbTemplateItem> list = JSON.parseArray(tbTemplate.getContent(), TbTemplateItem.class);
+                tbTemplate.setContentJson(list);
             }
         }
         return tbTemplate;
@@ -60,8 +61,8 @@ public class TemplateService {
     public boolean saveTemplate(TbTemplate tbTemplate){
         boolean boo = false;
         if(tbTemplate.getPkid()!=null){
-            JSONArray jsonArray = tbTemplate.getContentJson();
-            String content = jsonArray.toJSONString();
+            List<TbTemplateItem> list = tbTemplate.getContentJson();
+            String content = JSON.toJSONString(list);
             tbTemplate.setContent(content);
             tbTemplate.setOperator(VisitInfoHolder.getUserId());
             templateMapper.updateTemplate(tbTemplate);

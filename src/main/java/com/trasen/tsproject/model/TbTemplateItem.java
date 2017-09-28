@@ -55,5 +55,7 @@ public class TbTemplateItem {
      */
     private Integer px;
 
+    private String value;
+
 
 }

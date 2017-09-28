@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbHtHandoverMapper" >
+    <select id="getHandoverToHtNo" parameterType="String" resultType="com.trasen.tsproject.model.TbHtHandover">
+        select * from tb_ht_handover where ht_no = #{htNo} limit 1
+    </select>
+
+    <insert id="insertHandover" parameterType="com.trasen.tsproject.model.TbHtHandover">
+        insert into tb_ht_handover (ht_no,ht_name,customer_name,`type`,status,ht_owner,
+        sign_date,pro_manager,pro_phone,content,created,create_user) values
+        (#{htNo},#{htName},#{customerName},#{type},0,#{htOwner},
+        #{signDate},#{proManager},#{proPhone},#{content},now(),#{createUser})
+    </insert>
+
+    <update id="updateHandover" parameterType="com.trasen.tsproject.model.TbHtHandover">
+        update tb_ht_handover set ht_name=#{htName},customer_name=#{customerName},
+        ht_owner=#{htOwner},sign_date=#{signDate},
+        pro_manager=#{proManager},pro_phone=#{proPhone},
+        content=#{content},updated=now(),operator=#{operator} 
+        where ht_no=#{htNo} 
+    </update>
+    
+    <update id="submitHandover" parameterType="com.trasen.tsproject.model.TbHtHandover">
+        update tb_ht_handover set status=1,updated=now(),operator=#{operator}  where ht_no=#{htNo}
+    </update>
 
 
 
