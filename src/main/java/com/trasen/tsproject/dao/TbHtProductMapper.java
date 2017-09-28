@@ -10,7 +10,9 @@ public interface TbHtProductMapper extends MyMapper<TbHtProduct> {
     TbHtProduct selectTbHtProductById(String pkid);
 
     List<TbHtProduct> selectTbHtProductByHtNo(String htNo);
-    void saveTbHtProduct(TbHtProduct tbHtProduct);
+    int saveTbHtProduct(TbHtProduct tbHtProduct);
 
     TbStandardPrice selectStandardPrice(TbStandardPrice tbStandardPrice);
+
+    int updateTbHtProduct(TbHtProduct tbHtProduct);
 }

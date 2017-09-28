@@ -46,11 +46,21 @@ public class TbHtProduct {
     /**
      * 标准价
      */
-    private String standardPrice;
+    private Double standardPrice;
 
     /**
      * 部门名称
      */
     private String depName;
+
+
+    /**
+     *产品大类id
+     */
+    private String productMoreCode;
+    /**
+     *产品大类名称
+     */
+    private String productMoreName;
 
 }

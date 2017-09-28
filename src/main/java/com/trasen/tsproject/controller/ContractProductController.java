@@ -1,5 +1,6 @@
 package com.trasen.tsproject.controller;
 
+import com.trasen.tsproject.model.TbHtProduct;
 import com.trasen.tsproject.service.ContractProductService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,34 @@ public class ContractProductController {
             paramMap.put("succes",false);
             return paramMap;
         }
-        Map<String,Object> result=contractProductService.getProductByContract(param.get("contractNo"),param.get("hospitalLevel"),5.0);
+        Map<String,Object> result=contractProductService.getProductByContract(param.get("contractNo"),param.get("hospitalLevel"),Double.valueOf(param.get("contractPrice")));
+        return result;
+    }
+
+    @RequestMapping(value="/updateProductByContract",method = RequestMethod.POST)
+    public Map<String,Object> updateProductByContract(@RequestBody Map<String,String> param){
+        Map<String,Object> paramMap=new HashMap<String,Object>();
+        if(param.get("contractNo")==null||param.get("contractNo")==""){
+            paramMap.put("message","合同号为空");
+            paramMap.put("succes",false);
+            return paramMap;
+        }
+        if(param.get("pkid")==null||param.get("pkid")==""){
+            paramMap.put("message","参数为空");
+            paramMap.put("succes",false);
+            return paramMap;
+        }
+        if(param.get("contractPrice")==null||param.get("contractPrice")==""){
+            paramMap.put("message","合同金额为空，请查看数据是否正确");
+            paramMap.put("succes",false);
+            return paramMap;
+        }
+        if(param.get("standardPrice")==null||param.get("standardPrice")==""){
+            paramMap.put("message","修改的标准价为空");
+            paramMap.put("succes",false);
+            return paramMap;
+        }
+        Map<String,Object> result=contractProductService.updateProductByContract(param.get("contractNo"),Integer.valueOf(param.get("pkid")),Double.valueOf(param.get("contractPrice")),Double.valueOf(param.get("standardPrice")));
         return result;
     }
 }
