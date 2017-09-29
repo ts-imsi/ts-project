@@ -1,13 +1,11 @@
 package com.trasen.tsproject.service;
 
-import com.trasen.tsproject.common.VisitInfoHolder;
+
 import com.trasen.tsproject.dao.TbHtProductMapper;
 import com.trasen.tsproject.dao.TbProModulePriceMapper;
 import com.trasen.tsproject.model.ContractInfo;
-import com.trasen.tsproject.model.ContractProduct;
 import com.trasen.tsproject.model.TbHtProduct;
 import com.trasen.tsproject.model.TbProModulePrice;
-import com.trasen.tsproject.model.TbStandardPrice;
 import com.trasen.tsproject.util.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
