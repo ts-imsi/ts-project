@@ -1,11 +1,18 @@
 package com.trasen.tsproject.controller;
 
+import cn.trasen.commons.util.StringUtil;
+import cn.trasen.core.entity.Result;
+import com.trasen.tsproject.model.TbHtModule;
+import com.trasen.tsproject.model.TbHtResolve;
 import com.trasen.tsproject.service.ContractProductService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,50 +34,91 @@ public class ContractProductController {
         return contractProductService.getcontractTransenList(param);
     }
 
-/*    @RequestMapping(value="/getProductByContract",method = RequestMethod.POST)
-    public Map<String,Object> getProductByContract(@RequestBody Map<String,String> param){
-        Map<String,Object> paramMap=new HashMap<String,Object>();
-        if(param.get("contractNo")==null||param.get("contractNo")==""){
-            paramMap.put("message","合同号为空");
-            paramMap.put("succes",false);
-            return paramMap;
+    @RequestMapping(value="/queryHtResolve",method = RequestMethod.POST)
+    public Result queryHtResolve(@RequestBody Map<String,String> param){
+        Result result=new Result();
+        result.setSuccess(false);
+        try {
+            if(param==null){
+                result.setMessage("参数错误");
+                return result;
+            }
+            if(StringUtil.isEmpty(param.get("contractNo"))){
+                result.setMessage("合同号为空");
+                return result;
+            }
+            if(StringUtil.isEmpty(param.get("contrachospitalLeveltNo"))){
+                param.put("hospitalLevel","0");
+            }
+            if(StringUtil.isEmpty(param.get("contractPrice"))){
+                result.setMessage("合同金额为空，请查看数据是否正确");
+                return result;
+            }
+
+            List<TbHtResolve> list = contractProductService.queryHtResolve("B15075");
+            result.setSuccess(true);
+            result.setObject(list);
+        }catch (Exception e) {
+            logger.error("获取合同分解异常" + e.getMessage(), e);
+            result.setSuccess(false);
+            result.setMessage("获取合同分解失败");
         }
-        if(param.get("hospitalLevel")==null||param.get("hospitalLevel")==""){
-            param.put("hospitalLevel","0");
-        }
-        if(param.get("contractPrice")==null||param.get("contractPrice")==""){
-            paramMap.put("message","合同金额为空，请查看数据是否正确");
-            paramMap.put("succes",false);
-            return paramMap;
-        }
-        Map<String,Object> result=contractProductService.getProductByContract(param.get("contractNo"),param.get("hospitalLevel"),Double.valueOf(param.get("contractPrice")));
-        return result;
+        return  result;
     }
 
-    @RequestMapping(value="/updateProductByContract",method = RequestMethod.POST)
-    public Map<String,Object> updateProductByContract(@RequestBody Map<String,String> param){
-        Map<String,Object> paramMap=new HashMap<String,Object>();
-        if(param.get("contractNo")==null||param.get("contractNo")==""){
-            paramMap.put("message","合同号为空");
-            paramMap.put("succes",false);
-            return paramMap;
+    @RequestMapping(value="/updateModulePrice",method = RequestMethod.POST)
+    public Result updateModulePrice(@RequestBody List<TbHtModule> htModuleList) {
+        Result result=new Result();
+        result.setSuccess(false);
+        try {
+            if(htModuleList==null||htModuleList.size()==0){
+                result.setMessage("参数错误");
+                return result;
+            }
+            boolean boo = contractProductService.updateModulePrice(htModuleList);
+            List<TbHtResolve> resolveList = contractProductService.queryHtResolve(htModuleList.get(1).getHtNo());
+            result.setSuccess(boo);
+            result.setObject(resolveList);
+        }catch (Exception e) {
+            logger.error("修改合同模块价格异常" + e.getMessage(), e);
+            result.setSuccess(false);
+            result.setMessage("修改合同模块价格失败");
         }
-        if(param.get("pkid")==null||param.get("pkid")==""){
-            paramMap.put("message","参数为空");
-            paramMap.put("succes",false);
-            return paramMap;
+        return  result;
+    }
+
+
+    /**
+     * 查询合同模块
+     * */
+    @RequestMapping(value="/queryHtModule", method = RequestMethod.POST)
+    public Result queryHtModule(@RequestBody TbHtResolve htResolve)  {
+        Result result=new Result();
+        result.setSuccess(false);
+        try {
+            if(htResolve==null){
+                result.setMessage("参数对象错误");
+                return result;
+            }
+            if(htResolve.getHtNo()==null||htResolve.getProCode()==null){
+                result.setMessage("合同号或者产品code为空");
+                return result;
+            }
+            List<TbHtModule> list = contractProductService.queryHtModule(htResolve);
+            result.setObject(list);
+            result.setSuccess(true);
+        }catch (Exception e) {
+            logger.error("查询合同模块异常" + e.getMessage(), e);
+            result.setSuccess(false);
+            result.setMessage("查询合同模块失败");
         }
-        if(param.get("contractPrice")==null||param.get("contractPrice")==""){
-            paramMap.put("message","合同金额为空，请查看数据是否正确");
-            paramMap.put("succes",false);
-            return paramMap;
-        }
-        if(param.get("standardPrice")==null||param.get("standardPrice")==""){
-            paramMap.put("message","修改的标准价为空");
-            paramMap.put("succes",false);
-            return paramMap;
-        }
-        Map<String,Object> result=contractProductService.updateProductByContract(param.get("contractNo"),Integer.valueOf(param.get("pkid")),Double.valueOf(param.get("contractPrice")),Double.valueOf(param.get("standardPrice")));
-        return result;
-    }*/
+        return  result;
+    }
+
+
+
+
+
+
+
 }

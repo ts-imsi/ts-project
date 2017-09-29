@@ -58,4 +58,10 @@ public class TbHtResolve {
      */
     private String operator;
 
+    private String depName;
+
+    private String depId;
+
+    private String proName;
+
 }

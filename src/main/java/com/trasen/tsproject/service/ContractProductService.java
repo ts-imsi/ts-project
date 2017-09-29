@@ -1,6 +1,9 @@
 package com.trasen.tsproject.service;
 
 
+import cn.trasen.commons.util.StringUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.trasen.tsproject.dao.TbHtModuleMapper;
 import com.trasen.tsproject.dao.TbHtResolveMapper;
 import com.trasen.tsproject.dao.TbProModulePriceMapper;
@@ -9,15 +12,12 @@ import com.trasen.tsproject.model.TbHtModule;
 import com.trasen.tsproject.model.TbHtResolve;
 import com.trasen.tsproject.model.TbProModulePrice;
 import com.trasen.tsproject.util.HttpUtil;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -239,4 +239,34 @@ public class ContractProductService {
         logger.info("产值和小计,保存更新成功=======");
         return true;
     }
+
+
+
+     public List<TbHtResolve> queryHtResolve(String htNo){
+         List<TbHtResolve> list = new ArrayList<>();
+         if(!StringUtil.isEmpty(htNo)){
+             list = tbHtResolveMapper.queryHtResolve(htNo);
+         }
+         return list;
+     }
+
+     public List<TbHtModule> queryHtModule(TbHtResolve htResolve){
+         List<TbHtModule> list = new ArrayList<>();
+         if(htResolve!=null){
+             list = tbHtModuleMapper.queryHtModule(htResolve);
+         }
+         return list;
+     }
+
+     public boolean updateModulePrice(List<TbHtModule> list){
+         boolean boo = false;
+         if(list!=null){
+             for(TbHtModule htModule : list){
+                 tbHtModuleMapper.updateModulePrice(htModule);
+             }
+             boo = true;
+         }
+         return boo;
+     }
+
 }

@@ -48,4 +48,6 @@ public class TbHtModule {
      */
     private String operator;
 
+    private String modName;
+
 }

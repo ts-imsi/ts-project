@@ -4,11 +4,19 @@
     <select id="selectModuleByHtNo" resultType="com.trasen.tsproject.model.TbHtModule" parameterType="String">
         select * from tb_ht_module where ht_no=#{htNo}
     </select>
+    <select id="queryHtModule" parameterType="com.trasen.tsproject.model.TbHtResolve" resultType="com.trasen.tsproject.model.TbHtModule">
+        select p.mod_name,m.* from tb_ht_module m join tb_pro_module p on m.mod_id=p.mod_id where m.ht_no=#{htNo}  and m.pro_code=#{proCode}
+    </select>
+
+    <update id="updateModulePrice" parameterType="com.trasen.tsproject.model.TbHtModule">
+        update tb_ht_module set price=#{price},updated=now(),operator=#{operator}
+        where pkid=#{pkid}
+    </update>
 
     <insert id="saveHtModule" parameterType="com.trasen.tsproject.model.TbHtModule" useGeneratedKeys="true" keyProperty="pkid">
         insert into tb_ht_module(ht_no,pro_code,mod_id,price,updated,created,operator) values(#{htNo},#{proCode},#{modId},#{price},#{updated},#{created},#{operator})
     </insert>
-    
+
     <delete id="deleteHtModule" parameterType="String">
         delete from tb_ht_module where ht_no=#{htNo}
     </delete>
