@@ -2,9 +2,11 @@ package com.trasen.tsproject.service;
 
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbHtProductMapper;
+import com.trasen.tsproject.dao.TbProModulePriceMapper;
 import com.trasen.tsproject.model.ContractInfo;
 import com.trasen.tsproject.model.ContractProduct;
 import com.trasen.tsproject.model.TbHtProduct;
+import com.trasen.tsproject.model.TbProModulePrice;
 import com.trasen.tsproject.model.TbStandardPrice;
 import com.trasen.tsproject.util.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
@@ -40,6 +42,9 @@ public class ContractProductService {
 
     @Autowired
     private TbHtProductMapper tbHtProductMapper;
+
+    @Autowired
+    private TbProModulePriceMapper tbProModulePriceMapper;
 
     public Map<String,Object> getcontractTransenList(Map<String,String> param){
         Map<String,Object> paramMap=new HashMap<String,Object>();
@@ -130,32 +135,29 @@ public class ContractProductService {
                 JSONArray jsonArray = dataJson.getJSONArray("list");
                 List<TbHtProduct> tbHtProductList1=new ArrayList<TbHtProduct>();
                 for(java.util.Iterator tor=jsonArray.iterator();tor.hasNext();){
-                    TbStandardPrice tbStandardPrice=new TbStandardPrice();
+                    TbProModulePrice tbProModulePrice=new TbProModulePrice();
                     TbHtProduct tbHtProduct=new TbHtProduct();
                     JSONObject jsonObject = (JSONObject)tor.next();
                     tbHtProduct.setHtNo(jsonObject.getString("contractNo"));
                     tbHtProduct.setProductId(String.valueOf(jsonObject.getInteger("productId")));
                     tbHtProduct.setProductName(jsonObject.getString("productName"));
-                    if(jsonObject.getString("imisid")!=null) tbHtProduct.setDepId(jsonObject.getString("imisid"));
-                    if(jsonObject.getString("imisname")!=null) tbHtProduct.setDepName(jsonObject.getString("imisname"));
 
                     //根据医院等级和产品列表查询标准价
-                    tbStandardPrice.setHospitalLevel(hospitalLevel);
-                    tbStandardPrice.setProductId(String.valueOf(jsonObject.getInteger("ProductId")));
-                    tbStandardPrice= tbHtProductMapper.selectStandardPrice(tbStandardPrice);
+                    tbProModulePrice.setHospitalLevel(hospitalLevel);
+                    tbProModulePrice.setModId(String.valueOf(jsonObject.getInteger("productId")));
+                    tbProModulePrice= tbProModulePriceMapper.selectStandardPrice(tbProModulePrice);
 
                     //计算产值和小计
-                    if(tbStandardPrice==null){
+                    if(tbProModulePrice==null){
                         tbHtProduct.setStandardPrice(1.0);
                     }else{
-                        tbHtProduct.setStandardPrice(Double.valueOf(tbStandardPrice.getStandardPrice()));
+                        tbHtProduct.setStandardPrice(Double.valueOf(tbProModulePrice.getStandardPrice()));
                     }
                     //修改add
                     tbHtProductList1.add(tbHtProduct);
                 }
-                List<TbHtProduct> tbHtProducts=getOutputValueOrSubtotal(tbHtProductList1,contractPrice);
                 logger.info("根据合同查询产品列表成功=======");
-                paramMap.put("list",tbHtProducts);
+                paramMap.put("list",tbHtProductList1);
                 paramMap.put("success",true);
                 return paramMap;
             }else{

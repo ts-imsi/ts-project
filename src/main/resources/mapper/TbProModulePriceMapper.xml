@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.trasen.tsproject.dao.TbProModulePriceMapper" >
+  <select id="selectStandardPrice" parameterType="com.trasen.tsproject.model.TbProModulePrice" resultType="com.trasen.tsproject.model.TbProModulePrice">
+    select * from tb_pro_module_price where hospital_level=#{hospitalLevel} and mod_id=#{modId}
+  </select>
+</mapper>
