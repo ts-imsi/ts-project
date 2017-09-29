@@ -1,6 +1,5 @@
 package com.trasen.tsproject.controller;
 
-import com.trasen.tsproject.model.TbHtProduct;
 import com.trasen.tsproject.service.ContractProductService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class ContractProductController {
         return contractProductService.getcontractTransenList(param);
     }
 
-    @RequestMapping(value="/getProductByContract",method = RequestMethod.POST)
+/*    @RequestMapping(value="/getProductByContract",method = RequestMethod.POST)
     public Map<String,Object> getProductByContract(@RequestBody Map<String,String> param){
         Map<String,Object> paramMap=new HashMap<String,Object>();
         if(param.get("contractNo")==null||param.get("contractNo")==""){
@@ -73,5 +72,5 @@ public class ContractProductController {
         }
         Map<String,Object> result=contractProductService.updateProductByContract(param.get("contractNo"),Integer.valueOf(param.get("pkid")),Double.valueOf(param.get("contractPrice")),Double.valueOf(param.get("standardPrice")));
         return result;
-    }
+    }*/
 }

@@ -1,7 +1,6 @@
 package com.trasen.tsproject;
 
 
-import com.trasen.tsproject.model.TbHtProduct;
 import com.trasen.tsproject.service.ContractProductService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,15 +39,4 @@ public class ContractProductServiceTest {
         System.out.println(paramMap.get("totalPages"));
     }
 
-    @Test
-    @Rollback(false)
-    public void getProductByContract(){
-        Map<String,Object> param=contractProductService.getProductByContract("B16080","0",12.38);
-        List<TbHtProduct> tbHtProductList= (List<TbHtProduct>) param.get("list");
-        for(TbHtProduct tbHtProduct:tbHtProductList){
-            System.out.println(tbHtProduct.getHtNo()+","+tbHtProduct.getProductName()+tbHtProduct.getSubtotal()+","+tbHtProduct.getOutputValue());
-        }
-
-
-    }
 }
