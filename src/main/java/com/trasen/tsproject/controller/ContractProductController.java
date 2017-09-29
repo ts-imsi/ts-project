@@ -55,7 +55,7 @@ public class ContractProductController {
                 return result;
             }
 
-            List<TbHtResolve> list = contractProductService.queryHtResolve("B15075");
+            List<TbHtResolve> list = contractProductService.queryHtResolve(param.get("contractNo"));
             result.setSuccess(true);
             result.setObject(list);
         }catch (Exception e) {

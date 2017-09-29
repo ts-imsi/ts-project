@@ -196,7 +196,10 @@ public class ContractProductService {
                 htResolveMap.put(tbHtModule.getProCode(),tbHtResolve);
             }
         }
-        List<TbHtResolve> htResolveList = (List<TbHtResolve>)htResolveMap.values();
+        Collection<TbHtResolve> htResolveListT = htResolveMap.values();
+        List<TbHtResolve> htResolveList = new ArrayList<>();
+        htResolveList.addAll(htResolveListT);
+
         //计算产值
         int outPutCount=0;
         for(TbHtResolve htResolve : htResolveList){
@@ -233,9 +236,6 @@ public class ContractProductService {
          List<TbHtResolve> list = new ArrayList<>();
          if(!StringUtil.isEmpty(htNo)){
              list = tbHtResolveMapper.queryHtResolve(htNo);
-             // TODO: 17/9/29 同步模块
-             // TODO: 17/9/29 计算产值
-             // TODO: 17/9/29 重新获取
          }
          return list;
      }
@@ -256,7 +256,6 @@ public class ContractProductService {
                  tbHtModuleMapper.updateModulePrice(htModule);
              }
              boo = true;
-             // TODO: 17/9/29 计算产值
          }
          return boo;
      }
