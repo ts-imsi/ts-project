@@ -47,7 +47,7 @@ public class ContractProductController {
                 result.setMessage("合同号为空");
                 return result;
             }
-            if(StringUtil.isEmpty(param.get("contrachospitalLeveltNo"))){
+            if(StringUtil.isEmpty(param.get("hospitalLevel"))){
                 param.put("hospitalLevel","0");
             }
             if(StringUtil.isEmpty(param.get("contractPrice"))){
@@ -56,6 +56,13 @@ public class ContractProductController {
             }
 
             List<TbHtResolve> list = contractProductService.queryHtResolve(param.get("contractNo"));
+            if(list==null||list.size()==0){
+                //同步数据
+                contractProductService.synchroHtModuleByContract(param.get("contractNo"),param.get("hospitalLevel"));
+                //计算产值
+                contractProductService.getOutputValueOrSubtotal(param.get("contractNo"),Double.parseDouble(param.get("contractPrice")));
+                list = contractProductService.queryHtResolve(param.get("contractNo"));
+            }
             result.setSuccess(true);
             result.setObject(list);
         }catch (Exception e) {
@@ -76,6 +83,10 @@ public class ContractProductController {
                 return result;
             }
             boolean boo = contractProductService.updateModulePrice(htModuleList);
+            if(boo){
+                //计算产值
+                contractProductService.getOutputValueOrSubtotal(htModuleList.get(1).getHtNo(),htModuleList.get(1).getContractPrice());
+            }
             List<TbHtResolve> resolveList = contractProductService.queryHtResolve(htModuleList.get(1).getHtNo());
             result.setSuccess(boo);
             result.setObject(resolveList);
