@@ -117,6 +117,9 @@ public class ContractProductService {
         }
     }
 
+    /*
+    * 同步合同模块
+    * */
     public Map<String,Object> synchroHtModuleByContract(String contractNo,String hospitalLevel,double contractPrice){
         Map<String,Object> paramMap=new HashMap<String,Object>();
         String product_imis = env.getProperty("product_imis");
@@ -176,6 +179,9 @@ public class ContractProductService {
 
     }
 
+    /*
+    * 计算产值，小计和保存合同模块，合同分解
+    * */
     @Transactional(rollbackFor=Exception.class)
     public boolean getOutputValueOrSubtotal(List<TbHtModule> tbHtModuleList,String htNo,double contractPrice){
         double standardPriceCount=0;
