@@ -4,6 +4,7 @@ package com.trasen.tsproject.service;
 import cn.trasen.commons.util.StringUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbHtModuleMapper;
 import com.trasen.tsproject.dao.TbHtResolveMapper;
 import com.trasen.tsproject.dao.TbProModulePriceMapper;
@@ -235,6 +236,9 @@ public class ContractProductService {
          List<TbHtResolve> list = new ArrayList<>();
          if(!StringUtil.isEmpty(htNo)){
              list = tbHtResolveMapper.queryHtResolve(htNo);
+             // TODO: 17/9/29 同步模块
+             // TODO: 17/9/29 计算产值
+             // TODO: 17/9/29 重新获取
          }
          return list;
      }
@@ -251,9 +255,11 @@ public class ContractProductService {
          boolean boo = false;
          if(list!=null){
              for(TbHtModule htModule : list){
+                 htModule.setOperator(VisitInfoHolder.getUserId());
                  tbHtModuleMapper.updateModulePrice(htModule);
              }
              boo = true;
+             // TODO: 17/9/29 计算产值
          }
          return boo;
      }
