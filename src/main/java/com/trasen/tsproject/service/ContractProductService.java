@@ -1,11 +1,7 @@
 package com.trasen.tsproject.service;
 
 
-import com.trasen.tsproject.dao.TbHtProductMapper;
-import com.trasen.tsproject.dao.TbProModulePriceMapper;
 import com.trasen.tsproject.model.ContractInfo;
-import com.trasen.tsproject.model.TbHtProduct;
-import com.trasen.tsproject.model.TbProModulePrice;
 import com.trasen.tsproject.util.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -14,11 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.xml.bind.annotation.XmlType;
-import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -37,12 +31,6 @@ public class ContractProductService {
 
     @Autowired
     private Environment env;
-
-    @Autowired
-    private TbHtProductMapper tbHtProductMapper;
-
-    @Autowired
-    private TbProModulePriceMapper tbProModulePriceMapper;
 
     public Map<String,Object> getcontractTransenList(Map<String,String> param){
         Map<String,Object> paramMap=new HashMap<String,Object>();
@@ -108,7 +96,7 @@ public class ContractProductService {
         }
     }
 
-    public Map<String,Object> getProductByContract(String contractNo,String hospitalLevel,double contractPrice){
+ /*   public Map<String,Object> getProductByContract(String contractNo,String hospitalLevel,double contractPrice){
         Map<String,Object> paramMap=new HashMap<String,Object>();
         String product_imis = env.getProperty("product_imis");
         if(product_imis==null){
@@ -187,9 +175,9 @@ public class ContractProductService {
         return paramMap;
     }
 
-    /**
+    *//**
      * 计算产值和小计，保存，更新合同产品表
-     */
+     *//*
     @Transactional(rollbackFor=Exception.class)
     public List<TbHtProduct> getOutputValueOrSubtotal(List<TbHtProduct> tbHtProductList,double contractPrice){
         double standardPriceCount=0;
@@ -235,5 +223,5 @@ public class ContractProductService {
         }
         logger.info("产值和小计,保存更新成功=======");
         return tbHtProductList;
-    }
+    }*/
 }
