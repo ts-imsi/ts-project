@@ -39,4 +39,11 @@ public class ContractProductServiceTest {
         System.out.println(paramMap.get("totalPages"));
     }
 
+    @Test
+    @Rollback(true)
+    public void synchroHtModuleByContract(){
+        Map<String,Object> paramMap= contractProductService.synchroHtModuleByContract("B14011","0",33);
+        System.out.println("=========="+paramMap.get("success"));
+    }
+
 }

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -209,30 +210,28 @@ public class ContractProductService {
             //计算产品产值
             double price_output=pro_doc/standardPriceCount;
             BigDecimal bigDecimal=new BigDecimal(price_output);
-            price_output=bigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+            price_output=bigDecimal.setScale(2,BigDecimal.ROUND_DOWN).doubleValue();
             outPutCount=outPutCount+(int)(price_output*100);
+            logger.info("======="+price_output);
             //计算产品小计
             double subtotal=price_output*contractPrice;
-            BigDecimal  bigDec=new BigDecimal(subtotal);
-            subtotal=bigDec.setScale(4,BigDecimal.ROUND_HALF_UP).doubleValue();
 
             tbHtResolve.setPrice(pro_doc);
             tbHtResolve.setProCode(procodeList.get(i));
             tbHtResolve.setSubtotal(subtotal);
             tbHtResolve.setCreated(new Date());
-            tbHtResolve.setOutputValue(price_output*100+"%");
+            logger.info("==========="+(int)(price_output*100)+"%");
+            tbHtResolve.setOutputValue((int)(price_output*100)+"%");
             tbHtResolveMapper.saveHtResolve(tbHtResolve);
             tbHtResolveList.add(tbHtResolve);
         }
 
         if(tbHtResolveList.size()>0&&100 - outPutCount!=0){
-            for (int k = 0; k < outPutCount; k++) {
+            for (int k = 0; k <100-outPutCount; k++) {
                 String out=tbHtResolveList.get(k).getOutputValue().substring(0, tbHtResolveList.get(k).getOutputValue().length() - 1);
                 int out_l = Double.valueOf(out).intValue() + 1;
                 tbHtResolveList.get(k).setOutputValue(out_l + "%");
                 double subtotal_js = out_l * 0.01 * contractPrice;
-                BigDecimal big_dou = new BigDecimal(subtotal_js);
-                subtotal_js = big_dou.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
                 tbHtResolveList.get(k).setSubtotal(subtotal_js);
                 tbHtResolveMapper.updateHtResolve(tbHtResolveList.get(k));
             }
