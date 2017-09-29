@@ -158,7 +158,6 @@ public class ContractProductService {
                 }
                 tbHtModuleMapper.saveHtModule(htModule);
             }
-            //boolean boo=getOutputValueOrSubtotal(tbHtModuleList1,contractNo,contractPrice);
             logger.info("数据同步成功=======");
             return true;
         }else{
@@ -177,54 +176,52 @@ public class ContractProductService {
             return false;
         }
         double standardPriceCount=0;
+        //清空数据
         tbHtResolveMapper.deleteHtResolve(htNo);
-        Map<String, String> map = new HashMap<String, String>();
-        for(TbHtModule tbHtModule:tbHtModuleList){
-            standardPriceCount=standardPriceCount+Double.valueOf(tbHtModule.getPrice());
-            map.put(tbHtModule.getProCode(),tbHtModule.getProCode());
 
-        }
-        Collection<String> valueCollection = map.values();
-        List<String> procodeList = new ArrayList<String>(valueCollection);
-        List<TbHtResolve> tbHtResolveList=new ArrayList<TbHtResolve>();
-        int outPutCount=0;
-        for(int i=0;i<procodeList.size();i++){
-            TbHtResolve tbHtResolve=new TbHtResolve();
-            double pro_doc=0;
-            tbHtResolve.setHtNo(htNo);
-            for(int j=0;j<tbHtModuleList.size();j++){
-                if(procodeList.get(i).equals(tbHtModuleList.get(j).getProCode())){
-                    pro_doc=pro_doc+tbHtModuleList.get(j).getPrice();
-                }
+        //组装分解数据
+        Map<String,TbHtResolve> htResolveMap = new HashMap<>();
+        for(TbHtModule tbHtModule:tbHtModuleList){
+            standardPriceCount = standardPriceCount + tbHtModule.getPrice();
+            if(htResolveMap.get(tbHtModule.getProCode())!=null){
+                TbHtResolve htResolve = htResolveMap.get(tbHtModule.getProCode());
+                double price = htResolve.getPrice();
+                price = price+tbHtModule.getPrice();
+                htResolve.setPrice(price);
+            }else{
+                TbHtResolve tbHtResolve = new TbHtResolve();
+                tbHtResolve.setPrice(tbHtModule.getPrice());
+                tbHtResolve.setHtNo(tbHtModule.getHtNo());
+                tbHtResolve.setProCode(tbHtModule.getProCode());
+                htResolveMap.put(tbHtModule.getProCode(),tbHtResolve);
             }
+        }
+        List<TbHtResolve> htResolveList = (List<TbHtResolve>)htResolveMap.values();
+        //计算产值
+        int outPutCount=0;
+        for(TbHtResolve htResolve : htResolveList){
             //计算产品产值
-            double price_output=pro_doc/standardPriceCount;
+            double price_output=htResolve.getPrice()/standardPriceCount;
             BigDecimal bigDecimal=new BigDecimal(price_output);
             price_output=bigDecimal.setScale(2,BigDecimal.ROUND_DOWN).doubleValue();
             outPutCount=outPutCount+(int)(price_output*100);
-            logger.info("======="+price_output);
-            //计算产品小计
+            htResolve.setOutputValue((int)(price_output*100)+"%");
             double subtotal=price_output*contractPrice;
-
-            tbHtResolve.setPrice(pro_doc);
-            tbHtResolve.setProCode(procodeList.get(i));
-            tbHtResolve.setSubtotal(subtotal);
-            tbHtResolve.setCreated(new Date());
-            logger.info("==========="+(int)(price_output*100)+"%");
-            tbHtResolve.setOutputValue((int)(price_output*100)+"%");
-            tbHtResolveMapper.saveHtResolve(tbHtResolve);
-            tbHtResolveList.add(tbHtResolve);
+            htResolve.setSubtotal(subtotal);
         }
-
-        if(tbHtResolveList.size()>0&&100 - outPutCount!=0){
+        //平均分配余量
+        if(htResolveList.size()>0&&100 - outPutCount>0&&100 - outPutCount<htResolveList.size()){
             for (int k = 0; k <100-outPutCount; k++) {
-                String out=tbHtResolveList.get(k).getOutputValue().substring(0, tbHtResolveList.get(k).getOutputValue().length() - 1);
+                String out=htResolveList.get(k).getOutputValue().substring(0, htResolveList.get(k).getOutputValue().length() - 1);
                 int out_l = Double.valueOf(out).intValue() + 1;
-                tbHtResolveList.get(k).setOutputValue(out_l + "%");
+                htResolveList.get(k).setOutputValue(out_l + "%");
                 double subtotal_js = out_l * 0.01 * contractPrice;
-                tbHtResolveList.get(k).setSubtotal(subtotal_js);
-                tbHtResolveMapper.updateHtResolve(tbHtResolveList.get(k));
+                htResolveList.get(k).setSubtotal(subtotal_js);
             }
+        }
+        //保存产值
+        for(TbHtResolve htResolve : htResolveList){
+            tbHtResolveMapper.saveHtResolve(htResolve);
         }
         logger.info("产值和小计,保存更新成功=======");
         return true;

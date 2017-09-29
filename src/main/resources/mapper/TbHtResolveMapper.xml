@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbHtResolveMapper" >
     <insert id="saveHtResolve" parameterType="com.trasen.tsproject.model.TbHtResolve" useGeneratedKeys="true" keyProperty="pkid">
-        insert into tb_ht_resolve(pro_code,price,subtotal,output_value,created,updated,operator,ht_no,pro_man) values(#{proCode},#{price},#{subtotal},#{outputValue},#{created},#{updated},#{operator},#{htNo},#{proMan})
+        insert into tb_ht_resolve(pro_code,price,subtotal,output_value,created,updated,operator,ht_no,pro_man) values(#{proCode},#{price},#{subtotal},#{outputValue},now(),#{updated},#{operator},#{htNo},#{proMan})
     </insert>
     <select id="queryHtResolve" parameterType="String" resultType="com.trasen.tsproject.model.TbHtResolve">
         select p.dep_name,p.dep_id,p.pro_name,r.* from tb_ht_resolve r join tb_product p on r.pro_code = p.pro_code where r.ht_no=#{htNo} order by p.dep_id
