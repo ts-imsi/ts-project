@@ -121,22 +121,13 @@ public class ContractProductService {
     /*
     * 同步合同模块
     * */
-    public Map<String,Object> synchroHtModuleByContract(String contractNo,String hospitalLevel,double contractPrice){
+    public boolean synchroHtModuleByContract(String contractNo,String hospitalLevel){
         Map<String,Object> paramMap=new HashMap<String,Object>();
         String product_imis = env.getProperty("product_imis");
         if(product_imis==null){
-            paramMap.put("success",false);
-            paramMap.put("message","product_imis参数错误");
-            logger.info("合同列表查询失败，product_imis参数错误");
-            return paramMap;
+            return false;
         }
-        List<TbHtModule> tbHtModuleList= tbHtModuleMapper.selectModuleByHtNo(contractNo);
-        if(tbHtModuleList.size()>0){
-            paramMap.put("success",false);
-            paramMap.put("message","数据已存在不需要同步");
-            logger.info("数据已存在不需要同步=======");
-            return paramMap;
-        }
+        tbHtModuleMapper.deleteHtModule(contractNo);
         Map<String,String> jsonmap=new HashMap<String,String>();
         jsonmap.put("contractNo",contractNo);
         String parameterJson = JSONObject.toJSONString(jsonmap);
@@ -164,18 +155,13 @@ public class ContractProductService {
                 }else{
                     htModule.setPrice(tbProModulePrice.getStandardPrice());
                 }
-                tbHtModuleList1.add(htModule);
+                tbHtModuleMapper.saveHtModule(htModule);
             }
-            boolean boo=getOutputValueOrSubtotal(tbHtModuleList1,contractNo,contractPrice);
+            //boolean boo=getOutputValueOrSubtotal(tbHtModuleList1,contractNo,contractPrice);
             logger.info("数据同步成功=======");
-            paramMap.put("messge","数据同步成功");
-            paramMap.put("success",true);
-            return paramMap;
+            return true;
         }else{
-            logger.info("查询数据失败=======");
-            paramMap.put("messge","查询数据失败");
-            paramMap.put("success",false);
-            return paramMap;
+            return false;
         }
 
     }
@@ -184,15 +170,18 @@ public class ContractProductService {
     * 计算产值，小计和保存合同模块，合同分解
     * */
     @Transactional(rollbackFor=Exception.class)
-    public boolean getOutputValueOrSubtotal(List<TbHtModule> tbHtModuleList,String htNo,double contractPrice){
+    public boolean getOutputValueOrSubtotal(String htNo,double contractPrice){
+        List<TbHtModule> tbHtModuleList=tbHtModuleMapper.selectModuleByHtNo(htNo);
+        if(tbHtModuleList.size()==0){
+            return false;
+        }
         double standardPriceCount=0;
-        tbHtModuleMapper.deleteHtModule(htNo);
         tbHtResolveMapper.deleteHtResolve(htNo);
         Map<String, String> map = new HashMap<String, String>();
         for(TbHtModule tbHtModule:tbHtModuleList){
             standardPriceCount=standardPriceCount+Double.valueOf(tbHtModule.getPrice());
             map.put(tbHtModule.getProCode(),tbHtModule.getProCode());
-            tbHtModuleMapper.saveHtModule(tbHtModule);
+
         }
         Collection<String> valueCollection = map.values();
         List<String> procodeList = new ArrayList<String>(valueCollection);
