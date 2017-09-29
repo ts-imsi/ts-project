@@ -14,6 +14,11 @@ public class TbHtResolve {
     private Integer pkid;
 
     /**
+     *合同编号
+     */
+    private String htNo;
+
+    /**
      * 产品ID
      */
     private String proCode;
