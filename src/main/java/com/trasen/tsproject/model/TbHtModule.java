@@ -21,7 +21,7 @@ public class TbHtModule {
     /**
      * 产品ID
      */
-    private String proId;
+    private String proCode;
 
     /**
      * 模块ID

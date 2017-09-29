@@ -16,7 +16,7 @@ public class TbHtResolve {
     /**
      * 产品ID
      */
-    private String proId;
+    private String proCode;
 
     /**
      * 模块累计价格
