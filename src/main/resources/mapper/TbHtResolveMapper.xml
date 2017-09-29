@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbHtResolveMapper" >
+    <insert id="saveHtResolve" parameterType="com.trasen.tsproject.model.TbHtResolve" useGeneratedKeys="true" keyProperty="pkid">
+        insert into tb_ht_resolve(pro_code,price,subtotal,output_value,created,updated,operator,ht_no,pro_man) values(#{proCode},#{price},#{subtotal},#{outputValue},#{created},#{updated},#{operator},#{htNo},#{proMan})
+    </insert>
 
+    <delete id="deleteHtResolve" parameterType="String">
+        delete from tb_ht_resolve where ht_no=#{htNo}
+    </delete>
+
+    <update id="updateHtResolve" parameterType="com.trasen.tsproject.model.TbHtResolve">
+        update tb_ht_resolve set subtotal=#{subtotal},output_value=#{outputValue} where pkid=#{pkid}
+    </update>
 </mapper>

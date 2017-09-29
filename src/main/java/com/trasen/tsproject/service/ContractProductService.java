@@ -1,7 +1,13 @@
 package com.trasen.tsproject.service;
 
 
+import com.trasen.tsproject.dao.TbHtModuleMapper;
+import com.trasen.tsproject.dao.TbHtResolveMapper;
+import com.trasen.tsproject.dao.TbProModulePriceMapper;
 import com.trasen.tsproject.model.ContractInfo;
+import com.trasen.tsproject.model.TbHtModule;
+import com.trasen.tsproject.model.TbHtResolve;
+import com.trasen.tsproject.model.TbProModulePrice;
 import com.trasen.tsproject.util.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -10,14 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author luoyun
@@ -31,6 +34,24 @@ public class ContractProductService {
 
     @Autowired
     private Environment env;
+
+    /*
+    * 合同模块
+    * */
+    @Autowired
+    private TbHtModuleMapper tbHtModuleMapper;
+
+    /*
+    * 合同分解
+    * */
+    @Autowired
+    private TbHtResolveMapper tbHtResolveMapper;
+
+    /*
+    * 标准价
+    * */
+    @Autowired
+    private TbProModulePriceMapper tbProModulePriceMapper;
 
     public Map<String,Object> getcontractTransenList(Map<String,String> param){
         Map<String,Object> paramMap=new HashMap<String,Object>();
@@ -96,7 +117,7 @@ public class ContractProductService {
         }
     }
 
- /*   public Map<String,Object> getProductByContract(String contractNo,String hospitalLevel,double contractPrice){
+    public Map<String,Object> synchroHtModuleByContract(String contractNo,String hospitalLevel,double contractPrice){
         Map<String,Object> paramMap=new HashMap<String,Object>();
         String product_imis = env.getProperty("product_imis");
         if(product_imis==null){
@@ -105,123 +126,112 @@ public class ContractProductService {
             logger.info("合同列表查询失败，product_imis参数错误");
             return paramMap;
         }
-        if(contractNo!=null){
-            List<TbHtProduct> tbHtProductList=tbHtProductMapper.selectTbHtProductByHtNo(contractNo);
-            if(tbHtProductList.size()>0){
-                paramMap.put("list",tbHtProductList);
-                paramMap.put("success",true);
-                return paramMap;
-            }
-            Map<String,String> jsonmap=new HashMap<String,String>();
-            jsonmap.put("contractNo",contractNo);
-            String parameterJson = JSONObject.toJSONString(jsonmap);
-            String json= HttpUtil.connectURL(product_imis,parameterJson,"POST");
-            JSONObject dataJson = (JSONObject) JSONObject.parse(json);
-            if(dataJson.getBoolean("success")) {
-                JSONArray jsonArray = dataJson.getJSONArray("list");
-                List<TbHtProduct> tbHtProductList1=new ArrayList<TbHtProduct>();
-                for(java.util.Iterator tor=jsonArray.iterator();tor.hasNext();){
-                    TbProModulePrice tbProModulePrice=new TbProModulePrice();
-                    TbHtProduct tbHtProduct=new TbHtProduct();
-                    JSONObject jsonObject = (JSONObject)tor.next();
-                    tbHtProduct.setHtNo(jsonObject.getString("contractNo"));
-                    tbHtProduct.setProductId(String.valueOf(jsonObject.getInteger("productId")));
-                    tbHtProduct.setProductName(jsonObject.getString("productName"));
-
-                    //根据医院等级和产品列表查询标准价
-                    tbProModulePrice.setHospitalLevel(hospitalLevel);
-                    tbProModulePrice.setModId(String.valueOf(jsonObject.getInteger("productId")));
-                    tbProModulePrice= tbProModulePriceMapper.selectStandardPrice(tbProModulePrice);
-
-                    //计算产值和小计
-                    if(tbProModulePrice==null){
-                        tbHtProduct.setStandardPrice(1.0);
-                    }else{
-                        tbHtProduct.setStandardPrice(Double.valueOf(tbProModulePrice.getStandardPrice()));
-                    }
-                    //修改add
-                    tbHtProductList1.add(tbHtProduct);
-                }
-                logger.info("根据合同查询产品列表成功=======");
-                paramMap.put("list",tbHtProductList1);
-                paramMap.put("success",true);
-                return paramMap;
-            }else{
-                paramMap.put("message","根据合同查询产品列表失败");
-                paramMap.put("success",false);
-                logger.info("根据合同查询产品列表失败=======");
-                return paramMap;
-            }
-        }else{
-            paramMap.put("message","合同号为空");
+        List<TbHtModule> tbHtModuleList= tbHtModuleMapper.selectModuleByHtNo(contractNo);
+        if(tbHtModuleList.size()>0){
             paramMap.put("success",false);
-            logger.info("合同号为空，请检查传入参数=======");
+            paramMap.put("message","数据已存在不需要同步");
+            logger.info("数据已存在不需要同步=======");
             return paramMap;
         }
-    }
+        Map<String,String> jsonmap=new HashMap<String,String>();
+        jsonmap.put("contractNo",contractNo);
+        String parameterJson = JSONObject.toJSONString(jsonmap);
+        String json= HttpUtil.connectURL(product_imis,parameterJson,"POST");
+        JSONObject dataJson = (JSONObject) JSONObject.parse(json);
+        if(dataJson.getBoolean("success")) {
+            JSONArray jsonArray = dataJson.getJSONArray("list");
+            List<TbHtModule> tbHtModuleList1=new ArrayList<TbHtModule>();
+            for(java.util.Iterator tor=jsonArray.iterator();tor.hasNext();){
+                TbHtModule htModule=new TbHtModule();
+                TbProModulePrice tbProModulePrice=new TbProModulePrice();
+                JSONObject jsonObject = (JSONObject)tor.next();
+                htModule.setHtNo(jsonObject.getString("contractNo"));
+                htModule.setModId(jsonObject.getString("productId"));
+                htModule.setProCode(jsonObject.getString("type"));
+                htModule.setCreated(new Date());
 
-    public Map<String,Object> updateProductByContract(String contractNo,int pkid,double contractPrice,double standardPrice){
-        Map<String,Object> paramMap=new HashMap<String,Object>();
-        List<TbHtProduct> tbHtProductList=tbHtProductMapper.selectTbHtProductByHtNo(contractNo);
-        for(int i=0;i<tbHtProductList.size();i++){
-            if(pkid==tbHtProductList.get(i).getPkid()){
-                tbHtProductList.get(i).setStandardPrice(standardPrice);
-            }
-        }
-        List<TbHtProduct> tbHtProducts=getOutputValueOrSubtotal(tbHtProductList,contractPrice);
-        logger.info("标准价更新成功=============");
-        paramMap.put("list",tbHtProducts);
-        paramMap.put("success",true);
-        return paramMap;
-    }
+                tbProModulePrice.setModId(jsonObject.getString("productId"));
+                tbProModulePrice.setHospitalLevel(hospitalLevel);
+                tbProModulePrice=tbProModulePriceMapper.selectStandardPrice(tbProModulePrice);
 
-    *//**
-     * 计算产值和小计，保存，更新合同产品表
-     *//*
-    @Transactional(rollbackFor=Exception.class)
-    public List<TbHtProduct> getOutputValueOrSubtotal(List<TbHtProduct> tbHtProductList,double contractPrice){
-        double standardPriceCount=0;
-        for(TbHtProduct tbHtProduct:tbHtProductList){
-            standardPriceCount=standardPriceCount+Double.valueOf(tbHtProduct.getStandardPrice());
-        }
-        int outPutCount=0;
-
-        for(TbHtProduct tbHtProduct:tbHtProductList){
-                double output_value=Double.valueOf(tbHtProduct.getStandardPrice())/standardPriceCount;
-                BigDecimal  bigDecimal=new BigDecimal(output_value);
-                output_value=bigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-                double subtotal=output_value*contractPrice;
-                BigDecimal  bigDec=new BigDecimal(subtotal);
-                subtotal=bigDec.setScale(4,BigDecimal.ROUND_HALF_UP).doubleValue();
-                outPutCount=outPutCount+(int)(output_value*100);
-                String  output_values=output_value*100+"%";
-                tbHtProduct.setSubtotal(subtotal);
-                tbHtProduct.setOutputValue(output_values);
-                if(tbHtProduct.getPkid()!=null){
-                    tbHtProductMapper.updateTbHtProduct(tbHtProduct);
-                    logger.info("合同更新成功=======");
+                //设置标准价
+                if(tbProModulePrice==null){
+                    htModule.setPrice(1.0);
                 }else{
-                    tbHtProductMapper.saveTbHtProduct(tbHtProduct);
-                    logger.info("合同保存成功=======");
+                    htModule.setPrice(tbProModulePrice.getStandardPrice());
                 }
-
+                tbHtModuleList1.add(htModule);
+            }
+            boolean boo=getOutputValueOrSubtotal(tbHtModuleList1,contractNo,contractPrice);
+            logger.info("数据同步成功=======");
+            paramMap.put("messge","数据同步成功");
+            paramMap.put("success",true);
+            return paramMap;
+        }else{
+            logger.info("查询数据失败=======");
+            paramMap.put("messge","查询数据失败");
+            paramMap.put("success",false);
+            return paramMap;
         }
-        if(tbHtProductList.size()>0){
-            if (100 - outPutCount != 0) {
-                outPutCount = 100 - outPutCount;
-                for (int i = 0; i < outPutCount; i++) {
-                    String out = tbHtProductList.get(i).getOutputValue().substring(0, tbHtProductList.get(i).getOutputValue().length() - 1);
-                    int out_l = Double.valueOf(out).intValue() + 1;
-                    tbHtProductList.get(i).setOutputValue(out_l + "%");
-                    double subtotal_js = out_l * 0.01 * contractPrice;
-                    BigDecimal big_dou = new BigDecimal(subtotal_js);
-                    subtotal_js = big_dou.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
-                    tbHtProductList.get(i).setSubtotal(subtotal_js);
-                    tbHtProductMapper.updateTbHtProduct(tbHtProductList.get(i));
+
+    }
+
+    @Transactional(rollbackFor=Exception.class)
+    public boolean getOutputValueOrSubtotal(List<TbHtModule> tbHtModuleList,String htNo,double contractPrice){
+        double standardPriceCount=0;
+        tbHtModuleMapper.deleteHtModule(htNo);
+        tbHtResolveMapper.deleteHtResolve(htNo);
+        Map<String, String> map = new HashMap<String, String>();
+        for(TbHtModule tbHtModule:tbHtModuleList){
+            standardPriceCount=standardPriceCount+Double.valueOf(tbHtModule.getPrice());
+            map.put(tbHtModule.getProCode(),tbHtModule.getProCode());
+            tbHtModuleMapper.saveHtModule(tbHtModule);
+        }
+        Collection<String> valueCollection = map.values();
+        List<String> procodeList = new ArrayList<String>(valueCollection);
+        List<TbHtResolve> tbHtResolveList=new ArrayList<TbHtResolve>();
+        int outPutCount=0;
+        for(int i=0;i<procodeList.size();i++){
+            TbHtResolve tbHtResolve=new TbHtResolve();
+            double pro_doc=0;
+            tbHtResolve.setHtNo(htNo);
+            for(int j=0;j<tbHtModuleList.size();j++){
+                if(procodeList.get(i).equals(tbHtModuleList.get(j).getProCode())){
+                    pro_doc=pro_doc+tbHtModuleList.get(j).getPrice();
                 }
+            }
+            //计算产品产值
+            double price_output=pro_doc/standardPriceCount;
+            BigDecimal bigDecimal=new BigDecimal(price_output);
+            price_output=bigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+            outPutCount=outPutCount+(int)(price_output*100);
+            //计算产品小计
+            double subtotal=price_output*contractPrice;
+            BigDecimal  bigDec=new BigDecimal(subtotal);
+            subtotal=bigDec.setScale(4,BigDecimal.ROUND_HALF_UP).doubleValue();
+
+            tbHtResolve.setPrice(pro_doc);
+            tbHtResolve.setProCode(procodeList.get(i));
+            tbHtResolve.setSubtotal(subtotal);
+            tbHtResolve.setCreated(new Date());
+            tbHtResolve.setOutputValue(price_output*100+"%");
+            tbHtResolveMapper.saveHtResolve(tbHtResolve);
+            tbHtResolveList.add(tbHtResolve);
+        }
+
+        if(tbHtResolveList.size()>0&&100 - outPutCount!=0){
+            for (int k = 0; k < outPutCount; k++) {
+                String out=tbHtResolveList.get(k).getOutputValue().substring(0, tbHtResolveList.get(k).getOutputValue().length() - 1);
+                int out_l = Double.valueOf(out).intValue() + 1;
+                tbHtResolveList.get(k).setOutputValue(out_l + "%");
+                double subtotal_js = out_l * 0.01 * contractPrice;
+                BigDecimal big_dou = new BigDecimal(subtotal_js);
+                subtotal_js = big_dou.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+                tbHtResolveList.get(k).setSubtotal(subtotal_js);
+                tbHtResolveMapper.updateHtResolve(tbHtResolveList.get(k));
             }
         }
         logger.info("产值和小计,保存更新成功=======");
-        return tbHtProductList;
-    }*/
+        return true;
+    }
 }

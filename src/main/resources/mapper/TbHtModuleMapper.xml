@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbHtModuleMapper" >
+    <select id="selectModuleByHtNo" resultType="com.trasen.tsproject.model.TbHtModule" parameterType="String">
+        select * from tb_ht_module where ht_no=#{htNo}
+    </select>
 
+    <insert id="saveHtModule" parameterType="com.trasen.tsproject.model.TbHtModule" useGeneratedKeys="true" keyProperty="pkid">
+        insert into tb_ht_module(ht_no,pro_code,mod_id,price,updated,created,operator) values(#{htNo},#{proCode},#{modId},#{price},#{updated},#{created},#{operator})
+    </insert>
+    
+    <delete id="deleteHtModule" parameterType="String">
+        delete from tb_ht_module where ht_no=#{htNo}
+    </delete>
 </mapper>
