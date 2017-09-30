@@ -5,6 +5,7 @@ import cn.trasen.core.entity.Result;
 import com.trasen.tsproject.model.TbHtModule;
 import com.trasen.tsproject.model.TbHtResolve;
 import com.trasen.tsproject.service.ContractProductService;
+import com.trasen.tsproject.util.JsonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.ObjDoubleConsumer;
 
 /**
  * @author luoyun
@@ -74,18 +76,36 @@ public class ContractProductController {
     }
 
     @RequestMapping(value="/updateModulePrice",method = RequestMethod.POST)
-    public Result updateModulePrice(@RequestBody List<TbHtModule> htModuleList) {
+    public Result updateModulePrice(@RequestBody Map<String,Object> param) {
         Result result=new Result();
         result.setSuccess(false);
         try {
+
+            if(param==null){
+                result.setMessage("参数错误");
+                return result;
+            }
+
+            if(param.get("htModuleList")==null){
+                result.setMessage("模块数据为空，请查看数据是否正确");
+                return result;
+            }
+
+            List<TbHtModule> htModuleList = JsonUtil.parseJsonList(JsonUtil.toJsonStr(param.get("htModuleList")),TbHtModule.class);
+
             if(htModuleList==null||htModuleList.size()==0){
                 result.setMessage("参数错误");
                 return result;
             }
+            if(param.get("contractPrice")==null){
+                result.setMessage("合同金额为空，请查看数据是否正确");
+                return result;
+            }
+
             boolean boo = contractProductService.updateModulePrice(htModuleList);
             if(boo){
                 //计算产值
-                contractProductService.getOutputValueOrSubtotal(htModuleList.get(1).getHtNo(),htModuleList.get(1).getContractPrice());
+                contractProductService.getOutputValueOrSubtotal(htModuleList.get(1).getHtNo(),Double.parseDouble(param.get("contractPrice").toString()));
             }
             List<TbHtResolve> resolveList = contractProductService.queryHtResolve(htModuleList.get(1).getHtNo());
             result.setSuccess(boo);

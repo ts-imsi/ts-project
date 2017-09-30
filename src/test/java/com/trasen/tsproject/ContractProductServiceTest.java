@@ -42,8 +42,8 @@ public class ContractProductServiceTest {
     @Test
     @Rollback(true)
     public void synchroHtModuleByContract(){
-        Map<String,Object> paramMap= contractProductService.synchroHtModuleByContract("B14011","0",33);
-        System.out.println("=========="+paramMap.get("success"));
+        boolean boo = contractProductService.synchroHtModuleByContract("B14011","0");
+        System.out.println("=========="+boo);
     }
 
 }

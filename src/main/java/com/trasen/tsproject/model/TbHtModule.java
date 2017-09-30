@@ -50,6 +50,5 @@ public class TbHtModule {
 
     private String modName;
 
-    private double contractPrice;
 
 }
