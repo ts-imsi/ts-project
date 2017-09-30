@@ -105,9 +105,9 @@ public class ContractProductController {
             boolean boo = contractProductService.updateModulePrice(htModuleList);
             if(boo){
                 //计算产值
-                contractProductService.getOutputValueOrSubtotal(htModuleList.get(1).getHtNo(),Double.parseDouble(param.get("contractPrice").toString()));
+                contractProductService.getOutputValueOrSubtotal(htModuleList.get(0).getHtNo(),Double.parseDouble(param.get("contractPrice").toString()));
             }
-            List<TbHtResolve> resolveList = contractProductService.queryHtResolve(htModuleList.get(1).getHtNo());
+            List<TbHtResolve> resolveList = contractProductService.queryHtResolve(htModuleList.get(0).getHtNo());
             result.setSuccess(boo);
             result.setObject(resolveList);
         }catch (Exception e) {
