@@ -210,6 +210,10 @@ public class ContractProductService {
             outPutCount=outPutCount+(int)(price_output*100);
             htResolve.setOutputValue((int)(price_output*100)+"%");
             double subtotal=price_output*contractPrice;
+
+            BigDecimal bigDec=new BigDecimal(subtotal);
+            subtotal=bigDec.setScale(2,BigDecimal.ROUND_DOWN).doubleValue();
+
             htResolve.setSubtotal(subtotal);
         }
         //平均分配余量
@@ -219,6 +223,10 @@ public class ContractProductService {
                 int out_l = Double.valueOf(out).intValue() + 1;
                 htResolveList.get(k).setOutputValue(out_l + "%");
                 double subtotal_js = out_l * 0.01 * contractPrice;
+
+                BigDecimal bigDec_js=new BigDecimal(subtotal_js);
+                subtotal_js=bigDec_js.setScale(2,BigDecimal.ROUND_DOWN).doubleValue();
+
                 htResolveList.get(k).setSubtotal(subtotal_js);
             }
         }
