@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -200,6 +201,7 @@ public class ContractProductService {
         List<TbHtResolve> htResolveList = new ArrayList<>();
         htResolveList.addAll(htResolveListT);
         DecimalFormat df = new DecimalFormat("#.00");
+        df.setRoundingMode(RoundingMode.DOWN);
         //计算产值
         int outPutCount=0;
         for(TbHtResolve htResolve : htResolveList){
