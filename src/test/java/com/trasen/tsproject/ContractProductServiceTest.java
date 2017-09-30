@@ -42,7 +42,14 @@ public class ContractProductServiceTest {
     @Test
     @Rollback(true)
     public void synchroHtModuleByContract(){
-        boolean boo = contractProductService.synchroHtModuleByContract("B14011","0");
+        boolean boo = contractProductService.synchroHtModuleByContract("A16002-1","0");
+        System.out.println("=========="+boo);
+    }
+
+    @Test
+    @Rollback(true)
+    public void getOutputValueOrSubtotal(){
+        boolean boo= contractProductService.getOutputValueOrSubtotal("B14011",33);
         System.out.println("=========="+boo);
     }
 
