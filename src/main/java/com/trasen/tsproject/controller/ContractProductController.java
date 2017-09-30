@@ -147,6 +147,36 @@ public class ContractProductController {
     }
 
 
+    @RequestMapping(value="/updateResolveTotal",method = RequestMethod.POST)
+    public Result updateResolveTotal(@RequestBody  Map<String,Object> param) {
+        Result result=new Result();
+        result.setSuccess(false);
+        try {
+
+            if(param==null){
+                result.setMessage("参数错误");
+                return result;
+            }
+
+            if(param.get("htResolveList")==null){
+                result.setMessage("分解数据为空，请查看数据是否正确");
+                return result;
+            }
+
+            List<TbHtResolve> htResolveList = JsonUtil.parseJsonList(JsonUtil.toJsonStr(param.get("htResolveList")),TbHtResolve.class);
+
+
+            boolean boo = contractProductService.updateResolveTotal(htResolveList);
+            result.setSuccess(boo);
+        }catch (Exception e) {
+            logger.error("修改产值异常" + e.getMessage(), e);
+            result.setSuccess(false);
+            result.setMessage("修改产值失败");
+        }
+        return  result;
+    }
+
+
 
 
 

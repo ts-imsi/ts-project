@@ -214,6 +214,7 @@ public class ContractProductService {
             subtotal=Double.valueOf(df.format(subtotal));
 
             htResolve.setSubtotal(subtotal);
+            htResolve.setTotal(subtotal);
         }
         //平均分配余量
         if(htResolveList.size()>0&&100 - outPutCount>0&&100 - outPutCount<htResolveList.size()){
@@ -225,6 +226,7 @@ public class ContractProductService {
                 subtotal_js=Double.valueOf(df.format(subtotal_js));
 
                 htResolveList.get(k).setSubtotal(subtotal_js);
+                htResolveList.get(k).setTotal(subtotal_js);
             }
         }
         //保存产值
@@ -264,5 +266,19 @@ public class ContractProductService {
          }
          return boo;
      }
+
+     public boolean updateResolveTotal(List<TbHtResolve> htResolveList){
+         boolean boo = false;
+         if(htResolveList!=null){
+             for (TbHtResolve htResolve : htResolveList){
+                 htResolve.setOperator(VisitInfoHolder.getUserId());
+                 tbHtResolveMapper.updateResolveTotal(htResolve);
+             }
+             boo = true;
+         }
+         return boo;
+     }
+
+
 
 }

@@ -33,6 +33,8 @@ public class TbHtResolve {
      */
     private Double subtotal;
 
+    private Double total;
+
     /**
      * 占比
      */
