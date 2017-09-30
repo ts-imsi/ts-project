@@ -24,7 +24,11 @@
         update tb_ht_handover set status=1,updated=now(),operator=#{operator}  where ht_no=#{htNo}
     </update>
 
-
+    <select id="getHtHandoverList" parameterType="com.trasen.tsproject.model.TbHtHandover" resultType="com.trasen.tsproject.model.TbHtHandover">
+        select * from tb_ht_handover where 1=1
+        <if test="htNo!=null">and (ht_no like CONCAT('%',#{htNo},'%') or ht_name like CONCAT('%',#{htName},'%') or customer_name like CONCAT('%',#{customerName},'%'))</if>
+        <if test="type!=null"> and `type`=#{type}</if>
+    </select>
 
 
 

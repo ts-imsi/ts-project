@@ -2,6 +2,8 @@ package com.trasen.tsproject.service;
 
 import cn.trasen.commons.util.StringUtil;
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbHtHandoverMapper;
 import com.trasen.tsproject.model.ContractInfo;
@@ -146,13 +148,11 @@ public class HandoverService {
     }
 
 
+    public PageInfo<TbHtHandover> getHtHandoverList(int page,int rows,TbHtHandover tbHtHandover){
+        PageHelper.startPage(page,rows);
+        List<TbHtHandover> tbHtHandoverList=htHandoverMapper.getHtHandoverList(tbHtHandover);
+        PageInfo<TbHtHandover> pagehelper = new PageInfo<TbHtHandover>(tbHtHandoverList);
+        return pagehelper;
 
-
-
-
-
-
-
-
-
+    }
 }

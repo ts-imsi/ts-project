@@ -1,6 +1,8 @@
 package com.trasen.tsproject.controller;
 
+import cn.trasen.commons.util.StringUtil;
 import cn.trasen.core.entity.Result;
+import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.model.ContractInfo;
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbTemplate;
@@ -11,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by zhangxiahui on 17/9/27.
@@ -87,7 +92,39 @@ public class HandoverController {
         return  result;
     }
 
-
+    @RequestMapping(value="/getHtHandoverList",method = RequestMethod.POST)
+    public Map<String,Object> getHtHandoverList(@RequestBody Map<String,String> param){
+        Map<String,Object> paramMap=new HashMap<String,Object>();
+        try {
+            if(param.get("page")==null||param.get("rows")==null){
+                paramMap.put("messages","参数错误");
+                paramMap.put("success",false);
+                return paramMap;
+            }
+            TbHtHandover tbHtHandover=new TbHtHandover();
+            if(!StringUtil.isEmpty(param.get("selectName"))){
+                tbHtHandover.setHtNo(param.get("selectName"));
+                tbHtHandover.setHtName(param.get("selectName"));
+                tbHtHandover.setCustomerName(param.get("selectName"));
+            }
+            if(!StringUtil.isEmpty(param.get("selectType"))){
+                tbHtHandover.setType(param.get("selectType"));
+            }
+            PageInfo<TbHtHandover> tbHtHandoverPageInfo=handoverService.getHtHandoverList(Integer.valueOf(param.get("page")),Integer.valueOf(param.get("rows")),tbHtHandover);
+            logger.info("数据查询条数"+tbHtHandoverPageInfo.getList().size());
+            paramMap.put("totalPages",tbHtHandoverPageInfo.getPages());
+            paramMap.put("pageNo",tbHtHandoverPageInfo.getPageNum());
+            paramMap.put("totalCount",tbHtHandoverPageInfo.getTotal());
+            paramMap.put("pageSize",tbHtHandoverPageInfo.getPageSize());
+            paramMap.put("list",tbHtHandoverPageInfo.getList());
+            paramMap.put("success",true);
+            return paramMap;
+        }catch (Exception e) {
+            paramMap.put("messages","查询交接单错误");
+            paramMap.put("success",false);
+            return paramMap;
+        }
+    }
 
 
 
