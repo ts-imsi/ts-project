@@ -199,20 +199,17 @@ public class ContractProductService {
         Collection<TbHtResolve> htResolveListT = htResolveMap.values();
         List<TbHtResolve> htResolveList = new ArrayList<>();
         htResolveList.addAll(htResolveListT);
-
+        DecimalFormat df = new DecimalFormat("#.00");
         //计算产值
         int outPutCount=0;
         for(TbHtResolve htResolve : htResolveList){
             //计算产品产值
             double price_output=htResolve.getPrice()/standardPriceCount;
-            BigDecimal bigDecimal=new BigDecimal(price_output);
-            price_output=bigDecimal.setScale(2,BigDecimal.ROUND_DOWN).doubleValue();
+            price_output=Double.valueOf(df.format(price_output));
             outPutCount=outPutCount+(int)(price_output*100);
             htResolve.setOutputValue((int)(price_output*100)+"%");
             double subtotal=price_output*contractPrice;
-
-            BigDecimal bigDec=new BigDecimal(subtotal);
-            subtotal=bigDec.setScale(2,BigDecimal.ROUND_DOWN).doubleValue();
+            subtotal=Double.valueOf(df.format(subtotal));
 
             htResolve.setSubtotal(subtotal);
         }
@@ -223,9 +220,7 @@ public class ContractProductService {
                 int out_l = Double.valueOf(out).intValue() + 1;
                 htResolveList.get(k).setOutputValue(out_l + "%");
                 double subtotal_js = out_l * 0.01 * contractPrice;
-
-                BigDecimal bigDec_js=new BigDecimal(subtotal_js);
-                subtotal_js=bigDec_js.setScale(2,BigDecimal.ROUND_DOWN).doubleValue();
+                subtotal_js=Double.valueOf(df.format(subtotal_js));
 
                 htResolveList.get(k).setSubtotal(subtotal_js);
             }
