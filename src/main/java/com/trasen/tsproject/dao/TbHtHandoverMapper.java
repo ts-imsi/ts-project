@@ -16,4 +16,6 @@ public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
     int submitHandover(TbHtHandover tbHtHandover);
 
     List<TbHtHandover> getHtHandoverList(TbHtHandover tbHtHandover);
+
+    TbHtHandover getHandoverToPkid(Integer pkid);
 }

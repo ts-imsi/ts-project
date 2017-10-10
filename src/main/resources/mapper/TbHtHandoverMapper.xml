@@ -5,6 +5,11 @@
         select * from tb_ht_handover where ht_no = #{htNo} limit 1
     </select>
 
+    <select id="getHandoverToPkid" parameterType="Integer" resultType="com.trasen.tsproject.model.TbHtHandover">
+        select * from tb_ht_handover where pkid=#{pkid} limit 1
+    </select>
+
+
     <insert id="insertHandover" parameterType="com.trasen.tsproject.model.TbHtHandover">
         insert into tb_ht_handover (ht_no,ht_name,customer_name,`type`,status,ht_owner,
         sign_date,pro_manager,pro_phone,content,created,create_user) values

@@ -6,15 +6,14 @@ import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.model.ContractInfo;
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbTemplate;
+import com.trasen.tsproject.model.TempDataVo;
 import com.trasen.tsproject.service.HandoverService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -124,6 +123,27 @@ public class HandoverController {
             paramMap.put("success",false);
             return paramMap;
         }
+    }
+
+    @RequestMapping(value="/getHandover/{pkid}",method = RequestMethod.GET)
+    public Result getTemplate(@PathVariable Integer pkid){
+        //结果集
+        Result result = new Result();
+        result.setStatusCode(0);
+        result.setSuccess(false);
+        try {
+            List<TempDataVo> list = handoverService.getTempDataList(pkid);
+            result.setObject(list);
+            result.setSuccess(true);
+            result.setStatusCode(1);
+        } catch (IllegalArgumentException e) {
+            logger.error("获取交接单模板数据异常" + e.getMessage(), e);
+            result.setMessage(e.getMessage());
+        } catch (Exception e) {
+            logger.error("获取交接单模板数据异常" + e.getMessage(), e);
+            result.setMessage(e.getMessage());
+        }
+        return result;
     }
 
 
