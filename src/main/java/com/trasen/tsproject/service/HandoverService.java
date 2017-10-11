@@ -6,16 +6,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbHtHandoverMapper;
-import com.trasen.tsproject.model.ContractInfo;
-import com.trasen.tsproject.model.TbHtHandover;
-import com.trasen.tsproject.model.TbTemplate;
-import com.trasen.tsproject.model.TbTemplateItem;
+import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.util.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by zhangxiahui on 17/9/27.
@@ -154,5 +151,70 @@ public class HandoverService {
         PageInfo<TbHtHandover> pagehelper = new PageInfo<TbHtHandover>(tbHtHandoverList);
         return pagehelper;
 
+    }
+
+    public TbHtHandover getHandoverToPkid(Integer pkid){
+        TbHtHandover tbHtHandover = null;
+        if(pkid != null){
+            tbHtHandover = htHandoverMapper.getHandoverToPkid(pkid);
+            if(tbHtHandover!=null&&tbHtHandover.getContent()!=null){
+                List<TbTemplateItem> list = JSON.parseArray(tbHtHandover.getContent(), TbTemplateItem.class);
+                tbHtHandover.setContentJson(list);
+            }
+        }
+        return tbHtHandover;
+    }
+
+    public List<TempDataVo> getTempDataList(Integer pkid){
+        List<TempDataVo> tempDataVoList = new ArrayList<>();
+        TbHtHandover htHandover = getHandoverToPkid(pkid);
+        if(htHandover!=null&&htHandover.getContentJson()!=null&&htHandover.getContentJson().size()>0){
+            Map<String,List<TempDataVo>> dataMap = new HashMap<>();
+            for(TbTemplateItem item : htHandover.getContentJson()){
+                if(item.getLevel()==0&&item.getInput()==null){
+                    //过滤非填写内容
+                    continue;
+                }
+                String module = item.getModule();
+                TempDataVo vo = new TempDataVo();
+                vo.setName(item.getName());
+                vo.setLength(10/item.getLevel());
+                vo.setValue(item.getValue());
+                if(module!=null&&dataMap.get(module)!=null){
+                    dataMap.get(module).add(vo);
+                }else if (module!=null&&dataMap.get(module)==null){
+                    List<TempDataVo> voList = new ArrayList<>();
+                    voList.add(vo);
+                    dataMap.put(module,voList);
+                }
+            }
+            Set<String> moduleSet = dataMap.keySet();
+            for(String module : moduleSet){
+                TempDataVo vo = new TempDataVo();
+                vo.setName(module);
+                List<TempDataVo> voList = dataMap.get(module);
+                Integer length = 0;
+                List<TempDataVo> tempList = new ArrayList<>();
+                for(TempDataVo data : voList){
+                    length = length + data.getLength();
+                    if(data.getLength()==5){
+                        tempList.add(data);
+                    }
+                }
+
+                if(length%10!=0){
+                    tempList.get(tempList.size()-1).setLength(10);
+                    length = length + 5;
+                }
+
+
+
+
+                vo.setLength(length);
+                vo.setVoList(voList);
+                tempDataVoList.add(vo);
+            }
+        }
+        return tempDataVoList;
     }
 }
