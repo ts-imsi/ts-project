@@ -28,6 +28,9 @@ public class HandoverService {
     @Autowired
     TemplateService templateService;
 
+    @Autowired
+    ContractProductService contractProductService;
+
     public TbHtHandover getHandoverToHtNo(String htNo){
         TbHtHandover tbHtHandover = null;
         if(!StringUtil.isEmpty(htNo)){
@@ -165,13 +168,46 @@ public class HandoverService {
         return tbHtHandover;
     }
 
-    public List<TempDataVo> getTempDataList(Integer pkid){
+    public Map<String,Object> getTempDataList(Integer pkid){
+        Map<String,Object> resultMap = new HashMap<>();
         List<TempDataVo> tempDataVoList = new ArrayList<>();
+        Double total = 0d;
+        List<TempDataVo> signList = new ArrayList<>();
         TbHtHandover htHandover = getHandoverToPkid(pkid);
         if(htHandover!=null&&htHandover.getContentJson()!=null&&htHandover.getContentJson().size()>0){
             Map<String,List<TempDataVo>> dataMap = new HashMap<>();
+
+            List<TempDataVo> deptList = new ArrayList<>();
+            Map<String,List<TempDataVo>> resolveMap = new HashMap<>();
             for(TbTemplateItem item : htHandover.getContentJson()){
                 if(item.getLevel()==0&&item.getInput()==null){
+                    if("htResolve".equals(item.getCode())){
+                        List<TbHtResolve> resolveList = contractProductService.queryHtResolve(htHandover.getHtNo());
+
+                        for(TbHtResolve tbHtResolve : resolveList){
+                            TempDataVo tempDataVo = new TempDataVo();
+                            tempDataVo.setName(tbHtResolve.getProName());
+                            tempDataVo.setValue(tbHtResolve.getOutputValue());
+                            tempDataVo.setTotal(tbHtResolve.getTotal());
+                            if(tbHtResolve.getTotal()!=null){
+                                total = total + tbHtResolve.getTotal();
+                            }
+                            if(resolveMap.get(tbHtResolve.getDepName())==null){
+                                List<TempDataVo> tempDataVos = new ArrayList<>();
+                                tempDataVos.add(tempDataVo);
+                                resolveMap.put(tbHtResolve.getDepName(),tempDataVos);
+                            }else{
+                                resolveMap.get(tbHtResolve.getDepName()).add(tempDataVo);
+                            }
+                        }
+
+
+                    }else{
+                        TempDataVo tempDataVo = new TempDataVo();
+                        tempDataVo.setName(item.getName());
+                        tempDataVo.setValue(item.getValue());
+                        signList.add(tempDataVo);
+                    }
                     //过滤非填写内容
                     continue;
                 }
@@ -206,15 +242,30 @@ public class HandoverService {
                     tempList.get(tempList.size()-1).setLength(10);
                     length = length + 5;
                 }
-
-
-
-
                 vo.setLength(length);
                 vo.setVoList(voList);
                 tempDataVoList.add(vo);
             }
+
+            Set<String> deptSet = resolveMap.keySet();
+            for(String dept : deptSet){
+                TempDataVo vo = new TempDataVo();
+                vo.setName(dept);
+                List<TempDataVo> voList = resolveMap.get(dept);
+                vo.setVoList(voList);
+                deptList.add(vo);
+            }
+            TempDataVo tempDataVo = new TempDataVo();
+            tempDataVo.setName("合同分解信息");
+            tempDataVo.setVoList(deptList);
+            tempDataVoList.add(tempDataVo);
+
+            resultMap.put("tempDataVoList",tempDataVoList);
+            resultMap.put("total",total);
+            resultMap.put("signList",signList);
+
+
         }
-        return tempDataVoList;
+        return resultMap;
     }
 }

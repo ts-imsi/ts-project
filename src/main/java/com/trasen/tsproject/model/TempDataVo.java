@@ -18,6 +18,8 @@ public class TempDataVo {
 
     public String value;
 
+    private Double total;
+
     public List<TempDataVo> voList;
 
 
