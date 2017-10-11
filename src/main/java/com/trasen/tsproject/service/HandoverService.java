@@ -171,6 +171,10 @@ public class HandoverService {
         if(htHandover!=null&&htHandover.getContentJson()!=null&&htHandover.getContentJson().size()>0){
             Map<String,List<TempDataVo>> dataMap = new HashMap<>();
             for(TbTemplateItem item : htHandover.getContentJson()){
+                if(item.getLevel()==0&&item.getInput()==null){
+                    //过滤非填写内容
+                    continue;
+                }
                 String module = item.getModule();
                 TempDataVo vo = new TempDataVo();
                 vo.setName(item.getName());
