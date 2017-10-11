@@ -132,8 +132,8 @@ public class HandoverController {
         result.setStatusCode(0);
         result.setSuccess(false);
         try {
-            List<TempDataVo> list = handoverService.getTempDataList(pkid);
-            result.setObject(list);
+            Map<String,Object> map = handoverService.getTempDataList(pkid);
+            result.setObject(map);
             result.setSuccess(true);
             result.setStatusCode(1);
         } catch (IllegalArgumentException e) {

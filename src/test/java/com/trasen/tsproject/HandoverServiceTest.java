@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhangxiahui on 17/10/9.
@@ -25,11 +26,9 @@ public class HandoverServiceTest {
 
     @Test
     public void getTempDataList(){
-        List<TempDataVo> list = handoverService.getTempDataList(1);
-        String str = JSON.toJSONString(list);
+        Map<String,Object> map = handoverService.getTempDataList(5);
+        String str = JSON.toJSONString(map);
         System.out.println(str);
-        for(TempDataVo vo : list){
-            System.out.println(vo.getName()+"=="+vo.getValue());
-        }
+
     }
 }
