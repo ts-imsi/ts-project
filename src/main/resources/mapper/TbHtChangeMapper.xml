@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.trasen.tsproject.dao.TbHtChangeMapper" >
+
+  <select id="getHtChangeList" parameterType="com.trasen.tsproject.model.TbHtChange" resultType="com.trasen.tsproject.model.TbHtChange">
+    select * from tb_ht_change where 1=1
+    <if test="htNo!=null">and (ht_no like CONCAT('%',#{htNo},'%') or ht_name like CONCAT('%',#{htName},'%') or customer_name like CONCAT('%',#{customerName},'%'))</if>
+    <if test="type!=null"> and `type`=#{type}</if>
+    <if test="status!=null"> and status=#{status}</if>
+  </select>
+</mapper>
