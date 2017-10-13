@@ -1,6 +1,7 @@
 package com.trasen.tsproject;
 
 
+import com.trasen.tsproject.model.ContractInfo;
 import com.trasen.tsproject.service.ContractProductService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +52,17 @@ public class ContractProductServiceTest {
     public void getOutputValueOrSubtotal(){
         boolean boo= contractProductService.getOutputValueOrSubtotal("B14011",33);
         System.out.println("=========="+boo);
+    }
+
+    @Test
+    @Rollback(true)
+    public void getOaContractListByOwner(){
+        Map<String,String> param=new HashMap<>();
+        param.put("contractOwner","周林燕");
+        List<ContractInfo> contractInfoList=contractProductService.getOaContractListByOwner(param);
+        for(ContractInfo contractInfo:contractInfoList){
+            System.out.println(contractInfo.getContractNo());
+        }
     }
 
 }

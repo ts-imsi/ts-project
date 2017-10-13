@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TbHtChangeMapper extends MyMapper<TbHtChange> {
     List<TbHtChange> getHtChangeList(TbHtChange tbHtChange);
+
+    int saveHtChange(TbHtChange tbHtChange);
 }

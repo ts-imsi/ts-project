@@ -29,4 +29,13 @@ public class TbHtChangeService {
         return pagehelper;
     }
 
+    public boolean applySubmit(TbHtChange tbHtChange){
+        boolean boo=false;
+        tbHtChangeMapper.saveHtChange(tbHtChange);
+        //TODO 启动流程
+        boo=true;
+        return boo;
+    }
+
+
 }

@@ -2,16 +2,14 @@ package com.trasen.tsproject.service;
 
 
 import cn.trasen.commons.util.StringUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbHtModuleMapper;
 import com.trasen.tsproject.dao.TbHtResolveMapper;
 import com.trasen.tsproject.dao.TbProModulePriceMapper;
-import com.trasen.tsproject.model.ContractInfo;
-import com.trasen.tsproject.model.TbHtModule;
-import com.trasen.tsproject.model.TbHtResolve;
-import com.trasen.tsproject.model.TbProModulePrice;
+import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.util.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,6 +115,28 @@ public class ContractProductService {
             paramMap.put("message","传入参数错误");
             logger.info("合同列表查询失败，传入参数错误");
             return paramMap;
+        }
+    }
+
+    /*
+    *
+    * */
+    public List<ContractInfo> getOaContractListByOwner(Map<String,String> param){
+        String parameterJson = JSONObject.toJSONString(param);
+        String contractOwen_imis = env.getProperty("contractOwen_imis");
+        if(contractOwen_imis==null){
+            logger.info("============"+"获取contractOwen_imis失败");
+            return null;
+        }
+        String json= HttpUtil.connectURL(contractOwen_imis,parameterJson,"POST");
+        JSONObject dataJson = (JSONObject) JSONObject.parse(json);
+        if(dataJson.getBoolean("success")){
+            String  jsonString=dataJson.getString("list");
+            List<ContractInfo> list = JSON.parseArray(jsonString, ContractInfo.class);
+            return list;
+        }else{
+            logger.info("============"+"查询数据失败");
+            return null;
         }
     }
 

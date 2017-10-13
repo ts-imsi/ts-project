@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.trasen.tsproject.dao.TbPersonnelMapper" >
+<select id="selectTbPersonnel" parameterType="String" resultType="com.trasen.tsproject.model.TbPersonnel">
+   select per.* from tb_personnel per,t_user t_u where  t_u.per_id=per.per_id and t_u.pkid=#{userId}
+</select>
+</mapper>
