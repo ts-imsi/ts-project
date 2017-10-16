@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.trasen.tsproject.dao.TbMsgMapper" >
+  <select id="selectTbMsg" parameterType="java.util.Map" resultType="com.trasen.tsproject.model.TbMsg">
+    SELECT
+    msg.*
+    FROM
+    tb_msg msg
+    LEFT JOIN tb_personnel per ON per.work_num = msg.work_num
+    LEFT JOIN t_user t_u ON t_u.per_id = per.per_id
+    where t_u.pkid=#{userId}
+    <if test="type!=null and type!=''"> and msg.`type`=#{type}</if>
+    <if test="status!=null and status!=''">and msg.status=#{status}</if>
+  </select>
+
+  <select id="getTbMsgById" parameterType="Integer" resultType="com.trasen.tsproject.model.TbMsg">
+    select * from tb_msg where pkid=#{pkid}
+  </select>
+
+</mapper>
