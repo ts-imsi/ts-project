@@ -14,4 +14,6 @@ public interface TbHtResolveMapper extends MyMapper<TbHtResolve> {
     List<TbHtResolve> queryHtResolve(String htNo);
 
     int updateResolveTotal(TbHtResolve tbHtResolve);
+
+    int updateProMan(TbHtResolve tbHtResolve);
 }

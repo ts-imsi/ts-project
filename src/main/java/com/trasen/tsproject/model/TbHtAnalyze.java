@@ -58,7 +58,9 @@ public class TbHtAnalyze {
     * */
     private String depName;
 
-    private String personJson;
+
+    @Transient
+    private List<Select> selectJson;
 
     @Transient
     private List<Select> data;

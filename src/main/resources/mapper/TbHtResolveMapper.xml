@@ -15,4 +15,8 @@
     <update id="updateResolveTotal" parameterType="com.trasen.tsproject.model.TbHtResolve">
         update tb_ht_resolve set total=#{total},updated=now(),operator=#{operator} where pkid=#{pkid}
     </update>
+
+    <update id="updateProMan" parameterType="com.trasen.tsproject.model.TbHtResolve">
+        update tb_ht_resolve set pro_man=#{proMan} where ht_no=#{htNo}
+    </update>
 </mapper>
