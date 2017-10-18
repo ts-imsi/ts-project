@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.dao.TbHtChangeMapper;
 import com.trasen.tsproject.model.TbHtChange;
 import com.trasen.tsproject.model.TbHtHandover;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import java.util.List;
 @Service
 public class TbHtChangeService {
 
+    private static final Logger logger = LoggerFactory.getLogger(TbHtChangeService.class);
+
     @Autowired
     private TbHtChangeMapper tbHtChangeMapper;
 
@@ -32,6 +36,7 @@ public class TbHtChangeService {
     public boolean applySubmit(TbHtChange tbHtChange){
         boolean boo=false;
         tbHtChangeMapper.saveHtChange(tbHtChange);
+        logger.info("合同变更，合同变更id"+tbHtChange.getPkid());
         //TODO 启动流程
         boo=true;
         return boo;

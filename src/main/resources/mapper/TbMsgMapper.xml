@@ -17,4 +17,8 @@
     select * from tb_msg where pkid=#{pkid}
   </select>
 
+  <update id="updateTbMsgStatus" parameterType="Integer">
+    update tb_msg set status=1 where pkid=#{pkid}
+  </update>
+
 </mapper>

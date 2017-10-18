@@ -9,7 +9,7 @@
     <if test="status!=null"> and status=#{status}</if>
   </select>
   
-  <insert id="saveHtChange" parameterType="com.trasen.tsproject.model.TbHtChange">
+  <insert id="saveHtChange" parameterType="com.trasen.tsproject.model.TbHtChange" useGeneratedKeys="true" keyProperty="pkid">
     insert into tb_ht_change(ht_no,ht_name,customer_name,`type`,status,ht_owner,sign_date,change_content,work_num,application_dept,create_user,created)
      values(#{htNo},#{htName},#{customerName},#{type},#{status},#{htOwner},#{signDate},#{changeContent},#{workNum},#{applicationDept},#{createUser},#{created})
   </insert>

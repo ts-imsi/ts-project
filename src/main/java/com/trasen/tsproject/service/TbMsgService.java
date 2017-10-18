@@ -34,7 +34,15 @@ public class TbMsgService {
     }
 
     public TbMsg getTbMsgById(Integer pkid){
-        return tbMsgMapper.getTbMsgById(pkid);
+        TbMsg tbMsg  = tbMsgMapper.getTbMsgById(pkid);
+        if(tbMsg!=null&&tbMsg.getType().equals("read")&&tbMsg.getStatus()==0){
+            updateTbMsgStatus(pkid);
+        }
+        return tbMsg;
+    }
+
+    public int updateTbMsgStatus(Integer pkid){
+       return tbMsgMapper.updateTbMsgStatus(pkid);
     }
 
 }

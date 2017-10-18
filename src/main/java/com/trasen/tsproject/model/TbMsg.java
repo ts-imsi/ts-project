@@ -41,7 +41,7 @@ public class TbMsg {
     /**
      * 发送时间
      */
-    private Date sentTime;
+    private Date sendTime;
 
     /**
      * 流程名
