@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.trasen.tsproject.dao.TbHtAnalyzeMapper" >
+  <select id="selectAnalyzeList" parameterType="String" resultType="com.trasen.tsproject.model.TbHtAnalyze">
+    SELECT
+	re.ht_no,
+	pro.dep_id,
+	pro.dep_name,
+	pro.pro_name,
+	pro.pro_code,
+	re.pro_man
+FROM
+	tb_ht_resolve re,
+	tb_product pro
+WHERE
+	re.pro_code = pro.pro_code
+AND re.ht_no =#{htNo}
+  </select>
+
+	<delete id="deleteAnaly" parameterType="String">
+		delete from tb_ht_analyze where ht_no=#{htNo}
+	</delete>
+
+	<insert id="saveAnaly" parameterType="com.trasen.tsproject.model.TbHtAnalyze">
+		insert into tb_ht_analyze(ht_no,handover_id,dep_id,pro_code,operator,status) values(#{htNo},#{handoverId},#{depId},#{proCode},#{operator},#{status})
+	</insert>
+</mapper>

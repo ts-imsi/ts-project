@@ -41,7 +41,7 @@ public class TbMsg {
     /**
      * 发送时间
      */
-    private Date sengTime;
+    private Date sentTime;
 
     /**
      * 流程名
@@ -56,7 +56,9 @@ public class TbMsg {
     /**
      * 节点ID
      */
-    private String nodeId;
+    private String taskId;
+
+    private String taskKey;
 
     /**
      * 消息状态，0:未处理；1:已处理
@@ -77,4 +79,9 @@ public class TbMsg {
     * 消息标题
     * */
     private String title;
+
+    /**
+    * 意见备注
+    * */
+    private String remark;
 }

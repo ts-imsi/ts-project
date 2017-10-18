@@ -4,4 +4,7 @@
 <select id="selectTbPersonnel" parameterType="String" resultType="com.trasen.tsproject.model.TbPersonnel">
    select per.* from tb_personnel per,t_user t_u where  t_u.per_id=per.per_id and t_u.pkid=#{userId}
 </select>
+   <select id="selectTbPersonnelList" parameterType="String" resultType="com.trasen.tsproject.model.Select">
+      select work_num as id,name as text from tb_personnel where tag_code like CONCAT('%',#{depId},'%')
+   </select>
 </mapper>
