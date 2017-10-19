@@ -111,7 +111,7 @@ public class MessageController {
                     result.setMessage("流程驳回成功");
                     result.setSuccess(true);
                 }else{
-                    result.setMessage("流程驳回成功");
+                    result.setMessage("流程驳回失败");
                     result.setSuccess(true);
                 }
             }
@@ -119,6 +119,31 @@ public class MessageController {
             logger.error("流程驳回错误"+e.getMessage(),e);
             result.setSuccess(false);
             result.setMessage("流程驳回错误");
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/pdConfirm",method = RequestMethod.POST)
+    public Result pdConfirm(@RequestBody TbMsg tbMsg){
+        Result result=new Result();
+        try{
+            if(tbMsg==null){
+                result.setMessage("参数错误");
+                result.setSuccess(false);
+            }else{
+                boolean boo=tbMsgService.pdConfirm(tbMsg);
+                if(boo){
+                    result.setMessage("确认成功");
+                    result.setSuccess(true);
+                }else{
+                    result.setMessage("确认失败");
+                    result.setSuccess(true);
+                }
+            }
+        }catch (Exception e){
+            logger.error("生产确认错误"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("生产确认错误");
         }
         return result;
     }

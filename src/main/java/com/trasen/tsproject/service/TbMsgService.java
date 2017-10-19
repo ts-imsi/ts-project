@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,6 +99,28 @@ public class TbMsgService {
         return true;
     }
 
+
+    public boolean pdConfirm(TbMsg tbMsg){
+        boolean boo = false;
+        if(tbMsg!=null&&tbMsg.getProcessId()!=null){
+            Map<String,Object> param = new HashMap();
+            param.put("operator",tbMsg.getName());
+            param.put("processId",tbMsg.getProcessId());
+            //生产部门确认
+            tbMsgMapper.confirmAnalyze(param);
+            //生产部门负责人全部确认完之后提交流程节点到下一步
+            Integer count = tbMsgMapper.queryNoConfirm(tbMsg.getProcessId());
+            if(count==0){
+                submitFlow(tbMsg);
+            }
+            boo = true;
+        }
+        return boo;
+    }
+
+
+
+
     public void synTodoHandOver(String userId,String showName){
         if(userId!=null){
             List<Map<String,String>> tags = tbMsgMapper.getPersonTags(userId);
@@ -131,7 +154,11 @@ public class TbMsgService {
                             msg.setType("todo");
                             msg.setStatus(0);
                             msg.setSendName("ts-workflow");
-                            Integer num = tbMsgMapper.countMsgByTaskId(msg.getTaskId());
+
+                            Map<String,Object> param  = new HashMap();
+                            param.put("taskId",msg.getTaskId());
+                            param.put("workNum",workNum);
+                            Integer num = tbMsgMapper.countMsgByTaskId(param);
                             if(num==0){
                                 tbMsgMapper.insertMsg(msg);
                             }

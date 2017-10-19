@@ -14,7 +14,11 @@ public interface TbMsgMapper extends MyMapper<TbMsg> {
 
     List<Map<String,String>> getPersonTags(String userId);
 
-    Integer countMsgByTaskId(String taskId);
+    Integer countMsgByTaskId(Map<String,Object> param);
 
     int insertMsg(TbMsg tbMsg);
+
+    int confirmAnalyze(Map<String,Object> param);
+
+    Integer queryNoConfirm(String processId);
 }

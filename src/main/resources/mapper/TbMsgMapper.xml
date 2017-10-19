@@ -33,8 +33,8 @@
     where u.pkid=#{userId}
   </select>
 
-  <select id="countMsgByTaskId" parameterType="String" resultType="Integer">
-    select count(*) from tb_msg where task_id = #{taskId}
+  <select id="countMsgByTaskId" parameterType="Map" resultType="Integer">
+    select count(*) from tb_msg where task_id = #{taskId} and work_num = #{workNum}
   </select>
 
   <insert id="insertMsg" parameterType="com.trasen.tsproject.model.TbMsg">
@@ -43,5 +43,13 @@
     values (#{type},#{workNum},#{name},#{sendWorkNum},#{sendName},#{msgContent},#{sendTime},
     #{processKey},#{processId},#{taskKey},#{taskId},#{status},#{title},#{remark})
   </insert>
+  
+  <update id="confirmAnalyze" parameterType="Map">
+    update tb_ht_analyze set status=1 where process_id=#{processId} and operator=#{operator}
+  </update>
+
+  <select id="queryNoConfirm" parameterType="String" resultType="Integer">
+    select count(*) from tb_ht_analyze where status=0 and process_id=#{processId}
+  </select>
 
 </mapper>
