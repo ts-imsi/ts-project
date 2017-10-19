@@ -97,6 +97,10 @@ public class TbHtHandover {
      */
     private String content;
 
+    /**
+    * 流程ID
+    * */
+    private String processId;
 
     @Transient
     private List<TbTemplateItem> contentJson;

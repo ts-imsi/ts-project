@@ -3,6 +3,7 @@ package com.trasen.tsproject.controller;
 import cn.trasen.commons.util.StringUtil;
 import cn.trasen.core.entity.Result;
 import com.github.pagehelper.PageInfo;
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.ContractInfo;
 import com.trasen.tsproject.model.TbHtChange;
 import com.trasen.tsproject.model.TbHtHandover;
@@ -86,7 +87,7 @@ public class HtChangeController {
         try {
             //TODO 查询当前人员下面的合同
             Map<String, String> param = new HashMap<>();
-            param.put("contractOwner", "周林燕");
+            param.put("contractOwner", VisitInfoHolder.getShowName());
             List<ContractInfo> contractInfoList = contractProductService.getOaContractListByOwner(param);
             result.setSuccess(true);
             result.setObject(contractInfoList);

@@ -22,6 +22,10 @@
     update tb_msg set status=1 where pkid=#{pkid}
   </update>
 
+  <update id="updateTbMsgStatusAndRemark" parameterType="com.trasen.tsproject.model.TbMsg">
+    update tb_msg set status=#{status},remark=#{remark} where pkid=#{pkid}
+  </update>
+
   <select id="getPersonTags" resultType="Map" parameterType="String">
     select tag.tag_id,tag.work_num from tb_tag_personnel tag
     join tb_personnel p on p.work_num = tag.work_num

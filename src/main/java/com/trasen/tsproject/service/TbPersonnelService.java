@@ -23,7 +23,7 @@ public class TbPersonnelService {
 
     public TbPersonnel selectTbPersonnel(){
         //TODO VisitInfoHolder.getUserId() 暂时设置
-        TbPersonnel tbPersonnel=tbPersonnelMapper.selectTbPersonnel("3");
+        TbPersonnel tbPersonnel=tbPersonnelMapper.selectTbPersonnel(VisitInfoHolder.getUserId());
         return tbPersonnel;
     }
 

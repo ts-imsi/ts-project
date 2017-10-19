@@ -2,14 +2,17 @@ package com.trasen.tsproject.service;
 
 import cn.trasen.commons.util.StringUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbHtHandoverMapper;
 import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.util.DateUtils;
+import com.trasen.tsproject.util.HttpUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,6 +33,9 @@ public class HandoverService {
 
     @Autowired
     ContractProductService contractProductService;
+
+    @Autowired
+    private Environment env;
 
     public TbHtHandover getHandoverToHtNo(String htNo){
         TbHtHandover tbHtHandover = null;
@@ -142,6 +148,32 @@ public class HandoverService {
         if(tbHtHandover!=null&&tbHtHandover.getHtNo()!=null){
             tbHtHandover.setOperator(VisitInfoHolder.getUserId());
             //TODO 流程提交
+            String process_start=env.getProperty("process_start").replace("{key}","handover");
+            if(process_start==null){
+                logger.info("交接单提交获取process_start失败");
+                return false;
+            }
+            Map<String,Object> param=new HashMap<String,Object>();
+            param.put("htNo",tbHtHandover.getHtNo());
+            param.put("handOverId",tbHtHandover.getPkid());
+            param.put("htOwner",tbHtHandover.getHtOwner());
+            String parameterJson = JSONObject.toJSONString(param);
+            String json= HttpUtil.connectURL(process_start,parameterJson,"POST");
+            JSONObject dataJson = (JSONObject) JSONObject.parse(json);
+            String process_id=null;
+            if(dataJson.getInteger("code")==1){
+                JSONObject jsonObject=dataJson.getJSONObject("processInstance");
+                process_id=jsonObject.getString("id");
+            }else{
+                logger.info("交接单流程启动失败");
+                return false;
+            }
+            if(process_id!=null){
+                tbHtHandover.setProcessId(process_id);
+            }else{
+                logger.info("获取peocess_id失败");
+                return false;
+            }
             htHandoverMapper.submitHandover(tbHtHandover);
             boo = true;
         }

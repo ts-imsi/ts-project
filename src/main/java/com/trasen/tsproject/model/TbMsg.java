@@ -84,4 +84,14 @@ public class TbMsg {
     * 意见备注
     * */
     private String remark;
+
+    /**
+    * 合同号
+    * */
+    private String htNo;
+
+    /**
+    * 交接单id
+    * */
+    private String handOverId;
 }

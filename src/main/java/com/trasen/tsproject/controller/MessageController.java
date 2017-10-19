@@ -73,4 +73,53 @@ public class MessageController {
         }
         return result;
     }
+
+    @RequestMapping(value="/submitFlow",method = RequestMethod.POST)
+    public Result submitFlow(@RequestBody TbMsg tbMsg){
+        Result result=new Result();
+        try{
+            if(tbMsg==null){
+                result.setMessage("参数错误");
+                result.setSuccess(false);
+            }else{
+                boolean boo=tbMsgService.submitFlow(tbMsg);
+                if(boo){
+                    result.setMessage("流程提交成功");
+                    result.setSuccess(true);
+                }else{
+                    result.setMessage("流程提交失败");
+                    result.setSuccess(true);
+                }
+            }
+        }catch (Exception e){
+            logger.error("流程提交错误"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("流程提交错误");
+        }
+        return result;
+    }
+    @RequestMapping(value="/returnFlow",method = RequestMethod.POST)
+    public Result returnFlow(@RequestBody TbMsg tbMsg){
+        Result result=new Result();
+        try{
+            if(tbMsg==null){
+                result.setMessage("参数错误");
+                result.setSuccess(false);
+            }else{
+                boolean boo=tbMsgService.returnFlow(tbMsg);
+                if(boo){
+                    result.setMessage("流程驳回成功");
+                    result.setSuccess(true);
+                }else{
+                    result.setMessage("流程驳回成功");
+                    result.setSuccess(true);
+                }
+            }
+        }catch (Exception e){
+            logger.error("流程驳回错误"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("流程驳回错误");
+        }
+        return result;
+    }
 }

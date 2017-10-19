@@ -26,7 +26,7 @@
     </update>
     
     <update id="submitHandover" parameterType="com.trasen.tsproject.model.TbHtHandover">
-        update tb_ht_handover set status=1,updated=now(),operator=#{operator}  where ht_no=#{htNo}
+        update tb_ht_handover set process_id=#{processId},status=1,updated=now(),operator=#{operator}  where ht_no=#{htNo}
     </update>
 
     <select id="getHtHandoverList" parameterType="com.trasen.tsproject.model.TbHtHandover" resultType="com.trasen.tsproject.model.TbHtHandover">

@@ -6,7 +6,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbMsgMapper;
-import com.trasen.tsproject.model.ContractInfo;
 import com.trasen.tsproject.model.TbMsg;
 import com.trasen.tsproject.util.HttpUtil;
 import org.apache.log4j.Logger;
@@ -14,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,8 +33,9 @@ public class TbMsgService {
     private Environment env;
 
 
+
     public PageInfo<TbMsg> selectTbMsg(int page,int rows,Map<String,String> param){
-        param.put("userId",VisitInfoHolder.getUserId());
+        param.put("userId", VisitInfoHolder.getUserId());
         PageHelper.startPage(page,rows);
         synTodoHandOver(VisitInfoHolder.getUserId(),VisitInfoHolder.getShowName());
 
@@ -56,6 +54,48 @@ public class TbMsgService {
 
     public int updateTbMsgStatus(Integer pkid){
        return tbMsgMapper.updateTbMsgStatus(pkid);
+    }
+
+    public int updateTbMsgStatusAndRemark(TbMsg tbMsg){
+        return tbMsgMapper.updateTbMsgStatusAndRemark(tbMsg);
+    }
+
+    public boolean submitFlow(TbMsg tbMsg){
+        String process_complete=env.getProperty("process_complete").replace("{id}",tbMsg.getTaskId());
+        if(process_complete==null){
+            logger.info("process_complete获取失败");
+            return false;
+        }
+        String json= HttpUtil.connectURL(process_complete,"","POST");
+        JSONObject dataJson = (JSONObject) JSONObject.parse(json);
+        if(dataJson.getInteger("code")==1){
+            logger.info("流程提交成功");
+            tbMsg.setStatus(1);
+            updateTbMsgStatusAndRemark(tbMsg);
+        }else{
+            logger.info("流程提交失败");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean returnFlow(TbMsg tbMsg){
+        String process_return=env.getProperty("process_return").replace("{id}",tbMsg.getProcessId());
+        if(process_return==null){
+            logger.info("process_return获取失败");
+            return false;
+        }
+        String json= HttpUtil.connectURL(process_return,"","POST");
+        JSONObject dataJson = (JSONObject) JSONObject.parse(json);
+        if(dataJson.getInteger("code")==1){
+            logger.info("流程回退成功");
+            tbMsg.setStatus(1);
+            updateTbMsgStatusAndRemark(tbMsg);
+        }else{
+            logger.info("流程回退成功");
+            return false;
+        }
+        return true;
     }
 
     public void synTodoHandOver(String userId,String showName){

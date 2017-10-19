@@ -10,6 +10,7 @@ public interface TbMsgMapper extends MyMapper<TbMsg> {
     List<TbMsg> selectTbMsg(Map<String,String> param);
     TbMsg getTbMsgById(Integer pkid);
     int updateTbMsgStatus(Integer pkid);
+    int updateTbMsgStatusAndRemark(TbMsg tbMsg);
 
     List<Map<String,String>> getPersonTags(String userId);
 
