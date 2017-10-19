@@ -11,6 +11,7 @@
     where t_u.pkid=#{userId}
     <if test="type!=null and type!=''"> and msg.`type`=#{type}</if>
     <if test="status!=null and status!=''">and msg.status=#{status}</if>
+    order by msg.send_time desc
   </select>
 
   <select id="getTbMsgById" parameterType="Integer" resultType="com.trasen.tsproject.model.TbMsg">
@@ -20,5 +21,23 @@
   <update id="updateTbMsgStatus" parameterType="Integer">
     update tb_msg set status=1 where pkid=#{pkid}
   </update>
+
+  <select id="getPersonTags" resultType="Map" parameterType="String">
+    select tag.tag_id,tag.work_num from tb_tag_personnel tag
+    join tb_personnel p on p.work_num = tag.work_num
+    join t_user u on u.per_id=p.per_id
+    where u.pkid=#{userId}
+  </select>
+
+  <select id="countMsgByTaskId" parameterType="String" resultType="Integer">
+    select count(*) from tb_msg where task_id = #{taskId}
+  </select>
+
+  <insert id="insertMsg" parameterType="com.trasen.tsproject.model.TbMsg">
+    insert into tb_msg (`type`,work_num,`name`,send_work_num,send_name,msg_content,send_time,
+    process_key,process_id,task_key,task_id,status,title,remark)
+    values (#{type},#{workNum},#{name},#{sendWorkNum},#{sendName},#{msgContent},#{sendTime},
+    #{processKey},#{processId},#{taskKey},#{taskId},#{status},#{title},#{remark})
+  </insert>
 
 </mapper>

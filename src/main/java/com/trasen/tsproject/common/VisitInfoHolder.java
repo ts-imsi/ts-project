@@ -12,6 +12,8 @@ public class VisitInfoHolder {
 
     protected static final ThreadLocal<String> userId = new ThreadLocal<>();
 
+    protected static final ThreadLocal<String> showName = new ThreadLocal<>();
+
 
 
     public static String getUserId() {
@@ -21,6 +23,16 @@ public class VisitInfoHolder {
     public static void setUserId(String userId) {
         VisitInfoHolder.userId.set(userId);
     }
+
+    public static String getShowName() {
+        return VisitInfoHolder.showName.get();
+    }
+
+    public static void setShowName(String showName) {
+        VisitInfoHolder.showName.set(showName);
+    }
+
+
 
 
 

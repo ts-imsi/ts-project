@@ -61,6 +61,7 @@ public class CheckLoginFilter implements Filter {
             }
         }
         VisitInfoHolder.setUserId(userId);
+        VisitInfoHolder.setShowName(showName);
 
         //FILTER_URL
         String filterUrl = PropertiesUtils.getProperty("FILTER_URL");

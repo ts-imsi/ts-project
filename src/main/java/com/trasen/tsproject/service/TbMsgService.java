@@ -1,13 +1,21 @@
 package com.trasen.tsproject.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbMsgMapper;
+import com.trasen.tsproject.model.ContractInfo;
 import com.trasen.tsproject.model.TbMsg;
+import com.trasen.tsproject.util.HttpUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,10 +32,15 @@ public class TbMsgService {
     @Autowired
     private TbMsgMapper tbMsgMapper;
 
+    @Autowired
+    private Environment env;
+
+
     public PageInfo<TbMsg> selectTbMsg(int page,int rows,Map<String,String> param){
-        //TODO VisitInfoHolder.getUserId()
-        param.put("userId","3");
+        param.put("userId",VisitInfoHolder.getUserId());
         PageHelper.startPage(page,rows);
+        synTodoHandOver(VisitInfoHolder.getUserId(),VisitInfoHolder.getShowName());
+
         List<TbMsg> tbHtChangeList=tbMsgMapper.selectTbMsg(param);
         PageInfo<TbMsg> pagehelper = new PageInfo<TbMsg>(tbHtChangeList);
         return pagehelper;
@@ -43,6 +56,51 @@ public class TbMsgService {
 
     public int updateTbMsgStatus(Integer pkid){
        return tbMsgMapper.updateTbMsgStatus(pkid);
+    }
+
+    public void synTodoHandOver(String userId,String showName){
+        if(userId!=null){
+            List<Map<String,String>> tags = tbMsgMapper.getPersonTags(userId);
+            for(Map<String,String> tagMap : tags){
+                String tagCode = tagMap.get("tag_id");
+                String workNum = tagMap.get("work_num");
+                if(tagCode.indexOf("tag_handover")>0){
+                    String assignee = tagCode.substring(14,tagCode.length()-1);
+                    String wf_todo = env.getProperty("wf_todo").replace("{assignee}",assignee);
+                    Map<String,Object> paramMap=new HashMap<String,Object>();
+                    if("sale".equals(assignee)){
+                        paramMap.put("htOwner",showName);
+                    }
+                    String parameterJson = JSONObject.toJSONString(paramMap);
+                    String json= HttpUtil.connectURL(wf_todo,parameterJson,"POST");
+                    JSONObject dataJson = (JSONObject) JSONObject.parse(json);
+                    if(dataJson.getInteger("code")==1){
+                        JSONArray jsonArray = dataJson.getJSONArray("list");
+                        for(java.util.Iterator tor=jsonArray.iterator();tor.hasNext();) {
+                            TbMsg msg = new TbMsg();
+                            JSONObject jsonObject = (JSONObject) tor.next();
+                            msg.setWorkNum(workNum);
+                            msg.setName(showName);
+                            msg.setTitle(jsonObject.getString("title"));
+                            msg.setMsgContent(jsonObject.getString("msgContent"));
+                            msg.setSendTime(jsonObject.getDate("sendTime"));
+                            msg.setProcessId(jsonObject.getString("processId"));
+                            msg.setProcessKey(jsonObject.getString("processKey"));
+                            msg.setTaskId(jsonObject.getString("taskId"));
+                            msg.setTaskKey(jsonObject.getString("taskKey"));
+                            msg.setType("todo");
+                            msg.setStatus(0);
+                            msg.setSendName("ts-workflow");
+                            Integer num = tbMsgMapper.countMsgByTaskId(msg.getTaskId());
+                            if(num==0){
+                                tbMsgMapper.insertMsg(msg);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
 }
