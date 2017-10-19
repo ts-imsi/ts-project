@@ -94,4 +94,13 @@ public class TbMsg {
     * 交接单id
     * */
     private String handOverId;
+
+    /**
+    * 驳回按钮控制
+    * */
+    private Integer returnStatus;
+
+    private Integer resolveStatus;
+
+    private Integer productStatus;
 }

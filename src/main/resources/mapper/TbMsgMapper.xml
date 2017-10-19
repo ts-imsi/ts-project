@@ -52,4 +52,8 @@
     select count(*) from tb_ht_analyze where status=0 and process_id=#{processId}
   </select>
 
+  <select id="getButtonStatus" parameterType="java.util.Map" resultType="int">
+    select count(*) from twf_dict where `name`=#{name} and `type`=#{type} and is_vaild=1
+  </select>
+
 </mapper>

@@ -50,6 +50,34 @@ public class TbMsgService {
         if(tbMsg!=null&&tbMsg.getType().equals("read")&&tbMsg.getStatus()==0){
             updateTbMsgStatus(pkid);
         }
+        if(tbMsg!=null&&tbMsg.getType().equals("todo")&&tbMsg.getStatus()==0){
+            String process_task=env.getProperty("process_task").replace("{taskId}",tbMsg.getTaskId());
+            if(process_task==null){
+                logger.info("process_task获取失败");
+                return null;
+            }else{
+                String json= HttpUtil.connectURL(process_task,"","GET");
+                JSONObject dataJson = (JSONObject) JSONObject.parse(json);
+                if(dataJson.getInteger("code")==1){
+                    JSONObject jsonObject=dataJson.getJSONObject("task");
+                    JSONObject variables=jsonObject.getJSONObject("variables");
+                    if(variables==null){
+                        return null;
+                    }else{
+                        tbMsg.setHtNo(variables.getString("htNo"));
+                        tbMsg.setHandOverId(variables.getString("handOverId"));
+                    }
+                }
+            }
+            Map<String,String> params=new HashMap<>();
+            params.put("name",tbMsg.getTaskKey());
+            params.put("type","12");
+            tbMsg.setReturnStatus(tbMsgMapper.getButtonStatus(params));
+            params.put("type","13");
+            tbMsg.setResolveStatus(tbMsgMapper.getButtonStatus(params));
+            params.put("type","14");
+            tbMsg.setProductStatus(tbMsgMapper.getButtonStatus(params));
+        }
         return tbMsg;
     }
 
@@ -93,7 +121,7 @@ public class TbMsgService {
             tbMsg.setStatus(1);
             updateTbMsgStatusAndRemark(tbMsg);
         }else{
-            logger.info("流程回退成功");
+            logger.info("流程回退失败");
             return false;
         }
         return true;

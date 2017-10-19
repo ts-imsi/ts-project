@@ -21,4 +21,6 @@ public interface TbMsgMapper extends MyMapper<TbMsg> {
     int confirmAnalyze(Map<String,Object> param);
 
     Integer queryNoConfirm(String processId);
+
+    int getButtonStatus(Map<String,String> param);
 }
