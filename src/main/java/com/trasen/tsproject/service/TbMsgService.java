@@ -56,7 +56,7 @@ public class TbMsgService {
                 logger.info("process_task获取失败");
                 return null;
             }else{
-                String json= HttpUtil.connectURL(process_task,"","GET");
+                String json= HttpUtil.connectURL(process_task,"","POST");
                 JSONObject dataJson = (JSONObject) JSONObject.parse(json);
                 if(dataJson.getInteger("code")==1){
                     JSONObject jsonObject=dataJson.getJSONObject("task");
