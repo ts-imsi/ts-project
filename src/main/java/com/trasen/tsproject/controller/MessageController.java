@@ -122,6 +122,7 @@ public class MessageController {
                     result.setSuccess(true);
                     if(tbMsg.getTaskKey()!=null&&"gm_check".equals(tbMsg.getTaskKey())){
                         //总经理驳回生产部门重新确认
+                        logger.info("总经理交接单驳回,生产部门需重新确认===流程ID:"+tbMsg.getProcessId());
                         tbMsgService.pbReCheck(tbMsg.getProcessId());
                     }
                 }else{
