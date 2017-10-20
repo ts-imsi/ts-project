@@ -59,7 +59,9 @@ public class HandoverController {
         try {
             if(tbHtHandover!=null){
                 boolean boo = handoverService.saveHandover(tbHtHandover);
+                TbHtHandover handover = handoverService.getHandoverToHtNo(tbHtHandover.getHtNo());
                 result.setSuccess(boo);
+                result.setObject(handover);
             }
         }catch (Exception e) {
             logger.error("保存交接单异常" + e.getMessage(), e);
