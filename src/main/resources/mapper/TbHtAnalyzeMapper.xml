@@ -22,7 +22,7 @@ AND re.ht_no =#{htNo}
 	</delete>
 
 	<insert id="saveAnaly" parameterType="com.trasen.tsproject.model.TbHtAnalyze">
-		insert into tb_ht_analyze(ht_no,handover_id,dep_id,pro_code,operator,status) values(#{htNo},#{handoverId},#{depId},#{proCode},#{operator},#{status})
+		insert into tb_ht_analyze(ht_no,handover_id,dep_id,pro_code,operator,status,process_id) values(#{htNo},#{handoverId},#{depId},#{proCode},#{operator},#{status},#{processId})
 	</insert>
 	
 	<select id="selectPersonJson" parameterType="com.trasen.tsproject.model.TbHtAnalyze" resultType="String">

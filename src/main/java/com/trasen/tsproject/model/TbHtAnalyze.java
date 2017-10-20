@@ -59,6 +59,12 @@ public class TbHtAnalyze {
     private String depName;
 
 
+    /**
+    * 流程ID
+    * */
+    private String processId;
+
+
     @Transient
     private List<Select> selectJson;
 

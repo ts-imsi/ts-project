@@ -109,7 +109,7 @@ public class TbMsgService {
     }
 
     public boolean returnFlow(TbMsg tbMsg){
-        String process_return=env.getProperty("process_return").replace("{id}",tbMsg.getProcessId());
+        String process_return=env.getProperty("process_return").replace("{id}",tbMsg.getTaskId());
         if(process_return==null){
             logger.info("process_return获取失败");
             return false;
