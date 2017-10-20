@@ -37,10 +37,9 @@ public class TbMsgService {
 
 
     public PageInfo<TbMsg> selectTbMsg(int page,int rows,Map<String,String> param){
+        synTodoHandOver(VisitInfoHolder.getUserId(),VisitInfoHolder.getShowName());
         param.put("userId", VisitInfoHolder.getUserId());
         PageHelper.startPage(page,rows);
-        synTodoHandOver(VisitInfoHolder.getUserId(),VisitInfoHolder.getShowName());
-
         List<TbMsg> tbHtChangeList=tbMsgMapper.selectTbMsg(param);
         PageInfo<TbMsg> pagehelper = new PageInfo<TbMsg>(tbHtChangeList);
         return pagehelper;
