@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbMsgMapper;
+import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbMsg;
 import com.trasen.tsproject.util.HttpUtil;
 import org.apache.log4j.Logger;
@@ -170,26 +171,35 @@ public class TbMsgService {
                         for(java.util.Iterator tor=jsonArray.iterator();tor.hasNext();) {
                             TbMsg msg = new TbMsg();
                             JSONObject jsonObject = (JSONObject) tor.next();
-                            msg.setWorkNum(workNum);
-                            msg.setName(showName);
-                            msg.setTitle(jsonObject.getString("title"));
-                            msg.setMsgContent(jsonObject.getString("msgContent"));
-                            msg.setSendTime(jsonObject.getDate("sendTime"));
-                            msg.setProcessId(jsonObject.getString("processId"));
-                            msg.setProcessKey(jsonObject.getString("processKey"));
-                            msg.setTaskId(jsonObject.getString("taskId"));
-                            msg.setTaskKey(jsonObject.getString("taskKey"));
-                            msg.setType("todo");
-                            msg.setStatus(0);
-                            msg.setSendName("ts-workflow");
+                            String processId = jsonObject.getString("processId");
+                            if(processId!=null&&!"".equals(processId)){
+                                TbHtHandover handover = tbMsgMapper.getHandOverToProcessId(processId);
+                                if(handover!=null){
+                                    String title = "["+handover.getHtNo()+"]"+jsonObject.getString("title");
+                                    String content = "合同["+handover.getHtName()+"],客户["+handover.getCustomerName()+"],"+jsonObject.getString("msgContent");
+                                    msg.setWorkNum(workNum);
+                                    msg.setName(showName);
+                                    msg.setTitle(title);
+                                    msg.setMsgContent(content);
+                                    msg.setSendTime(jsonObject.getDate("sendTime"));
+                                    msg.setProcessId(jsonObject.getString("processId"));
+                                    msg.setProcessKey(jsonObject.getString("processKey"));
+                                    msg.setTaskId(jsonObject.getString("taskId"));
+                                    msg.setTaskKey(jsonObject.getString("taskKey"));
+                                    msg.setType("todo");
+                                    msg.setStatus(0);
+                                    msg.setSendName("ts-workflow");
 
-                            Map<String,Object> param  = new HashMap();
-                            param.put("taskId",msg.getTaskId());
-                            param.put("workNum",workNum);
-                            Integer num = tbMsgMapper.countMsgByTaskId(param);
-                            if(num==0){
-                                tbMsgMapper.insertMsg(msg);
+                                    Map<String,Object> param  = new HashMap();
+                                    param.put("taskId",msg.getTaskId());
+                                    param.put("workNum",workNum);
+                                    Integer num = tbMsgMapper.countMsgByTaskId(param);
+                                    if(num==0){
+                                        tbMsgMapper.insertMsg(msg);
+                                    }
+                                }
                             }
+
                         }
                     }
                 }

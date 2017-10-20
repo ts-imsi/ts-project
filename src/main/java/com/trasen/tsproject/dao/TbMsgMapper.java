@@ -1,5 +1,6 @@
 package com.trasen.tsproject.dao;
 
+import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbMsg;
 import com.trasen.tsproject.util.MyMapper;
 
@@ -23,4 +24,6 @@ public interface TbMsgMapper extends MyMapper<TbMsg> {
     Integer queryNoConfirm(String processId);
 
     int getButtonStatus(Map<String,String> param);
+
+    TbHtHandover getHandOverToProcessId(String processId);
 }

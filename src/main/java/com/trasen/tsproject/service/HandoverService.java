@@ -116,7 +116,7 @@ public class HandoverService {
                 tbHtHandover.setHtOwner(contractInfo.getContractOwner());
                 tbHtHandover.setSignDate(DateUtils.getDate(contractInfo.getSignDate(),"yyyy-MM-dd"));
                 tbHtHandover.setContent(JSON.toJSONString(list));
-                tbHtHandover.setCustomerName(VisitInfoHolder.getUserId());
+                tbHtHandover.setCreateUser(VisitInfoHolder.getShowName());
             }
         }
         return tbHtHandover;

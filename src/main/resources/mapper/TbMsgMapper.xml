@@ -56,4 +56,8 @@
     select count(*) from twf_dict where `name`=#{name} and `type`=#{type} and is_vaild=1
   </select>
 
+  <select id="getHandOverToProcessId" resultType="com.trasen.tsproject.model.TbHtHandover" parameterType="String">
+    select * from tb_ht_handover where process_id = #{processId}
+  </select>
+
 </mapper>
