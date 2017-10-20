@@ -144,6 +144,8 @@ public class TbMsgService {
                 submitFlow(tbMsg);
             }
             boo = true;
+            tbMsg.setStatus(1);
+            updateTbMsgStatusAndRemark(tbMsg);
         }
         return boo;
     }
