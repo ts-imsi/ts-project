@@ -68,4 +68,8 @@
     select * from tb_ht_analyze where process_id = #{processId}
   </select>
 
+  <update id="pbReCheck" parameterType="String">
+    update tb_ht_analyze set status = 0 where process_id = #{processId}
+  </update>
+
 </mapper>

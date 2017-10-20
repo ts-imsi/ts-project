@@ -31,4 +31,6 @@ public interface TbMsgMapper extends MyMapper<TbMsg> {
     List<String> getProcessToAnalyze(String workNum);
 
     List<TbHtAnalyze> queryAnalyze(String processId);
+
+    int pbReCheck(String processId);
 }

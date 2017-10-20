@@ -120,6 +120,10 @@ public class MessageController {
                 if(boo){
                     result.setMessage("流程驳回成功");
                     result.setSuccess(true);
+                    if(tbMsg.getTaskKey()!=null&&"gm_check".equals(tbMsg.getTaskKey())){
+                        //总经理驳回生产部门重新确认
+                        tbMsgService.pbReCheck(tbMsg.getProcessId());
+                    }
                 }else{
                     result.setMessage("流程驳回失败");
                     result.setSuccess(true);

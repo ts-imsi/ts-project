@@ -233,4 +233,13 @@ public class TbMsgService {
         return boo;
     }
 
+    public boolean pbReCheck(String processId){
+        boolean boo = false;
+        if(processId!=null){
+            tbMsgMapper.pbReCheck(processId);
+            boo = true;
+        }
+        return boo;
+    }
+
 }
