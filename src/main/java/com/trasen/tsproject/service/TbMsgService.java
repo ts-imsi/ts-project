@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbMsgMapper;
+import com.trasen.tsproject.model.TbHtAnalyze;
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbMsg;
 import com.trasen.tsproject.util.HttpUtil;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,6 +164,13 @@ public class TbMsgService {
                     if("sale".equals(assignee)){
                         paramMap.put("htOwner",showName);
                     }
+                    List<String> processList = null;
+                    if("PD".equals(assignee)){
+                        processList = tbMsgMapper.getProcessToAnalyze(workNum);
+                        if(processList==null){
+                            processList = new ArrayList<>();
+                        }
+                    }
                     String parameterJson = JSONObject.toJSONString(paramMap);
                     String json= HttpUtil.connectURL(wf_todo,parameterJson,"POST");
                     JSONObject dataJson = (JSONObject) JSONObject.parse(json);
@@ -172,6 +181,10 @@ public class TbMsgService {
                             JSONObject jsonObject = (JSONObject) tor.next();
                             String processId = jsonObject.getString("processId");
                             if(processId!=null&&!"".equals(processId)){
+                                //判断生产部门待办,如果是生产部门待办必须参与这个流程才能生成待办
+                                if(processList!=null&&!processList.contains(processId)){
+                                    continue;
+                                }
                                 TbHtHandover handover = tbMsgMapper.getHandOverToProcessId(processId);
                                 if(handover!=null){
                                     String title = "["+handover.getHtNo()+"]"+jsonObject.getString("title");
@@ -205,6 +218,17 @@ public class TbMsgService {
             }
         }
 
+    }
+
+    public boolean checkAnalyze(String processId){
+        boolean boo = false;
+        if(processId!=null){
+            List<TbHtAnalyze> list = tbMsgMapper.queryAnalyze(processId);
+            if(list!=null&&list.size()>0){
+                boo = true;
+            }
+        }
+        return boo;
     }
 
 }

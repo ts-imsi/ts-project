@@ -60,4 +60,12 @@
     select * from tb_ht_handover where process_id = #{processId}
   </select>
 
+  <select id="getProcessToAnalyze" parameterType="String" resultType="String">
+    select process_id from tb_ht_analyze where operator = #{workNum} and status=0
+  </select>
+
+  <select id="queryAnalyze" resultType="com.trasen.tsproject.model.TbHtAnalyze" parameterType="String">
+    select * from tb_ht_analyze where process_id = #{processId}
+  </select>
+
 </mapper>

@@ -82,6 +82,16 @@ public class MessageController {
                 result.setMessage("参数错误");
                 result.setSuccess(false);
             }else{
+                if(tbMsg.getTaskKey()!=null&&"nk_check".equals(tbMsg.getTaskKey())){
+                    //查分解表是否有生产部门确认
+                    boolean boo = tbMsgService.checkAnalyze(tbMsg.getProcessId());
+                    if(!boo){
+                        result.setMessage("您未分解生产部门,请先分解!");
+                        result.setSuccess(true);
+                        return result;
+                    }
+
+                }
                 boolean boo=tbMsgService.submitFlow(tbMsg);
                 if(boo){
                     result.setMessage("流程提交成功");
