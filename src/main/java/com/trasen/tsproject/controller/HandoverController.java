@@ -3,10 +3,7 @@ package com.trasen.tsproject.controller;
 import cn.trasen.commons.util.StringUtil;
 import cn.trasen.core.entity.Result;
 import com.github.pagehelper.PageInfo;
-import com.trasen.tsproject.model.ContractInfo;
-import com.trasen.tsproject.model.TbHtHandover;
-import com.trasen.tsproject.model.TbTemplate;
-import com.trasen.tsproject.model.TempDataVo;
+import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.service.HandoverService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +140,27 @@ public class HandoverController {
             result.setMessage(e.getMessage());
         } catch (Exception e) {
             logger.error("获取交接单模板数据异常" + e.getMessage(), e);
+            result.setMessage(e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/timeLine/{processId}",method = RequestMethod.GET)
+    public Result getTimeLine(@PathVariable String processId){
+        //结果集
+        Result result = new Result();
+        result.setStatusCode(0);
+        result.setSuccess(false);
+        try {
+            List<TimeLineVo> list = handoverService.getTimeLine(processId);
+            result.setSuccess(true);
+            result.setStatusCode(1);
+            result.setObject(list);
+        } catch (IllegalArgumentException e) {
+            logger.error("获取交接单进度数据异常" + e.getMessage(), e);
+            result.setMessage(e.getMessage());
+        } catch (Exception e) {
+            logger.error("获取交接单进度数据异常" + e.getMessage(), e);
             result.setMessage(e.getMessage());
         }
         return result;

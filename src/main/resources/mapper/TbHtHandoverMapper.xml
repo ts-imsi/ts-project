@@ -35,6 +35,11 @@
         <if test="type!=null"> and `type`=#{type}</if>
     </select>
 
+    <select id="getMsgToTaskId" parameterType="String" resultType="com.trasen.tsproject.model.TbMsg">
+        select * from tb_msg where task_id = #{taskId}
+
+    </select>
+
 
 
 

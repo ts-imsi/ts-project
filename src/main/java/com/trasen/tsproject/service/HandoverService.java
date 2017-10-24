@@ -2,6 +2,7 @@ package com.trasen.tsproject.service;
 
 import cn.trasen.commons.util.StringUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -300,5 +301,82 @@ public class HandoverService {
 
         }
         return resultMap;
+    }
+
+
+    public List<TimeLineVo> getTimeLine(String processId){
+        List<TimeLineVo> list = new ArrayList<>();
+        if(processId!=null){
+            String timeLine = env.getProperty("time_line").replace("{processId}",processId);
+            if(timeLine==null){
+                logger.info("==获取流程进度数据,远程服务链接未配置==");
+                return list;
+            }
+            Map<String,Object> paramMap=new HashMap<String,Object>();
+            String parameterJson = JSONObject.toJSONString(paramMap);
+            String json= HttpUtil.connectURL(timeLine,parameterJson,"POST");
+            JSONObject dataJson = (JSONObject) JSONObject.parse(json);
+            if(dataJson.getInteger("code")==1){
+                JSONArray jsonArray = dataJson.getJSONArray("list");
+                for(java.util.Iterator tor=jsonArray.iterator();tor.hasNext();) {
+                    TimeLineVo timeLineVo = new TimeLineVo();
+                    JSONObject jsonObject = (JSONObject) tor.next();
+                    String taskId = jsonObject.getString("id");
+                    if(taskId!=null){
+                        timeLineVo.setTaskId(taskId);
+                        String taskKey = jsonObject.getString("taskDefKey");
+                        if("sale_commit".equals(taskKey)){
+                            timeLineVo.setColour("primary");
+                        }else if("nk_check".equals(taskKey)){
+                            timeLineVo.setColour("warning");
+                        }else if("em_check".equals(taskKey)){
+                            timeLineVo.setColour("success");
+                        }else if("pd_check".equals(taskKey)){
+                            timeLineVo.setColour("white");
+                        }else if("pm_check".equals(taskKey)){
+                            timeLineVo.setColour("info");
+                        }else if("gm_check".equals(taskKey)){
+                            timeLineVo.setColour("danger");
+                        }else{
+                            timeLineVo.setColour("white");
+                        }
+                        timeLineVo.setTaskKey(taskKey);
+                        timeLineVo.setTaskName(jsonObject.getString("name"));
+                        timeLineVo.setAssignee(jsonObject.getString("assignee"));
+                        timeLineVo.setStartTime(jsonObject.getString("startTime"));
+                        timeLineVo.setTime(DateUtils.getTime(jsonObject.getString("startTime"),"yyyy-MM-dd HH:mm:ss","MM月dd日"));
+                        timeLineVo.setEndTime(jsonObject.getString("endTime"));
+                        timeLineVo.setDeleteReason(jsonObject.getString("deleteReason"));
+                        List<TbMsg> tbMsgList = htHandoverMapper.getMsgToTaskId(taskId);
+                        String content = "";
+                        String name = "";
+                        if(tbMsgList.size()>1){
+                            //生成部门确认
+                            timeLineVo.setTitle(tbMsgList.get(0).getTitle());
+                            name = "生产部门";
+                            for(TbMsg msg : tbMsgList){
+                                String str = "";
+                                if(msg.getUpdated()==null&&msg.getStatus()==0){
+                                    str = "未确认";
+                                }else{
+                                    str = DateUtils.getTime(msg.getUpdated(),"yyyy-MM-dd HH:mm:ss")+" 确认";
+                                }
+                                content = content + "确认人:"+msg.getName()+","+str+";";
+
+                            }
+                        }else if(tbMsgList.size()==1){
+                            TbMsg msg = tbMsgList.get(0);
+                            name = msg.getName();
+                            content = msg.getRemark();
+                            timeLineVo.setTitle(msg.getTitle());
+                        }
+                        timeLineVo.setRemark(content);
+                        timeLineVo.setName(name);
+                        list.add(timeLineVo);
+                    }
+                }
+            }
+        }
+        return list;
     }
 }

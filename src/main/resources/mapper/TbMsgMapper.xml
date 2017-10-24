@@ -23,7 +23,7 @@
   </update>
 
   <update id="updateTbMsgStatusAndRemark" parameterType="com.trasen.tsproject.model.TbMsg">
-    update tb_msg set status=#{status},remark=#{remark} where pkid=#{pkid}
+    update tb_msg set status=#{status},remark=#{remark},updated = now() where pkid=#{pkid}
   </update>
 
   <select id="getPersonTags" resultType="Map" parameterType="String">

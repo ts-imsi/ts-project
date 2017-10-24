@@ -39,7 +39,13 @@ public class TbMsgService {
 
 
     public PageInfo<TbMsg> selectTbMsg(int page,int rows,Map<String,String> param){
-        synTodoHandOver(VisitInfoHolder.getUserId(),VisitInfoHolder.getShowName());
+        if(param!=null&&param.get("type")!=null&&param.get("status")!=null){
+            if("todo".equals(param.get("type"))&&"0".equals(param.get("status"))){
+                //待办
+                synTodoHandOver(VisitInfoHolder.getUserId(),VisitInfoHolder.getShowName());
+            }
+        }
+
         param.put("userId", VisitInfoHolder.getUserId());
         PageHelper.startPage(page,rows);
         List<TbMsg> tbHtChangeList=tbMsgMapper.selectTbMsg(param);
