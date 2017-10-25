@@ -27,7 +27,7 @@ public class TbProductServiceTest {
     private TbProductService tbProductService;
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void saveTbProductModule(){
         List<String> tbProModuleList=new ArrayList<>();
 
