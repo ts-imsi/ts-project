@@ -57,7 +57,7 @@
   </select>
 
   <select id="getHandOverToProcessId" resultType="com.trasen.tsproject.model.TbHtHandover" parameterType="String">
-    select * from tb_ht_handover where process_id = #{processId}
+    select * from tb_ht_handover where process_id = #{processId} limit 1
   </select>
 
   <select id="getProcessToAnalyze" parameterType="String" resultType="String">
@@ -70,6 +70,11 @@
 
   <update id="pbReCheck" parameterType="String">
     update tb_ht_analyze set status = 0 where process_id = #{processId}
+  </update>
+
+  <update id="updateNowStep" parameterType="Map">
+    update tb_ht_handover set now_step = #{nowStep},is_confirm=#{isConfirm},updated=now(),operator=#{operator}
+    where process_id = #{processId}
   </update>
 
 </mapper>

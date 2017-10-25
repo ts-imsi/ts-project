@@ -33,4 +33,6 @@ public interface TbMsgMapper extends MyMapper<TbMsg> {
     List<TbHtAnalyze> queryAnalyze(String processId);
 
     int pbReCheck(String processId);
+
+    int updateNowStep(Map<String,Object> para);
 }

@@ -109,11 +109,38 @@ public class TbMsgService {
             logger.info("流程提交成功");
             tbMsg.setStatus(1);
             updateTbMsgStatusAndRemark(tbMsg);
+            updateNowStep(dataJson);
         }else{
             logger.info("流程提交失败");
             return false;
         }
         return true;
+    }
+
+    public void updateNowStep(JSONObject dataJson){
+        JSONObject task = dataJson.getJSONObject("task");
+        if(task!=null){
+            String processId = task.getString("processId");
+            String processKey = task.getString("processKey");
+            String nowStep = task.getString("subTitle");
+            Integer isConfirm = 0;
+
+            if(processKey!=null){
+                String key = processKey.split(":")[0];
+                if("handover".equals(key)){
+                    if(nowStep==null){
+                        nowStep = "完成审批";
+                        isConfirm = 1;
+                    }
+                    Map<String,Object> para = new HashMap<>();
+                    para.put("nowStep",nowStep);
+                    para.put("isConfirm",isConfirm);
+                    para.put("operator",VisitInfoHolder.getShowName());
+                    para.put("processId",processId);
+                    tbMsgMapper.updateNowStep(para);
+                }
+            }
+        }
     }
 
     public boolean returnFlow(TbMsg tbMsg){
@@ -128,6 +155,7 @@ public class TbMsgService {
             logger.info("流程回退成功");
             tbMsg.setStatus(1);
             updateTbMsgStatusAndRemark(tbMsg);
+            updateNowStep(dataJson);
         }else{
             logger.info("流程回退失败");
             return false;
