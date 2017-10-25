@@ -1,16 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.trasen.tsproject.dao.TbProModuleMapper" >
-  <resultMap id="BaseResultMap" type="com.trasen.tsproject.model.TbProModule" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="mod_id" property="modId" jdbcType="VARCHAR" />
-    <result column="mod_name" property="modName" jdbcType="VARCHAR" />
-    <result column="mod_no" property="modNo" jdbcType="VARCHAR" />
-    <result column="pro_code" property="proCode" jdbcType="VARCHAR" />
-    <result column="version" property="version" jdbcType="VARCHAR" />
-    <result column="is_vaild" property="isVaild" jdbcType="INTEGER" />
-    <result column="created" property="created" jdbcType="TIMESTAMP" />
-  </resultMap>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trasen.tsproject.dao.TbProModuleMapper">
+  <select id="selectProModule" parameterType="String" resultType="com.trasen.tsproject.model.TbProModule">
+    select * from tb_pro_module where pro_code=#{proCode} and is_vaild=1
+  </select>
+
+  <select id="selectCleckModule" parameterType="String" resultType="String">
+    select pro.mod_id as modId from tb_ht_module ht,tb_pro_module pro where ht.mod_id=pro.mod_id and ht.ht_no=#{htNo}
+  </select>
+  <select id="selectProCode" parameterType="String" resultType="com.trasen.tsproject.model.TbProModule">
+    select * from tb_pro_module where mod_id=#{modId}
+  </select>
 </mapper>

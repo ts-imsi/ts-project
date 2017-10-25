@@ -9,6 +9,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by zhangxiahui on 17/10/19.
  */
@@ -21,8 +24,15 @@ public class MsgServiceTest {
     TbMsgService tbMsgService;
 
     @Test
-    @Rollback(false)
+    @Rollback(true)
     public void getTodoHandOver(){
         tbMsgService.synTodoHandOver("3","周林燕");
+    }
+
+    @Test
+    @Rollback(true)
+    public void selectTbMsg(){
+        Map<String,String> param=new HashMap<String,String>();
+        tbMsgService.selectTbMsg(1,10,param);
     }
 }

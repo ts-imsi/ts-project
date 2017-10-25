@@ -4,11 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import javax.persistence.*;
+
 
 @Getter
 @Setter
 public class TbProModule {
+    /**
+     * 自增主键
+     */
     private String modId;
 
     /**
@@ -40,5 +43,7 @@ public class TbProModule {
      * 创建时间
      */
     private Date created;
+
+
 
 }

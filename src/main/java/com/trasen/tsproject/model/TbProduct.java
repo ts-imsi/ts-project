@@ -3,7 +3,9 @@ package com.trasen.tsproject.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Transient;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -43,4 +45,6 @@ public class TbProduct {
      */
     private Integer isVaild;
 
+    @Transient
+    private List<TbProModule> proModuleList;
 }
