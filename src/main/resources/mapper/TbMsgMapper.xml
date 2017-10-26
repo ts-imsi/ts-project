@@ -77,4 +77,12 @@
     where process_id = #{processId}
   </update>
 
+  <select id="gethtChangeToProcessId" resultType="com.trasen.tsproject.model.TbHtChange" parameterType="String">
+    select * from tb_ht_change where process_id = #{processId} limit 1
+  </select>
+
+  <update id="updatehtChangeStatus" parameterType="java.util.Map">
+    update tb_ht_change set status=#{status} where process_id=#{processId}
+  </update>
+
 </mapper>

@@ -72,4 +72,9 @@ public class TbHtChange {
      * 创建时间
      */
     private Date created;
+
+    /**
+    * 流程id
+    * */
+    private String processId;
 }

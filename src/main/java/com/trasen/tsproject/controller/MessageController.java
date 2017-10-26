@@ -92,6 +92,19 @@ public class MessageController {
                     }
 
                 }
+                if(tbMsg.getTaskKey()!=null&&"change_mg".equals(tbMsg.getTaskKey())){
+                    //合同变更总经理审批时更新
+                    Map<String,String> param=new HashMap<>();
+                    param.put("status","3");
+                    param.put("processId",tbMsg.getProcessId());
+                    boolean boo = tbMsgService.updatehtChangeStatus(param);
+                    if(!boo){
+                        result.setMessage("更新合同变更失败");
+                        result.setSuccess(true);
+                        return result;
+                    }
+
+                }
                 boolean boo=tbMsgService.submitFlow(tbMsg);
                 if(boo){
                     result.setMessage("流程提交成功");

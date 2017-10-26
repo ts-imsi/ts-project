@@ -7,6 +7,7 @@ import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbMsgMapper;
 import com.trasen.tsproject.model.TbHtAnalyze;
+import com.trasen.tsproject.model.TbHtChange;
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbMsg;
 import com.trasen.tsproject.util.HttpUtil;
@@ -213,39 +214,16 @@ public class TbMsgService {
                     if(dataJson.getInteger("code")==1){
                         JSONArray jsonArray = dataJson.getJSONArray("list");
                         for(java.util.Iterator tor=jsonArray.iterator();tor.hasNext();) {
-                            TbMsg msg = new TbMsg();
                             JSONObject jsonObject = (JSONObject) tor.next();
                             String processId = jsonObject.getString("processId");
+                            String processKey=jsonObject.getString("processKey");
                             if(processId!=null&&!"".equals(processId)){
                                 //判断生产部门待办,如果是生产部门待办必须参与这个流程才能生成待办
                                 if(processList!=null&&!processList.contains(processId)){
                                     continue;
                                 }
-                                TbHtHandover handover = tbMsgMapper.getHandOverToProcessId(processId);
-                                if(handover!=null){
-                                    String title = "["+handover.getHtNo()+"]"+jsonObject.getString("title");
-                                    String content = "合同["+handover.getHtName()+"],客户["+handover.getCustomerName()+"],"+jsonObject.getString("msgContent");
-                                    msg.setWorkNum(workNum);
-                                    msg.setName(showName);
-                                    msg.setTitle(title);
-                                    msg.setMsgContent(content);
-                                    msg.setSendTime(jsonObject.getDate("sendTime"));
-                                    msg.setProcessId(jsonObject.getString("processId"));
-                                    msg.setProcessKey(jsonObject.getString("processKey"));
-                                    msg.setTaskId(jsonObject.getString("taskId"));
-                                    msg.setTaskKey(jsonObject.getString("taskKey"));
-                                    msg.setType("todo");
-                                    msg.setStatus(0);
-                                    msg.setSendName("ts-workflow");
-
-                                    Map<String,Object> param  = new HashMap();
-                                    param.put("taskId",msg.getTaskId());
-                                    param.put("workNum",workNum);
-                                    Integer num = tbMsgMapper.countMsgByTaskId(param);
-                                    if(num==0){
-                                        tbMsgMapper.insertMsg(msg);
-                                    }
-                                }
+                                if(processKey.contains("addChange")) todohtChangeMsg(jsonObject,processId,workNum,showName);
+                                if(processKey.contains("handover")) todohandOverMsg(jsonObject,processId,workNum,showName);
                             }
 
                         }
@@ -253,7 +231,64 @@ public class TbMsgService {
                 }
             }
         }
+    }
 
+    public void todohandOverMsg(JSONObject jsonObject,String processId,String workNum,String showName){
+        TbMsg msg = new TbMsg();
+        TbHtHandover handover = tbMsgMapper.getHandOverToProcessId(processId);
+        if(handover!=null){
+            String title = "["+handover.getHtNo()+"]"+jsonObject.getString("title");
+            String content = "合同["+handover.getHtName()+"],客户["+handover.getCustomerName()+"],"+jsonObject.getString("msgContent");
+            msg.setWorkNum(workNum);
+            msg.setName(showName);
+            msg.setTitle(title);
+            msg.setMsgContent(content);
+            msg.setSendTime(jsonObject.getDate("sendTime"));
+            msg.setProcessId(jsonObject.getString("processId"));
+            msg.setProcessKey(jsonObject.getString("processKey"));
+            msg.setTaskId(jsonObject.getString("taskId"));
+            msg.setTaskKey(jsonObject.getString("taskKey"));
+            msg.setType("todo");
+            msg.setStatus(0);
+            msg.setSendName("ts-workflow");
+
+            Map<String,Object> param  = new HashMap();
+            param.put("taskId",msg.getTaskId());
+            param.put("workNum",workNum);
+            Integer num = tbMsgMapper.countMsgByTaskId(param);
+            if(num==0){
+                tbMsgMapper.insertMsg(msg);
+            }
+        }
+    }
+
+    public void todohtChangeMsg(JSONObject jsonObject,String processId,String workNum,String showName){
+        TbMsg msg = new TbMsg();
+        TbHtChange tbHtChange = tbMsgMapper.gethtChangeToProcessId(processId);
+        if(tbHtChange!=null){
+            String title = "["+tbHtChange.getHtNo()+"]"+jsonObject.getString("title");
+            String content = "合同["+tbHtChange.getHtName()+"],客户["+tbHtChange.getCustomerName()+"],"+jsonObject.getString("msgContent");
+            msg.setWorkNum(workNum);
+            msg.setName(showName);
+            msg.setTitle(title);
+            msg.setMsgContent(content);
+            msg.setSendTime(jsonObject.getDate("sendTime"));
+            msg.setProcessId(jsonObject.getString("processId"));
+            msg.setProcessKey(jsonObject.getString("processKey"));
+            msg.setTaskId(jsonObject.getString("taskId"));
+            msg.setTaskKey(jsonObject.getString("taskKey"));
+            msg.setType("todo");
+            msg.setStatus(0);
+            msg.setSendName("ts-workflow");
+
+            Map<String,Object> param  = new HashMap();
+            param.put("taskId",msg.getTaskId());
+            param.put("workNum",workNum);
+            Integer num = tbMsgMapper.countMsgByTaskId(param);
+            if(num==0){
+                tbMsgMapper.insertMsg(msg);
+            }
+        }
     }
 
     public boolean checkAnalyze(String processId){
@@ -272,6 +307,15 @@ public class TbMsgService {
         if(processId!=null){
             tbMsgMapper.pbReCheck(processId);
             boo = true;
+        }
+        return boo;
+    }
+
+    public boolean updatehtChangeStatus(Map<String,String> param){
+        boolean boo=false;
+        if(!param.isEmpty()){
+            tbMsgMapper.updatehtChangeStatus(param);
+            boo=true;
         }
         return boo;
     }

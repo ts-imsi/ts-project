@@ -1,6 +1,7 @@
 package com.trasen.tsproject.dao;
 
 import com.trasen.tsproject.model.TbHtAnalyze;
+import com.trasen.tsproject.model.TbHtChange;
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbMsg;
 import com.trasen.tsproject.util.MyMapper;
@@ -35,4 +36,8 @@ public interface TbMsgMapper extends MyMapper<TbMsg> {
     int pbReCheck(String processId);
 
     int updateNowStep(Map<String,Object> para);
+
+    TbHtChange gethtChangeToProcessId(String processId);
+
+    int updatehtChangeStatus(Map<String,String> param);
 }
