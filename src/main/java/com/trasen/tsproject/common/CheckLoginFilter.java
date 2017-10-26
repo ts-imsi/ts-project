@@ -48,7 +48,7 @@ public class CheckLoginFilter implements Filter {
             String [] token = xToken.split("\\.");
             if(token.length==2){
                 sign = token[0];
-                String json = new String(Base64.getDecoder().decode(token[1]));
+                String json = new String(Base64.getDecoder().decode(token[1]),"utf-8");
                 JSONObject jsonObject = (JSONObject) JSONObject.parse(json);
                 name = jsonObject.getString("name");
                 pwd = jsonObject.getString("pwd");
