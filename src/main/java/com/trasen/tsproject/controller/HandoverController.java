@@ -56,7 +56,7 @@ public class HandoverController {
         try {
             if(tbHtHandover!=null){
                 boolean boo = handoverService.saveHandover(tbHtHandover);
-                TbHtHandover handover = handoverService.getHandoverToHtNo(tbHtHandover.getHtNo());
+                TbHtHandover handover = handoverService.getHandoverToHtNo(tbHtHandover);
                 result.setSuccess(boo);
                 result.setObject(handover);
             }
@@ -78,7 +78,7 @@ public class HandoverController {
         try {
             if(tbHtHandover!=null){
                 boolean boo = handoverService.submitHandover(tbHtHandover);
-                TbHtHandover handover = handoverService.getHandoverToHtNo(tbHtHandover.getHtNo());
+                TbHtHandover handover = handoverService.getHandoverToHtNo(tbHtHandover);
                 result.setSuccess(boo);
                 result.setObject(handover);
             }
