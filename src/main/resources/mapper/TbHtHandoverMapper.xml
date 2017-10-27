@@ -12,9 +12,9 @@
 
     <insert id="insertHandover" parameterType="com.trasen.tsproject.model.TbHtHandover">
         insert into tb_ht_handover (ht_no,ht_name,customer_name,`type`,status,ht_owner,
-        sign_date,pro_manager,pro_phone,content,created,create_user) values
+        sign_date,pro_manager,pro_phone,content,created,create_user,change_no) values
         (#{htNo},#{htName},#{customerName},#{type},0,#{htOwner},
-        #{signDate},#{proManager},#{proPhone},#{content},now(),#{createUser})
+        #{signDate},#{proManager},#{proPhone},#{content},now(),#{createUser},#{changeNo})
     </insert>
 
     <update id="updateHandover" parameterType="com.trasen.tsproject.model.TbHtHandover">
