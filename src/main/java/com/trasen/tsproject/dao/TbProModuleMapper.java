@@ -9,4 +9,5 @@ public interface TbProModuleMapper extends MyMapper<TbProModule> {
     List<TbProModule> selectProModule(String proCode);
     List<String> selectCleckModule(String htNo);
     TbProModule selectProCode(String modId);
+    List<String> getOldTbProModule(String htNo);
 }

@@ -83,4 +83,8 @@ public class TbProductService {
         }
         tbHtModuleMapper.saveHtModule(htModule);
     }
+
+    public List<String> getOldTbProModule(String htNo){
+        return tbProModuleMapper.getOldTbProModule(htNo);
+    }
 }

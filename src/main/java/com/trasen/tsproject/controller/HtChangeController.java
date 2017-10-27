@@ -13,14 +13,9 @@ import com.trasen.tsproject.service.TbHtChangeService;
 import com.trasen.tsproject.service.TbPersonnelService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author luoyun
@@ -115,23 +110,69 @@ public class HtChangeController {
     }
 
     @RequestMapping(value="/applySubmit",method = RequestMethod.POST)
-    public Result applySubmit(@RequestBody TbHtChange tbHtChange){
+    public Result applySubmit(@RequestBody Map<String,Object> param){
         Result result=new Result();
+
         try {
-            if (tbHtChange == null) {
+            if(param.isEmpty()){
                 result.setSuccess(false);
                 result.setMessage("参数传递失败");
                 return result;
-            } else {
-                tbHtChangeService.applySubmit(tbHtChange);
-                result.setSuccess(true);
-                result.setMessage("流程启动成功");
             }
+            Map<String,Object> maptb=(Map<String,Object>)param.get("htchange");;
+            TbHtChange tbHtChange=new TbHtChange();
+            tbHtChange.setHtNo(maptb.get("htNo").toString());
+            tbHtChange.setHtName(maptb.get("htName").toString());
+            tbHtChange.setType(maptb.get("type").toString());
+            tbHtChange.setHtOwner(maptb.get("htOwner").toString());
+            tbHtChange.setStatus(Integer.valueOf(maptb.get("status").toString()));
+            tbHtChange.setApplicationDept(maptb.get("applicationDept").toString());
+            tbHtChange.setChangeContent(maptb.get("changeContent").toString());
+            tbHtChange.setWorkNum(maptb.get("workNum").toString());
+            tbHtChange.setCreated(new Date());
+            tbHtChange.setCustomerName(maptb.get("customerName").toString());
+            tbHtChange.setCreateUser(maptb.get("createUser").toString());
+            tbHtChange.setSignDate(maptb.get("signDate").toString());
+            tbHtChange.setRemark(maptb.get("remark").toString());
+            if ( tbHtChange== null) {
+                result.setSuccess(false);
+                result.setMessage("合同变更参数传递失败");
+                return result;
+            }
+           List<String> oldModuleList=(List<String>) param.get("oldModuleList");
+            List<String> newModuleList=(List<String>) param.get("newModuleList");
+            if(param.get("hosLevel")==null){
+                param.put("hosLevel",0);
+            }
+            tbHtChangeService.applySubmit(tbHtChange,oldModuleList,newModuleList,param.get("hosLevel").toString());
+            result.setSuccess(true);
+            result.setMessage("流程启动成功");
         }catch (Exception e){
             logger.error("流程启动失败=="+e.getMessage(),e);
             result.setSuccess(false);
             result.setMessage("流程启动失败");
         }
         return result;
+    }
+
+    @RequestMapping(value="/getContractByHtNo/{contractNo}",method = RequestMethod.POST)
+    public Map<String,Object> getContractByHtNo(@PathVariable String contractNo){
+        Map<String,Object> result=new HashMap<>();
+        try{
+            Optional<String> optional=Optional.of(contractNo);
+            if(!optional.isPresent()){
+                result.put("success",false);
+                result.put("message","参数为空");
+            }else{
+             Map<String,Object>  param=tbHtChangeService.getContractByHtNo(optional.get());
+             return param;
+            }
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.put("success",false);
+            result.put("message","数据查询失败");
+        }
+        return result;
+
     }
 }

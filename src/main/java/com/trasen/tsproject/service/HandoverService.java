@@ -127,6 +127,8 @@ public class HandoverService {
         return tbHtHandover;
     }
 
+
+
     public boolean saveHandover(TbHtHandover tbHtHandover){
         boolean boo = false;
         if(tbHtHandover!=null&&tbHtHandover.getHtNo()!=null){
@@ -136,11 +138,11 @@ public class HandoverService {
             }
             TbHtHandover handover = getHandoverToHtNo(tbHtHandover);
             if(handover!=null){
-                tbHtHandover.setOperator(VisitInfoHolder.getUserId());
+                tbHtHandover.setOperator(VisitInfoHolder.getShowName());
                 htHandoverMapper.updateHandover(tbHtHandover);
                 boo = true;
             }else{
-                tbHtHandover.setCreateUser(VisitInfoHolder.getUserId());
+                tbHtHandover.setCreateUser(VisitInfoHolder.getShowName());
                 htHandoverMapper.insertHandover(tbHtHandover);
                 boo = true;
             }

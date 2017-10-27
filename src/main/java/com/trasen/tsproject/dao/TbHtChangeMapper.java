@@ -9,4 +9,6 @@ public interface TbHtChangeMapper extends MyMapper<TbHtChange> {
     List<TbHtChange> getHtChangeList(TbHtChange tbHtChange);
 
     int saveHtChange(TbHtChange tbHtChange);
+
+    int updateHtChange(TbHtChange tbHtChange);
 }

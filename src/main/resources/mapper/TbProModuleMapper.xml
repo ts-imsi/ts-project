@@ -11,4 +11,7 @@
   <select id="selectProCode" parameterType="String" resultType="com.trasen.tsproject.model.TbProModule">
     select * from tb_pro_module where mod_id=#{modId}
   </select>
+  <select id="getOldTbProModule" parameterType="String" resultType="String">
+    select CONCAT(pro.mod_id,',',pro.mod_name) from tb_ht_module mo,tb_pro_module pro where mo.mod_id=pro.mod_id and mo.ht_no=#{htNo}
+  </select>
 </mapper>
