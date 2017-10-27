@@ -102,7 +102,7 @@ public class HandoverService {
             TbHtHandover handover = new TbHtHandover();
             handover.setHtNo(contractInfo.getContractNo());
             handover.setType("new");
-            handover.setChangeId(null);
+            handover.setChangeNo(null);
             tbHtHandover = getHandoverToHtNo(handover);
             if(tbHtHandover!=null){
                 return tbHtHandover;
@@ -163,9 +163,9 @@ public class HandoverService {
                 param.put("htNo",tbHtHandover.getHtNo());
                 param.put("handOverId",tbHtHandover.getPkid());
                 param.put("htOwner",tbHtHandover.getHtOwner());
-            }else if(tbHtHandover.getChangeId()!=null){
+            }else if(tbHtHandover.getChangeNo()!=null){
                 //变更增补合同交接单
-                param.put("htNo",tbHtHandover.getChangeId());
+                param.put("htNo",tbHtHandover.getChangeNo());
                 param.put("handOverId",tbHtHandover.getPkid());
                 param.put("htOwner",tbHtHandover.getHtOwner());
             }else{
