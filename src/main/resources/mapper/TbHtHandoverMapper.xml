@@ -2,7 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbHtHandoverMapper" >
     <select id="getHandover" parameterType="com.trasen.tsproject.model.TbHtHandover" resultType="com.trasen.tsproject.model.TbHtHandover">
-        select * from tb_ht_handover where ht_no = #{htNo} and `type` = #{type} and change_no = #{changeNo} limit 1
+        select * from tb_ht_handover where ht_no = #{htNo} and `type` = #{type}
+        <if test="changeNo!=null"> and change_no = #{changeNo}  </if>
+        limit 1
     </select>
 
     <select id="getHandoverToPkid" parameterType="Integer" resultType="com.trasen.tsproject.model.TbHtHandover">
