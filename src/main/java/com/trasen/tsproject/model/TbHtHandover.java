@@ -104,6 +104,8 @@ public class TbHtHandover {
 
     private String nowStep;
 
+    private Integer changeId;
+
     @Transient
     private List<TbTemplateItem> contentJson;
 
