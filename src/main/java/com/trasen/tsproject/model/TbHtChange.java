@@ -77,4 +77,6 @@ public class TbHtChange {
     * 流程id
     * */
     private String processId;
+
+    private String remark;
 }
