@@ -268,6 +268,8 @@ public class TbMsgService {
         if(tbHtChange!=null){
             String title = "["+tbHtChange.getHtNo()+"]"+jsonObject.getString("title");
             String content = "合同["+tbHtChange.getHtName()+"],客户["+tbHtChange.getCustomerName()+"],"+jsonObject.getString("msgContent");
+            content = content + "变更理由:"+tbHtChange.getChangeContent();
+            content = content + "变更说明:"+tbHtChange.getRemark();
             msg.setWorkNum(workNum);
             msg.setName(showName);
             msg.setTitle(title);
