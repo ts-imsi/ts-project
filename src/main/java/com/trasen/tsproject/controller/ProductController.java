@@ -93,7 +93,7 @@ public class ProductController {
     public Result getOldTbProModule(@PathVariable String htNo){
         Result result=new Result();
         try{
-            Optional<String> op=Optional.of(htNo);
+            Optional<String> op=Optional.ofNullable(htNo);
             if(!op.isPresent()){
                 result.setMessage("合同编号参数传入错误");
                 result.setSuccess(false);

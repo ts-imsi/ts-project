@@ -144,7 +144,8 @@ public class HtChangeController {
             if(param.get("hosLevel")==null){
                 param.put("hosLevel",0);
             }
-            tbHtChangeService.applySubmit(tbHtChange,oldModuleList,newModuleList,param.get("hosLevel").toString());
+            Optional<Object> opt=Optional.ofNullable(param.get("price"));
+            tbHtChangeService.applySubmit(tbHtChange,oldModuleList,newModuleList,param.get("hosLevel").toString(),opt.orElse("1.0").toString());
             result.setSuccess(true);
             result.setMessage("流程启动成功");
         }catch (Exception e){

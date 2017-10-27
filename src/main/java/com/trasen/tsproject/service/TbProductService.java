@@ -65,7 +65,7 @@ public class TbProductService {
         TbHtModule htModule=new TbHtModule();
         TbProModulePrice tbProModulePrice=new TbProModulePrice();
         TbProModule tbProModule=tbProModuleMapper.selectProCode(modId);
-        Optional<TbProModule> tb=Optional.of(tbProModule);
+        Optional<TbProModule> tb=Optional.ofNullable(tbProModule);
         htModule.setHtNo(htNo);
         htModule.setProCode(tb.orElse(null).getProCode());
         htModule.setModId(tb.orElse(null).getModId());

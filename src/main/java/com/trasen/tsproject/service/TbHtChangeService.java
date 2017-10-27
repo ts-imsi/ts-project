@@ -44,6 +44,9 @@ public class TbHtChangeService {
     private TbHtModuleChangeMapper tbHtModuleChangeMapper;
 
     @Autowired
+    private ContractProductService contractProductService;
+
+    @Autowired
     private Environment env;
 
     public PageInfo<TbHtChange> getHtChangeList(int page,int rows,TbHtChange tbHtChange){
@@ -54,13 +57,14 @@ public class TbHtChangeService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean applySubmit(TbHtChange tbHtChange,List<String> oldModuleList,List<String> newModuleList,String hosLevel){
+    public boolean applySubmit(TbHtChange tbHtChange,List<String> oldModuleList,List<String> newModuleList,String hosLevel,String price){
         boolean boo=false;
         tbHtChangeMapper.saveHtChange(tbHtChange);
         logger.info("合同变更，合同变更id"+tbHtChange.getPkid());
         //String htType,String module,String moduleType,Integer pkid,String hosLevel
         oldModuleList.stream().forEach(old->saveHtChange(tbHtChange.getType(),old,"old",tbHtChange.getPkid(),hosLevel));
         newModuleList.stream().forEach(newm->saveHtChange(tbHtChange.getType(),newm,"new",tbHtChange.getPkid(),hosLevel));
+        contractProductService.getOutputValueOrSubtotal(tbHtChange.getType()+"_"+tbHtChange.getPkid(),Double.valueOf(price));
         //TODO 启动流程
         String process_start=env.getProperty("process_start").replace("{key}","addChange");
         if(process_start==null){
