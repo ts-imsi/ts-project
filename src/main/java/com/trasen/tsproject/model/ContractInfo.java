@@ -70,4 +70,8 @@ public class ContractInfo {
 
     private String contactPhone;//联系电话
 
+    private String type;
+
+    private String changeNo;
+
 }

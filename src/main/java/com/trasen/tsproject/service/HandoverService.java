@@ -101,8 +101,8 @@ public class HandoverService {
         if(contractInfo.getContractNo()!=null){
             TbHtHandover handover = new TbHtHandover();
             handover.setHtNo(contractInfo.getContractNo());
-            handover.setType("new");
-            handover.setChangeNo(null);
+            handover.setType(contractInfo.getType());
+            handover.setChangeNo(contractInfo.getChangeNo());
             tbHtHandover = getHandoverToHtNo(handover);
             if(tbHtHandover!=null){
                 return tbHtHandover;
@@ -116,12 +116,12 @@ public class HandoverService {
                 tbHtHandover.setHtNo(contractInfo.getContractNo());
                 tbHtHandover.setHtName(contractInfo.getContractName());
                 tbHtHandover.setCustomerName(contractInfo.getCustomerName());
-                // TODO: 17/9/28 交接单类型需定义
-                tbHtHandover.setType("new");
+                tbHtHandover.setType(contractInfo.getType());
                 tbHtHandover.setHtOwner(contractInfo.getContractOwner());
                 tbHtHandover.setSignDate(DateUtils.getDate(contractInfo.getSignDate(),"yyyy-MM-dd"));
                 tbHtHandover.setContent(JSON.toJSONString(list));
                 tbHtHandover.setCreateUser(VisitInfoHolder.getShowName());
+                tbHtHandover.setChangeNo(contractInfo.getChangeNo());
             }
         }
         return tbHtHandover;
