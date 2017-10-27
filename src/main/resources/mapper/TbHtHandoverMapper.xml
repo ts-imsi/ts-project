@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbHtHandoverMapper" >
-    <select id="getHandoverToHtNo" parameterType="String" resultType="com.trasen.tsproject.model.TbHtHandover">
-        select * from tb_ht_handover where ht_no = #{htNo} limit 1
+    <select id="getHandover" parameterType="com.trasen.tsproject.model.TbHtHandover" resultType="com.trasen.tsproject.model.TbHtHandover">
+        select * from tb_ht_handover where ht_no = #{htNo} and `type` = #{type} and change_id = #{changeId} limit 1
     </select>
 
     <select id="getHandoverToPkid" parameterType="Integer" resultType="com.trasen.tsproject.model.TbHtHandover">
@@ -22,11 +22,11 @@
         ht_owner=#{htOwner},sign_date=#{signDate},
         pro_manager=#{proManager},pro_phone=#{proPhone},
         content=#{content},updated=now(),operator=#{operator} 
-        where ht_no=#{htNo} 
+        where pkid = #{pkid}
     </update>
     
     <update id="submitHandover" parameterType="com.trasen.tsproject.model.TbHtHandover">
-        update tb_ht_handover set process_id=#{processId},status=1,updated=now(),operator=#{operator}  where ht_no=#{htNo}
+        update tb_ht_handover set process_id=#{processId},status=1,updated=now(),operator=#{operator}  where pkid=#{pkid}
     </update>
 
     <select id="getHtHandoverList" parameterType="com.trasen.tsproject.model.TbHtHandover" resultType="com.trasen.tsproject.model.TbHtHandover">

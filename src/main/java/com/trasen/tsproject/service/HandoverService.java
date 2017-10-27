@@ -38,10 +38,10 @@ public class HandoverService {
     @Autowired
     private Environment env;
 
-    public TbHtHandover getHandoverToHtNo(String htNo){
+    public TbHtHandover getHandoverToHtNo(TbHtHandover handover){
         TbHtHandover tbHtHandover = null;
-        if(!StringUtil.isEmpty(htNo)){
-            tbHtHandover = htHandoverMapper.getHandoverToHtNo(htNo);
+        if(handover!=null&&!StringUtil.isEmpty(handover.getHtNo())){
+            tbHtHandover = htHandoverMapper.getHandover(handover);
             if(tbHtHandover!=null&&tbHtHandover.getContent()!=null){
                 List<TbTemplateItem> list = JSON.parseArray(tbHtHandover.getContent(), TbTemplateItem.class);
                 tbHtHandover.setContentJson(list);
@@ -99,7 +99,11 @@ public class HandoverService {
             return tbHtHandover;
         }
         if(contractInfo.getContractNo()!=null){
-            tbHtHandover = getHandoverToHtNo(contractInfo.getContractNo());
+            TbHtHandover handover = new TbHtHandover();
+            handover.setHtNo(contractInfo.getContractNo());
+            handover.setType("new");
+            handover.setChangeId(null);
+            tbHtHandover = getHandoverToHtNo(handover);
             if(tbHtHandover!=null){
                 return tbHtHandover;
             }
@@ -130,7 +134,7 @@ public class HandoverService {
                 String content = JSON.toJSONString(tbHtHandover.getContentJson());
                 tbHtHandover.setContent(content);
             }
-            TbHtHandover handover = getHandoverToHtNo(tbHtHandover.getHtNo());
+            TbHtHandover handover = getHandoverToHtNo(tbHtHandover);
             if(handover!=null){
                 tbHtHandover.setOperator(VisitInfoHolder.getUserId());
                 htHandoverMapper.updateHandover(tbHtHandover);
@@ -146,7 +150,7 @@ public class HandoverService {
 
     public boolean submitHandover(TbHtHandover tbHtHandover){
         boolean boo = false;
-        if(tbHtHandover!=null&&tbHtHandover.getHtNo()!=null){
+        if(tbHtHandover!=null&&tbHtHandover.getHtNo()!=null&&tbHtHandover.getPkid()!=null){
             tbHtHandover.setOperator(VisitInfoHolder.getUserId());
             //TODO 流程提交
             String process_start=env.getProperty("process_start").replace("{key}","handover");
@@ -155,9 +159,18 @@ public class HandoverService {
                 return false;
             }
             Map<String,Object> param=new HashMap<String,Object>();
-            param.put("htNo",tbHtHandover.getHtNo());
-            param.put("handOverId",tbHtHandover.getPkid());
-            param.put("htOwner",tbHtHandover.getHtOwner());
+            if("new".equals(tbHtHandover.getType())){
+                param.put("htNo",tbHtHandover.getHtNo());
+                param.put("handOverId",tbHtHandover.getPkid());
+                param.put("htOwner",tbHtHandover.getHtOwner());
+            }else if(tbHtHandover.getChangeId()!=null){
+                //变更增补合同交接单
+                param.put("htNo",tbHtHandover.getChangeId());
+                param.put("handOverId",tbHtHandover.getPkid());
+                param.put("htOwner",tbHtHandover.getHtOwner());
+            }else{
+                return false;
+            }
             String parameterJson = JSONObject.toJSONString(param);
             String json= HttpUtil.connectURL(process_start,parameterJson,"POST");
             JSONObject dataJson = (JSONObject) JSONObject.parse(json);
@@ -216,6 +229,7 @@ public class HandoverService {
             for(TbTemplateItem item : htHandover.getContentJson()){
                 if(item.getLevel()==0&&item.getInput()==null){
                     if("htResolve".equals(item.getCode())){
+                        // TODO: 17/10/26 思考并更增补单 如何加载分解信息
                         List<TbHtResolve> resolveList = contractProductService.queryHtResolve(htHandover.getHtNo());
 
                         for(TbHtResolve tbHtResolve : resolveList){

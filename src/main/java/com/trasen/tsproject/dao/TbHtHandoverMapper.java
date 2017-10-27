@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
 
-    TbHtHandover getHandoverToHtNo(String htNo);
+    TbHtHandover getHandover(TbHtHandover handover);
 
     int insertHandover(TbHtHandover tbHtHandover);
 
