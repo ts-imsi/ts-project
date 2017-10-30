@@ -106,6 +106,10 @@ public class TbHtHandover {
 
     private String changeNo;
 
+    private Date recountTime;
+    private Date confirmTime;
+    private Date arrangeTime;
+
     @Transient
     private List<TbTemplateItem> contentJson;
 
