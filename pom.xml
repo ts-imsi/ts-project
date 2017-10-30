@@ -6,7 +6,7 @@
 
     <groupId>ts-project</groupId>
     <artifactId>ts-project</artifactId>
-    <version>1.2</version>
+    <version>1.8.3</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
