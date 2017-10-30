@@ -26,7 +26,7 @@ public class MsgServiceTest {
     @Test
     @Rollback(true)
     public void getTodoHandOver(){
-        tbMsgService.synTodoHandOver("3","周林燕");
+        //tbMsgService.synTodoHandOver("3","周林燕");
     }
 
     @Test

@@ -26,9 +26,9 @@ public class HandoverServiceTest {
 
     @Test
     public void getTempDataList(){
-        Map<String,Object> map = handoverService.getTempDataList(5);
+        /*Map<String,Object> map = handoverService.getTempDataList(5);
         String str = JSON.toJSONString(map);
-        System.out.println(str);
+        System.out.println(str);*/
 
     }
 }
