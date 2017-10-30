@@ -160,7 +160,7 @@ public class HtChangeController {
     public Map<String,Object> getContractByHtNo(@PathVariable String contractNo){
         Map<String,Object> result=new HashMap<>();
         try{
-            Optional<String> optional=Optional.of(contractNo);
+            Optional<String> optional=Optional.ofNullable(contractNo);
             if(!optional.isPresent()){
                 result.put("success",false);
                 result.put("message","参数为空");
