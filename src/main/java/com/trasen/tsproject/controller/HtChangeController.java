@@ -121,19 +121,19 @@ public class HtChangeController {
             }
             Map<String,Object> maptb=(Map<String,Object>)param.get("htchange");;
             TbHtChange tbHtChange=new TbHtChange();
-            tbHtChange.setHtNo(maptb.get("htNo").toString());
-            tbHtChange.setHtName(maptb.get("htName").toString());
-            tbHtChange.setType(maptb.get("type").toString());
-            tbHtChange.setHtOwner(maptb.get("htOwner").toString());
-            tbHtChange.setStatus(Integer.valueOf(maptb.get("status").toString()));
-            tbHtChange.setApplicationDept(maptb.get("applicationDept").toString());
-            tbHtChange.setChangeContent(maptb.get("changeContent").toString());
-            tbHtChange.setWorkNum(maptb.get("workNum").toString());
+            tbHtChange.setHtNo(Optional.ofNullable(maptb.get("htNo")).orElse("0").toString());
+            tbHtChange.setHtName(Optional.ofNullable(maptb.get("htName")).orElse("0").toString());
+            tbHtChange.setType(Optional.ofNullable(maptb.get("type")).orElse("0").toString());
+            tbHtChange.setHtOwner(Optional.ofNullable(maptb.get("htOwner")).orElse("0").toString());
+            tbHtChange.setStatus(Integer.valueOf(Optional.ofNullable(maptb.get("status")).orElse("0").toString()));
+            tbHtChange.setApplicationDept(Optional.ofNullable(maptb.get("applicationDept")).orElse("0").toString());
+            tbHtChange.setChangeContent(Optional.ofNullable(maptb.get("changeContent")).orElse("0").toString());
+            tbHtChange.setWorkNum(Optional.ofNullable(maptb.get("workNum")).orElse("0").toString());
             tbHtChange.setCreated(new Date());
-            tbHtChange.setCustomerName(maptb.get("customerName").toString());
-            tbHtChange.setCreateUser(maptb.get("createUser").toString());
-            tbHtChange.setSignDate(maptb.get("signDate").toString());
-            tbHtChange.setRemark(maptb.get("remark").toString());
+            tbHtChange.setCustomerName(Optional.ofNullable(maptb.get("customerName")).orElse("0").toString());
+            tbHtChange.setCreateUser(Optional.ofNullable(maptb.get("createUser")).orElse("0").toString());
+            tbHtChange.setSignDate(Optional.ofNullable(maptb.get("signDate")).orElse("0").toString());
+            tbHtChange.setRemark(Optional.ofNullable(maptb.get("remark")).orElse("备注").toString());
             if ( tbHtChange== null) {
                 result.setSuccess(false);
                 result.setMessage("合同变更参数传递失败");

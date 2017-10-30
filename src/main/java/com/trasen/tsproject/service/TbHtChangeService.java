@@ -62,8 +62,12 @@ public class TbHtChangeService {
         tbHtChangeMapper.saveHtChange(tbHtChange);
         logger.info("合同变更，合同变更id"+tbHtChange.getPkid());
         //String htType,String module,String moduleType,Integer pkid,String hosLevel
-        oldModuleList.stream().forEach(old->saveHtChange(tbHtChange.getType(),old,"old",tbHtChange.getPkid(),hosLevel));
-        newModuleList.stream().forEach(newm->saveHtChange(tbHtChange.getType(),newm,"new",tbHtChange.getPkid(),hosLevel));
+        if(Optional.ofNullable(oldModuleList).isPresent()){
+            oldModuleList.stream().forEach(old->saveHtChange(tbHtChange.getType(),old,"old",tbHtChange.getPkid(),hosLevel));
+        }
+        if(Optional.ofNullable(newModuleList).isPresent()){
+            newModuleList.stream().forEach(newm->saveHtChange(tbHtChange.getType(),newm,"new",tbHtChange.getPkid(),hosLevel));
+        }
         contractProductService.getOutputValueOrSubtotal(tbHtChange.getType()+"_"+tbHtChange.getPkid(),Double.valueOf(price));
         //TODO 启动流程
         String process_start=env.getProperty("process_start").replace("{key}","addChange");
