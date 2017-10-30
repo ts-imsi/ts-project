@@ -187,5 +187,12 @@ public class TbHtChangeService {
         tbHtModuleChangeMapper.saveHtModuleChange(tbHtModuleChange);
     }
 
+    public Map<String,Object> getHtChangeView(String htNo){
+        Map<String,Object> param=new HashMap<>();
+        param.put("newModule",tbHtModuleChangeMapper.selectNewModuleList(htNo));
+        param.put("oldModule",tbHtModuleChangeMapper.selectOldModuleList(htNo));
+        return param;
+    }
+
 
 }

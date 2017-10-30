@@ -176,4 +176,21 @@ public class HtChangeController {
         return result;
 
     }
+
+    @RequestMapping(value="/getHtChangeView/{type}/{pkid}",method = RequestMethod.POST)
+    public Map<String,Object> getHtChangeView(@PathVariable String type,@PathVariable String pkid){
+        Map<String,Object> result=new HashMap<>();
+        try{
+            String htNo=Optional.ofNullable(type).orElse("0")+"_"+Optional.ofNullable(pkid).orElse("0");
+            Map<String,Object> param=tbHtChangeService.getHtChangeView(htNo);
+            result.put("newModule",param.get("newModule"));
+            result.put("oldModule",param.get("oldModule"));
+            result.put("success",true);
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.put("success",false);
+            result.put("message","数据查询失败");
+        }
+        return result;
+    }
 }
