@@ -330,10 +330,6 @@ public class TbMsgService {
         tbMsgMapper.updateRecount(para);
     }
 
-    public void updateConfirm(Map<String,Object> para){
-        tbMsgMapper.updateConfirm(para);
-    }
-
     public void updateArrange(Map<String,Object> para){
         tbMsgMapper.updateArrange(para);
     }
