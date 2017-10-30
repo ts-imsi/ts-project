@@ -124,18 +124,15 @@ public class TbMsgService {
             String processId = task.getString("processId");
             String processKey = task.getString("processKey");
             String nowStep = task.getString("subTitle");
-            Integer isConfirm = 0;
 
             if(processKey!=null){
                 String key = processKey.split(":")[0];
                 if("handover".equals(key)){
                     if(nowStep==null){
                         nowStep = "完成审批";
-                        isConfirm = 1;
                     }
                     Map<String,Object> para = new HashMap<>();
                     para.put("nowStep",nowStep);
-                    para.put("isConfirm",isConfirm);
                     para.put("operator",VisitInfoHolder.getShowName());
                     para.put("processId",processId);
                     tbMsgMapper.updateNowStep(para);
@@ -176,7 +173,13 @@ public class TbMsgService {
             //生产部门负责人全部确认完之后提交流程节点到下一步
             Integer count = tbMsgMapper.queryNoConfirm(tbMsg.getProcessId());
             if(count==0){
-                submitFlow(tbMsg);
+                boolean submitBoo = submitFlow(tbMsg);
+                if (submitBoo){
+                    Map<String,Object> para = new HashMap<>();
+                    para.put("operator", VisitInfoHolder.getShowName());
+                    para.put("processId",tbMsg.getProcessId());
+                    tbMsgMapper.updateConfirm(para);
+                }
             }
             boo = true;
             tbMsg.setStatus(1);
@@ -320,6 +323,23 @@ public class TbMsgService {
             boo=true;
         }
         return boo;
+    }
+
+
+    public void updateRecount(Map<String,Object> para){
+        tbMsgMapper.updateRecount(para);
+    }
+
+    public void updateConfirm(Map<String,Object> para){
+        tbMsgMapper.updateConfirm(para);
+    }
+
+    public void updateArrange(Map<String,Object> para){
+        tbMsgMapper.updateArrange(para);
+    }
+
+    public void updateStatus(Map<String,Object> para){
+        tbMsgMapper.updateStatus(para);
     }
 
 }

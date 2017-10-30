@@ -73,7 +73,7 @@
   </update>
 
   <update id="updateNowStep" parameterType="Map">
-    update tb_ht_handover set now_step = #{nowStep},is_confirm=#{isConfirm},updated=now(),operator=#{operator}
+    update tb_ht_handover set now_step = #{nowStep},updated=now(),operator=#{operator}
     where process_id = #{processId}
   </update>
 
@@ -83,6 +83,27 @@
 
   <update id="updatehtChangeStatus" parameterType="java.util.Map">
     update tb_ht_change set status=#{status} where process_id=#{processId}
+  </update>
+
+
+  <update id="updateRecount" parameterType="Map">
+    update tb_ht_handover set is_recount = 1,recount_time=now(),operator=#{operator}
+    where process_id = #{processId}
+  </update>
+
+  <update id="updateConfirm" parameterType="Map">
+    update tb_ht_handover set is_confirm = 1,confirm_time=now(),operator=#{operator}
+    where process_id = #{processId}
+  </update>
+
+  <update id="updateArrange" parameterType="Map">
+    update tb_ht_handover set is_arrange = 1,arrange_time=now(),operator=#{operator}
+    where process_id = #{processId}
+  </update>
+
+  <update id="updateStatus" parameterType="Map">
+    update tb_ht_handover set status = #{status},updated=now(),operator=#{operator}
+    where process_id = #{processId}
   </update>
 
 </mapper>

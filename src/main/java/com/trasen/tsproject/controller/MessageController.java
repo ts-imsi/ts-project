@@ -3,6 +3,7 @@ package com.trasen.tsproject.controller;
 import cn.trasen.commons.util.StringUtil;
 import cn.trasen.core.entity.Result;
 import com.github.pagehelper.PageInfo;
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.TbMsg;
 import com.trasen.tsproject.service.TbMsgService;
 import org.apache.commons.collections.MapUtils;
@@ -89,26 +90,38 @@ public class MessageController {
                         result.setMessage("您未分解生产部门,请先分解!");
                         result.setSuccess(true);
                         return result;
-                    }
-
-                }
-                if(tbMsg.getTaskKey()!=null&&"change_mg".equals(tbMsg.getTaskKey())){
-                    //合同变更总经理审批时更新
-                    Map<String,String> param=new HashMap<>();
-                    param.put("status","3");
-                    param.put("processId",tbMsg.getProcessId());
-                    boolean boo = tbMsgService.updatehtChangeStatus(param);
-                    if(!boo){
-                        result.setMessage("更新合同变更失败");
-                        result.setSuccess(true);
-                        return result;
+                    }else{
+                        //内控已分解
+                        Map<String,Object> para = new HashMap<>();
+                        para.put("operator", VisitInfoHolder.getShowName());
+                        para.put("processId",tbMsg.getProcessId());
+                        tbMsgService.updateRecount(para);
                     }
 
                 }
                 boolean boo=tbMsgService.submitFlow(tbMsg);
+
                 if(boo){
                     result.setMessage("流程提交成功");
                     result.setSuccess(true);
+
+                    if(tbMsg.getTaskKey()!=null&&"change_mg".equals(tbMsg.getTaskKey())){
+                        //合同变更总经理审批时更新
+                        Map<String,String> param=new HashMap<>();
+                        param.put("status","3");
+                        param.put("processId",tbMsg.getProcessId());
+                        tbMsgService.updatehtChangeStatus(param);
+                    }
+
+                    if(tbMsg.getTaskKey()!=null&&"gm_check".equals(tbMsg.getTaskKey())){
+                        Map<String,Object> para = new HashMap<>();
+                        para.put("operator", VisitInfoHolder.getShowName());
+                        para.put("processId",tbMsg.getProcessId());
+                        para.put("status",2);//完成交接单流程
+                        tbMsgService.updateStatus(para);
+                    }
+
+
                 }else{
                     result.setMessage("流程提交失败");
                     result.setSuccess(true);
