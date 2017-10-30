@@ -96,7 +96,7 @@ public class TbHtChangeService {
     public Map<String,Object> getContractByHtNo(String contractNo){
         Map<String,Object> param=new HashMap<>();
         String contract_htNo=env.getProperty("contract_htNo").replace("{contractNo}",contractNo);
-        Optional<String> op=Optional.of(contract_htNo);
+        Optional<String> op=Optional.ofNullable(contract_htNo);
         if(!op.isPresent()){
             param.put("message","获取contract_htNo失败");
             param.put("success",false);
@@ -148,9 +148,9 @@ public class TbHtChangeService {
 
     public void saveHtChange(String htType,String module,String moduleType,Integer pkid,String hosLevel){
         String[] modules=module.split(":");
-        Optional<String> op=Optional.of(modules[0]);
+        Optional<String> op=Optional.ofNullable(modules[0]);
         TbProModule tbProModule=tbProModuleMapper.selectProCode(op.orElse("0"));
-        Optional<TbProModule> opt=Optional.of(tbProModule);
+        Optional<TbProModule> opt=Optional.ofNullable(tbProModule);
         TbHtModuleChange tbHtModuleChange=new TbHtModuleChange();
         tbHtModuleChange.setCreated(new Date());
         tbHtModuleChange.setHtNo(htType+"_"+pkid);
