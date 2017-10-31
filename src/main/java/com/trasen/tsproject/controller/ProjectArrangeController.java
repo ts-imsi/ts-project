@@ -1,18 +1,18 @@
 package com.trasen.tsproject.controller;
 
 
+import cn.trasen.core.entity.Result;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.model.TbHtHandover;
+import com.trasen.tsproject.model.TbProjectManager;
 import com.trasen.tsproject.service.ProjectArrangeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -63,6 +63,21 @@ public class ProjectArrangeController {
             logger.error("数据查询失败"+e.getMessage(),e);
             result.put("success",false);
             result.put("message","数据查询失败");
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/getManageByType/{type}",method = RequestMethod.POST)
+    public Result getManageByType(@PathVariable String type){
+        Result result=new Result();
+        try{
+            List<TbProjectManager> projectManagerList=projectArrangeService.getManageByType(Optional.ofNullable(type).orElse("0"));
+            result.setObject(projectManagerList);
+            result.setSuccess(true);
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.setMessage("数据查询失败");
+            result.setSuccess(false);
         }
         return result;
     }
