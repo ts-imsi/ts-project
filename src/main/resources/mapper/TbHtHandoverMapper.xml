@@ -43,7 +43,11 @@
     </select>
 
 
-
+    <select id="selectProjectArrangeList" parameterType="com.trasen.tsproject.model.TbHtHandover" resultType="com.trasen.tsproject.model.TbHtHandover">
+        select * from tb_ht_handover where `status`=2
+        <if test="proManager!=null">and (ht_no like CONCAT('%',#{htNo},'%') or ht_name like CONCAT('%',#{htName},'%') or customer_name like CONCAT('%',#{customerName},'%') or pro_manager like CONCAT('%',#{proManager},'%'))</if>
+        <if test="isArrange!=null">and is_arrange=#{isArrange}</if>
+    </select>
 
 
 </mapper>

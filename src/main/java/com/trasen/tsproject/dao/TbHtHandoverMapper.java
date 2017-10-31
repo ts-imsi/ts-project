@@ -21,4 +21,6 @@ public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
     TbHtHandover getHandoverToPkid(Integer pkid);
 
     List<TbMsg> getMsgToTaskId(String taskId);
+
+    List<TbHtHandover> selectProjectArrangeList(TbHtHandover tbHtHandover);
 }
