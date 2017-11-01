@@ -60,15 +60,17 @@ public class TbHtChangeService {
     public boolean applySubmit(TbHtChange tbHtChange,List<String> oldModuleList,List<String> newModuleList,String hosLevel,String price){
         boolean boo=false;
         tbHtChangeMapper.saveHtChange(tbHtChange);
+        //拼接合同编号
+        String changeNo = tbHtChange.getType()+"-"+tbHtChange.getPkid();
         logger.info("合同变更，合同变更id"+tbHtChange.getPkid());
         //String htType,String module,String moduleType,Integer pkid,String hosLevel
         if(Optional.ofNullable(oldModuleList).isPresent()){
-            oldModuleList.stream().forEach(old->saveHtChange(tbHtChange.getType(),old,"old",tbHtChange.getPkid(),hosLevel));
+            oldModuleList.stream().forEach(old->saveHtChange(changeNo,old,"old",hosLevel));
         }
         if(Optional.ofNullable(newModuleList).isPresent()){
-            newModuleList.stream().forEach(newm->saveHtChange(tbHtChange.getType(),newm,"new",tbHtChange.getPkid(),hosLevel));
+            newModuleList.stream().forEach(newm->saveHtChange(changeNo,newm,"new",hosLevel));
         }
-        contractProductService.getOutputValueOrSubtotal(tbHtChange.getType()+"_"+tbHtChange.getPkid(),Double.valueOf(price));
+        contractProductService.getOutputValueOrSubtotal(changeNo,Double.valueOf(price));
         //TODO 启动流程
         String process_start=env.getProperty("process_start").replace("{key}","addChange");
         if(process_start==null){
@@ -90,7 +92,7 @@ public class TbHtChangeService {
             logger.info("交接单流程启动失败");
             return false;
         }
-        tbHtChange.setStatus(1);
+        tbHtChange.setStatus(0);//待审批
         tbHtChange.setProcessId(process_id);
         tbHtChangeMapper.updateHtChange(tbHtChange);
         boo=true;
@@ -150,16 +152,16 @@ public class TbHtChangeService {
         return param;
     }
 
-    public void saveHtChange(String htType,String module,String moduleType,Integer pkid,String hosLevel){
+    public void saveHtChange(String changeNo,String module,String moduleType,String hosLevel){
         String[] modules=module.split(":");
         Optional<String> op=Optional.ofNullable(modules[0]);
         TbProModule tbProModule=tbProModuleMapper.selectProCode(op.orElse("0"));
         Optional<TbProModule> opt=Optional.ofNullable(tbProModule);
         TbHtModuleChange tbHtModuleChange=new TbHtModuleChange();
         tbHtModuleChange.setCreated(new Date());
-        tbHtModuleChange.setHtNo(htType+"_"+pkid);
+        tbHtModuleChange.setHtNo(changeNo);
         tbHtModuleChange.setModId(op.orElse("0"));
-        tbHtModuleChange.setOperator(VisitInfoHolder.getUserId());
+        tbHtModuleChange.setOperator(VisitInfoHolder.getShowName());
         tbHtModuleChange.setProCode(opt.orElse(null).getProCode());
 
         TbProModulePrice tbProModulePrice=new TbProModulePrice();
@@ -176,10 +178,10 @@ public class TbHtChangeService {
         if(moduleType.equals("new")){
             TbHtModule tbHtModule=new TbHtModule();
             tbHtModule.setCreated(new Date());
-            tbHtModule.setOperator(VisitInfoHolder.getUserId());
+            tbHtModule.setOperator(VisitInfoHolder.getShowName());
             tbHtModule.setModId(op.orElse("0"));
             tbHtModule.setProCode(opt.orElse(null).getProCode());
-            tbHtModule.setHtNo(htType+"_"+pkid);
+            tbHtModule.setHtNo(changeNo);
             tbHtModule.setPrice(tbHtModuleChange.getPrice());
             tbHtModuleMapper.saveHtModule(tbHtModule);
         }

@@ -118,6 +118,7 @@ public class HandoverController {
             paramMap.put("success",true);
             return paramMap;
         }catch (Exception e) {
+            logger.error("交接单查询异常" + e.getMessage(), e);
             paramMap.put("messages","查询交接单错误");
             paramMap.put("success",false);
             return paramMap;

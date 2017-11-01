@@ -108,7 +108,7 @@ public class MessageController {
                     if(tbMsg.getTaskKey()!=null&&"change_mg".equals(tbMsg.getTaskKey())){
                         //合同变更总经理审批时更新
                         Map<String,String> param=new HashMap<>();
-                        param.put("status","3");
+                        param.put("status","1");
                         param.put("processId",tbMsg.getProcessId());
                         tbMsgService.updatehtChangeStatus(param);
                     }

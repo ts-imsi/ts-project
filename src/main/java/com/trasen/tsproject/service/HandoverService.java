@@ -153,7 +153,7 @@ public class HandoverService {
     public boolean submitHandover(TbHtHandover tbHtHandover){
         boolean boo = false;
         if(tbHtHandover!=null&&tbHtHandover.getHtNo()!=null&&tbHtHandover.getPkid()!=null){
-            tbHtHandover.setOperator(VisitInfoHolder.getUserId());
+            tbHtHandover.setOperator(VisitInfoHolder.getShowName());
             //TODO 流程提交
             String process_start=env.getProperty("process_start").replace("{key}","handover");
             if(process_start==null){
@@ -161,18 +161,14 @@ public class HandoverService {
                 return false;
             }
             Map<String,Object> param=new HashMap<String,Object>();
-            if("new".equals(tbHtHandover.getType())){
-                param.put("htNo",tbHtHandover.getHtNo());
-                param.put("handOverId",tbHtHandover.getPkid());
-                param.put("htOwner",tbHtHandover.getHtOwner());
-            }else if(tbHtHandover.getChangeNo()!=null){
-                //变更增补合同交接单
+            if(tbHtHandover.getChangeNo()!=null){
                 param.put("htNo",tbHtHandover.getChangeNo());
                 param.put("handOverId",tbHtHandover.getPkid());
                 param.put("htOwner",tbHtHandover.getHtOwner());
             }else{
                 return false;
             }
+
             String parameterJson = JSONObject.toJSONString(param);
             String json= HttpUtil.connectURL(process_start,parameterJson,"POST");
             JSONObject dataJson = (JSONObject) JSONObject.parse(json);
