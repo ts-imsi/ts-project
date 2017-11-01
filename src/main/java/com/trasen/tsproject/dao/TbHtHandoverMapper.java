@@ -2,6 +2,7 @@ package com.trasen.tsproject.dao;
 
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbMsg;
+import com.trasen.tsproject.model.TbProduct;
 import com.trasen.tsproject.util.MyMapper;
 
 import java.util.List;
@@ -23,4 +24,9 @@ public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
     List<TbMsg> getMsgToTaskId(String taskId);
 
     List<TbHtHandover> selectProjectArrangeList(TbHtHandover tbHtHandover);
+
+    int updateProManage(TbHtHandover tbHtHandover);
+
+    List<TbProduct> getProductByHtNo(String htNo);
+    List<TbProduct> getProductByChangeNo(String changeNo);
 }

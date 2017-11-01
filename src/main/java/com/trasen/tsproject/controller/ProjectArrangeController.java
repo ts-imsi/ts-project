@@ -2,10 +2,13 @@ package com.trasen.tsproject.controller;
 
 
 import cn.trasen.core.entity.Result;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbProjectManager;
 import com.trasen.tsproject.service.ProjectArrangeService;
+import org.mockito.cglib.beans.BeanMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +81,33 @@ public class ProjectArrangeController {
             logger.error("数据查询失败"+e.getMessage(),e);
             result.setMessage("数据查询失败");
             result.setSuccess(false);
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/sendLetter",method = RequestMethod.POST)
+    public Result sendLetter(@RequestBody Map<String,Object> param){
+        Result result=new Result();
+        try{
+            if(param.isEmpty()){
+                result.setSuccess(false);
+                result.setMessage("参数传入错误");
+            }else{
+                TbHtHandover tbHtHandover=new TbHtHandover();
+                Map<String,Object> handOverMap= (Map<String, Object>) param.get("handOver");
+                tbHtHandover=JSON.parseObject(JSON.toJSONString(handOverMap), TbHtHandover.class);
+
+                TbProjectManager tbProjectManager= new TbProjectManager();
+                Map<String,Object> manageMap= (Map<String, Object>) param.get("projectManage");
+                tbProjectManager=JSON.parseObject(JSON.toJSONString(manageMap), TbProjectManager.class);
+                projectArrangeService.sendLetter(tbHtHandover,tbProjectManager);
+                result.setSuccess(true);
+                result.setMessage("数据保存成功");
+            }
+        }catch (Exception e){
+            logger.error("数据保存失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("数据保存失败");
         }
         return result;
     }

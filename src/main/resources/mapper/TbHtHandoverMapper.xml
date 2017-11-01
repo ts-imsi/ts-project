@@ -49,5 +49,17 @@
         <if test="isArrange!=null">and is_arrange=#{isArrange}</if>
     </select>
 
+    <update id="updateProManage" parameterType="com.trasen.tsproject.model.TbHtHandover" >
+        update tb_ht_handover set pro_manager=#{proManager},pro_phone=#{proPhone},is_arrange=1,arrange_time=#{arrangeTime} where pkid=#{pkid}
+    </update>
+
+    <select id="getProductByHtNo" parameterType="String" resultType="com.trasen.tsproject.model.TbProduct">
+      select pro.* from tb_ht_handover hand LEFT JOIN tb_ht_resolve res on hand.ht_no=res.ht_no LEFT JOIN tb_product pro on res.pro_code=pro.pro_code where hand.ht_no=#{htNo}
+    </select>
+
+    <select id="getProductByChangeNo" parameterType="String" resultType="com.trasen.tsproject.model.TbProduct">
+        select pro.* from tb_ht_handover hand LEFT JOIN tb_ht_resolve res on hand.change_no=res.ht_no LEFT JOIN tb_product pro on res.pro_code=pro.pro_code where hand.change_no=#{changeNo}
+    </select>
+
 
 </mapper>
