@@ -70,11 +70,9 @@ public class ProjectArrangeService {
         tbMsgMapper.insertMsg(tbMsg);
         //todo 发送邮箱或者微信
         List<TbProduct> tbProductList=new ArrayList<>();
-        if(tbHtHandover.getType().equals("new")){
-            tbProductList=tbHtHandoverMapper.getProductByHtNo(tbHtHandover.getHtNo());
-        }else{
-            tbProductList= tbHtHandoverMapper.getProductByChangeNo(tbHtHandover.getChangeNo());
-        }
+
+        tbProductList= tbHtHandoverMapper.getProductByChangeNo(tbHtHandover.getChangeNo());
+
         if(Optional.ofNullable(tbProductList).isPresent()){
             tbProductList.stream().forEach(tbProduct->saveProjectPlan(tbHtHandover,tbProduct));
         }

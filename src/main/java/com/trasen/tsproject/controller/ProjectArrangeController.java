@@ -3,12 +3,10 @@ package com.trasen.tsproject.controller;
 
 import cn.trasen.core.entity.Result;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbProjectManager;
 import com.trasen.tsproject.service.ProjectArrangeService;
-import org.mockito.cglib.beans.BeanMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
