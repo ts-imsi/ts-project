@@ -36,9 +36,6 @@ public class CheckLoginFilter implements Filter {
         String requestUri = request.getRequestURI();
         String xToken = null ;
         xToken = SecurityCheck.getHeaderValue(request,"X-TOKEN");
-        // TODO: 17/11/1
-        xToken = "71FD532E9C8D4128D670867D709F8172.eyJuYW1lIjoidHMtaW1pcyIsInB3ZCI6IjEyMzMyMSIsInNob3dOYW1lIjoi6YKT5paH54G/IiwidXNlcklkIjoiMyJ9";
-
 
         String sign = null;
         String name = null;
