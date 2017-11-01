@@ -14,4 +14,12 @@
   <select id="getOldTbProModule" parameterType="String" resultType="String">
     select CONCAT(pro.mod_id,',',pro.mod_name) from tb_ht_module mo,tb_pro_module pro where mo.mod_id=pro.mod_id and mo.ht_no=#{htNo}
   </select>
+
+  <select id="selectProductCount" resultType="com.trasen.imis.model.TbProModule" parameterType="String">
+    select * from tb_pro_module where mod_id=#{modId}
+  </select>
+  <insert id="saveProduct" parameterType="com.trasen.imis.model.TbProModule">
+    insert into tb_pro_module(mod_id,mod_name,mod_no,pro_code,version,is_vaild,created)
+    values(#{modId},#{modName},#{modNo},#{proCode},#{version},#{isVaild},#{created})
+  </insert>
 </mapper>
