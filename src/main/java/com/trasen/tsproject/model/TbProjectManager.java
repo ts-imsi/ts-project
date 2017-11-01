@@ -43,4 +43,8 @@ public class TbProjectManager {
      */
     private Date created;
 
+    private String phone;
+
+    private String eMail;
+
 }
