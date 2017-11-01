@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @Description: 操作类型
  * @date 2017/11/1
  */
-@RequestMapping(value="/task")
 @RestController
+@RequestMapping(value="/task")
 public class TaskController {
 
     private static final Logger logger = Logger.getLogger(TaskController.class);
