@@ -100,6 +100,7 @@ public class ProjectPlanService {
                 upBoo = true;
             }
             if(upBoo){
+                plan.setOperator(VisitInfoHolder.getShowName());
                 tbProjectPlanLogMapper.updatePlanTime(plan);
                 boo = true;
             }
