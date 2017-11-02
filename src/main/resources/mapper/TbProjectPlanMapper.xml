@@ -4,4 +4,12 @@
     <insert id="saveProjectPlan" parameterType="com.trasen.tsproject.model.TbProjectPlan">
         insert into tb_project_plan(handover_id,handover_type,pro_name,pro_code) values(#{handoverId},#{handoverType},#{proName},#{proCode})
     </insert>
+    
+    <select id="getProjectPlanByHandOverId" parameterType="String" resultType="com.trasen.tsproject.model.TbProjectPlan">
+        select * from tb_project_plan where handover_id=#{handoverId}
+    </select>
+    
+    <update id="updateProjectActualizePlan" parameterType="com.trasen.tsproject.model.TbProjectPlan">
+        update tb_project_plan set actualize_manager=#{actualizeManager},work_num=#{workNum},survey_time=#{surveyTime},approach_time=#{approachTime},online_time=#{onlineTime},check_time=#{checkTime},operator=#{operator},created=#{created} where plan_id=#{planId}
+    </update>
 </mapper>

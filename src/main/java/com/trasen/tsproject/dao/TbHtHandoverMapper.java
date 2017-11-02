@@ -25,6 +25,8 @@ public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
 
     List<TbHtHandover> selectProjectArrangeList(TbHtHandover tbHtHandover);
 
+    List<TbHtHandover> selectProjectActualizeList(TbHtHandover tbHtHandover);
+
     int updateProManage(TbHtHandover tbHtHandover);
 
     List<TbProduct> getProductByHtNo(String htNo);

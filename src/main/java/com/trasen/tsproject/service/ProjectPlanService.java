@@ -1,18 +1,22 @@
 package com.trasen.tsproject.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.trasen.tsproject.dao.TbHtHandoverMapper;
 import com.trasen.tsproject.common.VisitInfoHolder;
+import com.trasen.tsproject.dao.TbMsgMapper;
 import com.trasen.tsproject.dao.TbProjectPlanLogMapper;
 import com.trasen.tsproject.dao.TbProjectPlanMapper;
+import com.trasen.tsproject.model.TbHtHandover;
+import com.trasen.tsproject.model.TbMsg;
 import com.trasen.tsproject.model.TbProjectPlan;
 import com.trasen.tsproject.model.TbProjectPlanLog;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhangxiahui on 17/11/1.
@@ -28,13 +32,20 @@ public class ProjectPlanService {
     @Autowired
     TbProjectPlanLogMapper tbProjectPlanLogMapper;
 
+    @Autowired
+    private TbHtHandoverMapper tbHtHandoverMapper;
+
+    @Autowired
+    private TbMsgMapper tbMsgMapper;
+
 
     /**
-     * 获取项目计划初始划数据
+     * 获取项目计划数据
      *
      * */
-    public List<TbProjectPlan> queryProjectPlanList(){
+    public List<TbProjectPlan> queryProjectPlanList(String handoverId){
         List<TbProjectPlan> list = new ArrayList<>();
+        list=tbProjectPlanMapper.getProjectPlanByHandOverId(handoverId);
         return list;
     }
 
@@ -125,9 +136,40 @@ public class ProjectPlanService {
     }
 
 
+    public PageInfo<TbHtHandover> selectProjecActualizetList(int page,int rows,TbHtHandover tbHtHandover){
+        PageHelper.startPage(page,rows);
+        List<TbHtHandover> tbHtHandoverList=tbHtHandoverMapper.selectProjectActualizeList(tbHtHandover);
+        PageInfo<TbHtHandover> pagehelper = new PageInfo<TbHtHandover>(tbHtHandoverList);
+        return pagehelper;
+    }
 
 
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveProjectActualizePlan(List<TbProjectPlan> tbProjectPlanList){
+        boolean boo=false;
+        tbProjectPlanList.stream().forEach(tbProjectPlan -> updateProjectActualizePlan(tbProjectPlan));
+        boo=true;
+        return boo;
+    }
 
+    public void updateProjectActualizePlan(TbProjectPlan tbProjectPlan){
+        tbProjectPlan.setOperator(VisitInfoHolder.getShowName());
+        tbProjectPlan.setCreated(new Date());
+        tbProjectPlanMapper.updateProjectActualizePlan(tbProjectPlan);
+        TbHtHandover tbHtHandover=tbHtHandoverMapper.getHandoverToPkid(Integer.valueOf(tbProjectPlan.getHandoverId()));
+        TbMsg tbMsg=new TbMsg();
+        tbMsg.setHtNo(tbHtHandover.getHtNo());
+        tbMsg.setMsgContent(tbHtHandover.getHtNo()+tbHtHandover.getHtName()+tbProjectPlan.getProName()+"实施计划");
+        tbMsg.setSendName(VisitInfoHolder.getShowName());
+        tbMsg.setType("read");
+        tbMsg.setStatus(0);
+        tbMsg.setSendTime(new Date());
+        tbMsg.setWorkNum(tbProjectPlan.getWorkNum());
+        tbMsg.setName(tbProjectPlan.getActualizeManager());
+        tbMsg.setTitle(tbHtHandover.getHtNo()+tbProjectPlan.getProName()+"实施计划");
+        tbMsgMapper.insertMsg(tbMsg);
+        //todo 发送邮箱或者微信
+    }
 
 
 
