@@ -79,4 +79,6 @@ public class TbProjectPlan {
      */
     private Date updated;
 
+    private String remark;
+
 }

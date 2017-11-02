@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.trasen.tsproject.dao.TbProjectPlanLogMapper" >
+    <insert id="insertPlanLog" parameterType="com.trasen.tsproject.model.TbProjectPlanLog">
+        insert into tb_project_plan_log (plan_id,old_time,new_time,code,remark,created,operator)
+        values (#{planId},#{oldTime},#{newTime},#{code},#{remark},now(),#{operator})
+    </insert>
+
+    <update id="updatePlanTime" parameterType="com.trasen.tsproject.model.TbProjectPlan">
+        update tb_project_plan set survey_time=#{surveyTime},approach_time=#{approachTime},online_time=#{onlineTime},
+        check_time=#{checkTime},operator=#{operator},updated=now() where plan_id=#{planId}
+    </update>
+
+    <select id="queryPlanLogList" parameterType="Map" resultType="com.trasen.tsproject.model.TbProjectPlanLog">
+        select * from tb_project_plan_log where plan_id = #{planId} and code = #{code} order by created desc
+    </select>
+
+    <select id="getPlanToId" parameterType="Integer" resultType="com.trasen.tsproject.model.TbProjectPlan">
+        select * from tb_project_plan where plan_id=#{planId} limit 1
+    </select>
+
+</mapper>
