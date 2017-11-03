@@ -157,6 +157,9 @@ public class ProjectPlanService {
         tbProjectPlan.setCreated(new Date());
         tbProjectPlanMapper.updateProjectActualizePlan(tbProjectPlan);
         TbHtHandover tbHtHandover=tbHtHandoverMapper.getHandoverToPkid(Integer.valueOf(tbProjectPlan.getHandoverId()));
+        tbHtHandover.setIsProPlan(1);
+        tbHtHandover.setProPlanTime(new Date());
+        tbHtHandoverMapper.updateProPlan(tbHtHandover);
         TbMsg tbMsg=new TbMsg();
         tbMsg.setHtNo(tbHtHandover.getHtNo());
         tbMsg.setMsgContent(tbHtHandover.getHtNo()+tbHtHandover.getHtName()+tbProjectPlan.getProName()+"实施计划");
@@ -171,14 +174,6 @@ public class ProjectPlanService {
         //todo 发送邮箱或者微信
     }
 
-    public Integer selectCountManage(String handoverId){
-        int count= tbProjectPlanMapper.selectCountManage(handoverId);
-        if(count>0){
-            return 1;
-        }else{
-            return 0;
-        }
-    }
 
 
 

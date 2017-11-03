@@ -31,4 +31,6 @@ public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
 
     List<TbProduct> getProductByHtNo(String htNo);
     List<TbProduct> getProductByChangeNo(String changeNo);
+
+    int updateProPlan(TbHtHandover tbHtHandover);
 }

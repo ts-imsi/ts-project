@@ -68,4 +68,8 @@
         <if test="isArrange==2"> and (select count(*) from tb_project_plan where handover_id=hand.pkid and actualize_manager is not null )>0</if>
     </select>
 
+    <update id="updateProPlan" parameterType="com.trasen.tsproject.model.TbHtHandover">
+        update tb_ht_handover set pro_plan_time=#{proPlanTime},is_pro_plan=#{isProPlan} where pkid=#{pkid}
+    </update>
+
 </mapper>

@@ -110,7 +110,8 @@ public class TbHtHandover {
     private Date confirmTime;
     private Date arrangeTime;
 
-    private Integer isProjectPlan;
+    private Integer isProPlan;
+    private Date proPlanTime;
 
     @Transient
     private List<TbTemplateItem> contentJson;
