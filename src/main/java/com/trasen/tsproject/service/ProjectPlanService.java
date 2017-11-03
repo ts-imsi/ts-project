@@ -69,6 +69,7 @@ public class ProjectPlanService {
                 log.setRemark(plan.getRemark());
                 log.setOperator(VisitInfoHolder.getShowName());
                 tbProjectPlanLogMapper.insertPlanLog(log);
+                plan.setIsSurvey(1);
                 upBoo = true;
             }
             //修改进程时间
@@ -82,6 +83,7 @@ public class ProjectPlanService {
                 log.setRemark(plan.getRemark());
                 log.setOperator(VisitInfoHolder.getShowName());
                 tbProjectPlanLogMapper.insertPlanLog(log);
+                plan.setIsApproach(1);
                 upBoo = true;
             }
             //修改上线时间
@@ -95,6 +97,7 @@ public class ProjectPlanService {
                 log.setRemark(plan.getRemark());
                 log.setOperator(VisitInfoHolder.getShowName());
                 tbProjectPlanLogMapper.insertPlanLog(log);
+                plan.setIsOnline(1);
                 upBoo = true;
             }
             //修改验收时间
@@ -108,6 +111,7 @@ public class ProjectPlanService {
                 log.setRemark(plan.getRemark());
                 log.setOperator(VisitInfoHolder.getShowName());
                 tbProjectPlanLogMapper.insertPlanLog(log);
+                plan.setIsCheck(1);
                 upBoo = true;
             }
             if(upBoo){

@@ -81,4 +81,12 @@ public class TbProjectPlan {
 
     private String remark;
 
+    private Integer isSurvey;
+
+    private Integer isApproach;
+
+    private Integer isOnline;
+
+    private Integer isCheck;
+
 }
