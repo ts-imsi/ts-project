@@ -60,7 +60,7 @@ public class ProjectPlanService {
             //修改调研时间
             boolean upBoo = false;
             if(plan.getSurveyTime()!=null&&projectPlan.getSurveyTime()!=null
-                    &&plan.getSurveyTime().getTime()!=projectPlan.getSurveyTime().getTime()){
+                    &&!plan.getSurveyTime().equals(projectPlan.getSurveyTime())){
                 TbProjectPlanLog log = new TbProjectPlanLog();
                 log.setPlanId(plan.getPlanId());
                 log.setOldTime(projectPlan.getSurveyTime());
@@ -73,7 +73,7 @@ public class ProjectPlanService {
             }
             //修改进程时间
             if(plan.getApproachTime()!=null&&projectPlan.getApproachTime()!=null
-                    &&plan.getApproachTime().getTime()!=projectPlan.getApproachTime().getTime()){
+                    &&!plan.getApproachTime().equals(projectPlan.getApproachTime())){
                 TbProjectPlanLog log = new TbProjectPlanLog();
                 log.setPlanId(plan.getPlanId());
                 log.setOldTime(projectPlan.getApproachTime());
@@ -86,7 +86,7 @@ public class ProjectPlanService {
             }
             //修改上线时间
             if(plan.getOnlineTime()!=null&&projectPlan.getOnlineTime()!=null
-                    &&plan.getOnlineTime().getTime()!=projectPlan.getOnlineTime().getTime()){
+                    &&!plan.getOnlineTime().equals(projectPlan.getOnlineTime())){
                 TbProjectPlanLog log = new TbProjectPlanLog();
                 log.setPlanId(plan.getPlanId());
                 log.setOldTime(projectPlan.getOnlineTime());
@@ -99,7 +99,7 @@ public class ProjectPlanService {
             }
             //修改验收时间
             if(plan.getCheckTime()!=null&&projectPlan.getCheckTime()!=null
-                    &&plan.getCheckTime().getTime()!=projectPlan.getCheckTime().getTime()){
+                    &&!plan.getCheckTime().equals(projectPlan.getCheckTime())){
                 TbProjectPlanLog log = new TbProjectPlanLog();
                 log.setPlanId(plan.getPlanId());
                 log.setOldTime(projectPlan.getCheckTime());

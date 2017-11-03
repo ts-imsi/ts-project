@@ -47,22 +47,22 @@ public class TbProjectPlan {
     /**
      * 调研时间
      */
-    private Date surveyTime;
+    private String surveyTime;
 
     /**
      * 进场时间
      */
-    private Date approachTime;
+    private String approachTime;
 
     /**
      * 上线时间
      */
-    private Date onlineTime;
+    private String onlineTime;
 
     /**
      * 验收时间
      */
-    private Date checkTime;
+    private String checkTime;
 
     /**
      * 操作人

@@ -22,12 +22,12 @@ public class TbProjectPlanLog {
     /**
      * 变更前时间
      */
-    private Date oldTime;
+    private String oldTime;
 
     /**
      * 变更后时间
      */
-    private Date newTime;
+    private String newTime;
 
     /**
      * 调研:survey;进场:approac;上线:online;验收:check
