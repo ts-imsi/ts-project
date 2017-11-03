@@ -171,7 +171,14 @@ public class ProjectPlanService {
         //todo 发送邮箱或者微信
     }
 
-
+    public boolean selectCountManage(String handoverId){
+        int count= tbProjectPlanMapper.selectCountManage(handoverId);
+        if(count>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 
 

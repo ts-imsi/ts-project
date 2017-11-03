@@ -9,4 +9,5 @@ public interface TbProjectPlanMapper extends MyMapper<TbProjectPlan> {
     int saveProjectPlan(TbProjectPlan tbProjectPlan);
     List<TbProjectPlan> getProjectPlanByHandOverId(String handoverId);
     int updateProjectActualizePlan(TbProjectPlan tbProjectPlan);
+    int selectCountManage(String handoverId);
 }

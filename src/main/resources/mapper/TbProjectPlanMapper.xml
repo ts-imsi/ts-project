@@ -12,4 +12,10 @@
     <update id="updateProjectActualizePlan" parameterType="com.trasen.tsproject.model.TbProjectPlan">
         update tb_project_plan set actualize_manager=#{actualizeManager},work_num=#{workNum},survey_time=#{surveyTime},approach_time=#{approachTime},online_time=#{onlineTime},check_time=#{checkTime},operator=#{operator},created=#{created} where plan_id=#{planId}
     </update>
+
+
+    <select id="selectCountManage" parameterType="String" resultType="int">
+        select count(*) from tb_project_plan where handover_id=#{handoverId} and actualize_manager is not null
+    </select>
+
 </mapper>
