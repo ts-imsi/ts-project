@@ -51,7 +51,7 @@ public class ProjectArrangeService {
         List<TbHtHandover> tbHtHandoverList=tbHtHandoverMapper.selectProjectArrangeList(tbHtHandover);
         PageInfo<TbHtHandover> pagehelper = new PageInfo<TbHtHandover>(tbHtHandoverList);
 
-        pagehelper.getList().stream().forEach(tbHtHandover1 -> tbHtHandover1.setProjectPlan(projectPlanService.selectCountManage(tbHtHandover1.getPkid().toString())));
+        pagehelper.getList().stream().forEach(tbHtHandover1 -> tbHtHandover1.setIsProjectPlan(projectPlanService.selectCountManage(tbHtHandover1.getPkid().toString())));
         return pagehelper;
     }
 
