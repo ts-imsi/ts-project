@@ -35,7 +35,7 @@
         select * from tb_ht_handover where 1=1
         <if test="htNo!=null">and (ht_no like CONCAT('%',#{htNo},'%') or ht_name like CONCAT('%',#{htName},'%') or customer_name like CONCAT('%',#{customerName},'%'))</if>
         <if test="type!=null"> and `type`=#{type}</if>
-        <if test="nowStep!=null"> and now_step=#{nowStep}</if>
+        <if test="nowStep!=null"> and now_step like CONCAT('%',#{nowStep},'%') </if>
     </select>
 
     <select id="getMsgToTaskId" parameterType="String" resultType="com.trasen.tsproject.model.TbMsg">
