@@ -251,7 +251,12 @@ public class HandoverService {
                     }else{
                         TempDataVo tempDataVo = new TempDataVo();
                         tempDataVo.setName(item.getName());
-                        tempDataVo.setValue(item.getValue());
+                        if(item.getModule().equals(item.getName())){
+                            tempDataVo.setModule("nbsp");
+                        }else{
+                            tempDataVo.setModule(item.getModule());
+                        }
+                        tempDataVo.setValue(Optional.ofNullable(item.getValue()).orElse("nbsp"));
                         signList.add(tempDataVo);
                     }
                     //过滤非填写内容

@@ -35,6 +35,7 @@
         select * from tb_ht_handover where 1=1
         <if test="htNo!=null">and (ht_no like CONCAT('%',#{htNo},'%') or ht_name like CONCAT('%',#{htName},'%') or customer_name like CONCAT('%',#{customerName},'%'))</if>
         <if test="type!=null"> and `type`=#{type}</if>
+        <if test="nowStep!=null"> and now_step=#{nowStep}</if>
     </select>
 
     <select id="getMsgToTaskId" parameterType="String" resultType="com.trasen.tsproject.model.TbMsg">
@@ -71,5 +72,9 @@
     <update id="updateProPlan" parameterType="com.trasen.tsproject.model.TbHtHandover">
         update tb_ht_handover set pro_plan_time=#{proPlanTime},is_pro_plan=#{isProPlan} where pkid=#{pkid}
     </update>
+
+    <select id="selectByProcessId" parameterType="String" resultType="com.trasen.tsproject.model.TbHtHandover">
+        select * from tb_ht_handover where process_id=#{processId}
+    </select>
 
 </mapper>

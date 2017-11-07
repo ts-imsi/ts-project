@@ -108,6 +108,9 @@ public class HandoverController {
             if(!StringUtil.isEmpty(param.get("selectType"))){
                 tbHtHandover.setType(param.get("selectType"));
             }
+            if(!StringUtil.isEmpty(param.get("nowStep"))){
+                tbHtHandover.setNowStep(param.get("nowStep"));
+            }
             PageInfo<TbHtHandover> tbHtHandoverPageInfo=handoverService.getHtHandoverList(Integer.valueOf(param.get("page")),Integer.valueOf(param.get("rows")),tbHtHandover);
             logger.info("数据查询条数"+tbHtHandoverPageInfo.getList().size());
             paramMap.put("totalPages",tbHtHandoverPageInfo.getPages());

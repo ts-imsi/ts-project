@@ -16,6 +16,8 @@ public class TempDataVo {
 
     public Integer length;
 
+    public String module;
+
     public String value;
 
     private Double total;

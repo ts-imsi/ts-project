@@ -1,25 +1,21 @@
 package com.trasen.tsproject.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
+import com.trasen.tsproject.dao.TbHtHandoverMapper;
 import com.trasen.tsproject.dao.TbMsgMapper;
-import com.trasen.tsproject.model.TbHtAnalyze;
-import com.trasen.tsproject.model.TbHtChange;
-import com.trasen.tsproject.model.TbHtHandover;
-import com.trasen.tsproject.model.TbMsg;
+import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.util.HttpUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author luoyun
@@ -33,6 +29,9 @@ public class TbMsgService {
 
     @Autowired
     private TbMsgMapper tbMsgMapper;
+
+    @Autowired
+    private TbHtHandoverMapper tbHtHandoverMapper;
 
     @Autowired
     private Environment env;
@@ -129,8 +128,9 @@ public class TbMsgService {
                 String key = processKey.split(":")[0];
                 if("handover".equals(key)){
                     if(nowStep==null){
-                        nowStep = "完成审批";
+                        nowStep = "完成派遣";
                     }
+                    if(!nowStep.equals("完成派遣")) nowStep="待"+nowStep;
                     Map<String,Object> para = new HashMap<>();
                     para.put("nowStep",nowStep);
                     para.put("operator",VisitInfoHolder.getShowName());
@@ -323,6 +323,23 @@ public class TbMsgService {
             boo=true;
         }
         return boo;
+    }
+
+    public TbHtHandover selectByProcessId(String processId){
+        TbHtHandover htHandover= tbHtHandoverMapper.selectByProcessId(processId);
+        if(htHandover!=null&&htHandover.getContent()!=null){
+            List<TbTemplateItem> list = JSON.parseArray(htHandover.getContent(), TbTemplateItem.class);
+            htHandover.setContentJson(list);
+        }
+        return htHandover;
+    }
+
+    public int  updateHandOverByProcessId(TbHtHandover tbHtHandover){
+        if(Optional.ofNullable(tbHtHandover.getContentJson()).isPresent()){
+            String content = JSON.toJSONString(tbHtHandover.getContentJson());
+            tbHtHandover.setContent(content);
+        }
+        return tbHtHandoverMapper.updateHandover(tbHtHandover);
     }
 
 

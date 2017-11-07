@@ -4,8 +4,11 @@ import cn.trasen.commons.util.StringUtil;
 import cn.trasen.core.entity.Result;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
+import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbMsg;
+import com.trasen.tsproject.model.TbTemplateItem;
 import com.trasen.tsproject.service.TbMsgService;
+import com.trasen.tsproject.util.DateUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author luoyun
@@ -97,7 +101,14 @@ public class MessageController {
                         para.put("processId",tbMsg.getProcessId());
                         tbMsgService.updateRecount(para);
                     }
-
+                }
+                if(tbMsg.getProcessKey().contains("handover")){
+                    TbHtHandover tbHtHandover=tbMsgService.selectByProcessId(tbMsg.getProcessId());
+                    if(Optional.ofNullable(tbHtHandover).isPresent()){
+                        List<TbTemplateItem> tbTemplateItems=tbHtHandover.getContentJson();
+                        tbTemplateItems.stream().forEach(tbTemplateItem -> addContentJson(tbTemplateItem,tbMsg));
+                    }
+                    tbMsgService.updateHandOverByProcessId(tbHtHandover);
                 }
                 boolean boo=tbMsgService.submitFlow(tbMsg);
 
@@ -187,5 +198,34 @@ public class MessageController {
             result.setMessage("生产确认错误");
         }
         return result;
+    }
+
+    public void addContentJson(TbTemplateItem tbTemplateItem,TbMsg tbMsg){
+        if(tbMsg.getTaskKey().equals("sale_commit")){
+            if(tbTemplateItem.getCode().equals("saleSign")){
+                tbTemplateItem.setModule(VisitInfoHolder.getShowName());
+                tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
+            }
+        }else if(tbMsg.getTaskKey().equals("nk_check")){
+            if(tbTemplateItem.getCode().equals("nkSign")){
+                tbTemplateItem.setModule(VisitInfoHolder.getShowName());
+                tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
+            }
+        }else if(tbMsg.getTaskKey().equals("pm_check")){
+            if(tbTemplateItem.getCode().equals("proSign")){
+                tbTemplateItem.setModule(VisitInfoHolder.getShowName());
+                tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
+            }
+        }else if(tbMsg.getTaskKey().equals("pd_check")){
+            /*if(tbTemplateItem.getCode().equals("implementSign")){
+                tbTemplateItem.setModule(VisitInfoHolder.getShowName());
+                tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
+            }*/
+        }else if(tbMsg.getTaskKey().equals("gm_check")){
+            if(tbTemplateItem.getCode().equals("zjlSign")){
+                tbTemplateItem.setModule(VisitInfoHolder.getShowName());
+                tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
+            }
+        }
     }
 }
