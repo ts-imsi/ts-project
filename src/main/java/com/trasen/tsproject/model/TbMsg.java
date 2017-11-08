@@ -3,6 +3,7 @@ package com.trasen.tsproject.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Transient;
 import java.util.Date;
 
 @Setter
@@ -93,7 +94,7 @@ public class TbMsg {
     /**
     * 交接单id
     * */
-    private String handOverId;
+    private Integer handOverId;
 
     /**
     * 驳回按钮控制
@@ -103,4 +104,7 @@ public class TbMsg {
     private Integer resolveStatus;
 
     private Integer productStatus;
+
+    @Transient
+    private TbHtHandover handover;
 }

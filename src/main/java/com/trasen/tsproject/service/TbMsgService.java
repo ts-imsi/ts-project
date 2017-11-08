@@ -59,23 +59,11 @@ public class TbMsgService {
             updateTbMsgStatus(pkid);
         }
         if(tbMsg!=null&&tbMsg.getType().equals("todo")&&tbMsg.getStatus()==0){
-            String process_task=env.getProperty("process_task").replace("{taskId}",tbMsg.getTaskId());
-            if(process_task==null){
-                logger.info("process_task获取失败");
-                return null;
-            }else{
-                String json= HttpUtil.connectURL(process_task,"","POST");
-                JSONObject dataJson = (JSONObject) JSONObject.parse(json);
-                if(dataJson.getInteger("code")==1){
-                    JSONObject jsonObject=dataJson.getJSONObject("task");
-                    JSONObject variables=jsonObject.getJSONObject("variables");
-                    if(variables==null){
-                        return null;
-                    }else{
-                        tbMsg.setHtNo(variables.getString("htNo"));
-                        tbMsg.setHandOverId(variables.getString("handOverId"));
-                    }
-                }
+            TbHtHandover handover = tbMsgMapper.getHandOverToProcessId(tbMsg.getProcessId());
+            if(handover!=null){
+                tbMsg.setHtNo(handover.getHtNo());
+                tbMsg.setHandOverId(handover.getPkid());
+                tbMsg.setHandover(handover);
             }
             Map<String,String> params=new HashMap<>();
             params.put("name",tbMsg.getTaskKey());
