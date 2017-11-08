@@ -116,5 +116,8 @@ public class TbHtHandover {
     @Transient
     private List<TbTemplateItem> contentJson;
 
+    @Transient
+    private List<TbProjectPlan> planList;
+
 
 }

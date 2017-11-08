@@ -46,6 +46,10 @@ public class ProjectArrangeService {
     public PageInfo<TbHtHandover> selectProjectArrangeList(int page,int rows,TbHtHandover tbHtHandover){
         PageHelper.startPage(page,rows);
         List<TbHtHandover> tbHtHandoverList=tbHtHandoverMapper.selectProjectArrangeList(tbHtHandover);
+        for(TbHtHandover handover : tbHtHandoverList){
+            List<TbProjectPlan> list=tbProjectPlanMapper.getProjectPlanByHandOverId(handover.getPkid().toString());
+            handover.setPlanList(list);
+        }
         PageInfo<TbHtHandover> pagehelper = new PageInfo<TbHtHandover>(tbHtHandoverList);
         return pagehelper;
     }
