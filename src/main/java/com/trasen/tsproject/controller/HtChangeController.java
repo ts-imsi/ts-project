@@ -177,12 +177,11 @@ public class HtChangeController {
 
     }
 
-    @RequestMapping(value="/getHtChangeView/{type}/{pkid}",method = RequestMethod.POST)
-    public Map<String,Object> getHtChangeView(@PathVariable String type,@PathVariable String pkid){
+    @RequestMapping(value="/getHtChangeView/{htNo}",method = RequestMethod.POST)
+    public Map<String,Object> getHtChangeView(@PathVariable String htNo){
         Map<String,Object> result=new HashMap<>();
         try{
-            String htNo=Optional.ofNullable(type).orElse("0")+"_"+Optional.ofNullable(pkid).orElse("0");
-            Map<String,Object> param=tbHtChangeService.getHtChangeView(htNo);
+            Map<String,Object> param=tbHtChangeService.getHtChangeView(Optional.ofNullable(htNo).orElse("0"));
             result.put("newModule",param.get("newModule"));
             result.put("oldModule",param.get("oldModule"));
             result.put("success",true);
