@@ -13,4 +13,5 @@ public interface TbProModuleMapper extends MyMapper<TbProModule> {
 
     TbProModule selectProductCount(String pkid);
     void saveProduct(TbProModule tbProduct);
+    List<TbProModule> queryProModuleList(List<String> proCodeList);
 }

@@ -22,4 +22,12 @@
     insert into tb_pro_module(mod_id,mod_name,mod_no,pro_code,version,is_vaild,created)
     values(#{modId},#{modName},#{modNo},#{proCode},#{version},#{isVaild},#{created})
   </insert>
+
+  <select id="queryProModuleList" resultType="com.trasen.tsproject.model.TbProModule">
+    Select *
+     from tb_pro_module where pro_code in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
 </mapper>

@@ -109,4 +109,33 @@ public class ProductController {
         }
         return result;
     }
+
+    @RequestMapping(value = "/queryTbProductList",method = RequestMethod.POST)
+    public Result queryTbProductList(){
+        Result result=new Result();
+        try{
+            List<TbProduct> tbProductList=tbProductService.queryTbProductList();
+            result.setObject(tbProductList);
+            result.setSuccess(true);
+        }catch(Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.setMessage("数据查询失败");
+            result.setSuccess(false);
+        }
+        return result;
+    }
+    @RequestMapping(value="/queryProModuleList",method = RequestMethod.POST)
+    public Result queryProModuleList(@RequestBody List<String> proCodeList){
+        Result result=new Result();
+        try{
+            List<TbProModule> tbProModuleList=tbProductService.queryProModuleList(Optional.ofNullable(proCodeList).orElse(null));
+            result.setSuccess(true);
+            result.setObject(tbProModuleList);
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("数据查询失败");
+        }
+        return result;
+    }
 }

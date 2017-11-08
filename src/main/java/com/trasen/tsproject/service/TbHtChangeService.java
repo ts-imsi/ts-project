@@ -92,7 +92,6 @@ public class TbHtChangeService {
             logger.info("交接单流程启动失败");
             return false;
         }
-        tbHtChange.setStatus(0);//待审批
         tbHtChange.setProcessId(process_id);
         tbHtChangeMapper.updateHtChange(tbHtChange);
         boo=true;

@@ -37,6 +37,8 @@ public interface TbMsgMapper extends MyMapper<TbMsg> {
 
     int updateNowStep(Map<String,Object> para);
 
+    int updateHtChangeNowStep(Map<String,Object> para);
+
     TbHtChange gethtChangeToProcessId(String processId);
 
     int updatehtChangeStatus(Map<String,String> param);

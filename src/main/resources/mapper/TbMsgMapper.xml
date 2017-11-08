@@ -77,6 +77,11 @@
     where process_id = #{processId}
   </update>
 
+  <update id="updateHtChangeNowStep" parameterType="Map">
+    update tb_ht_change set now_step = #{nowStep}
+    where process_id = #{processId}
+  </update>
+
   <select id="gethtChangeToProcessId" resultType="com.trasen.tsproject.model.TbHtChange" parameterType="String">
     select * from tb_ht_change where process_id = #{processId} limit 1
   </select>

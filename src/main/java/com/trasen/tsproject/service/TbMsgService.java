@@ -125,6 +125,17 @@ public class TbMsgService {
                     para.put("processId",processId);
                     tbMsgMapper.updateNowStep(para);
                 }
+                if("addChange".equals(key)){
+                    if(nowStep==null){
+                        nowStep = "已完成";
+                    }
+                    if(!nowStep.equals("已完成")) nowStep="待"+nowStep;
+                    Map<String,Object> para = new HashMap<>();
+                    para.put("nowStep",nowStep);
+                    para.put("operator",VisitInfoHolder.getShowName());
+                    para.put("processId",processId);
+                    tbMsgMapper.updateHtChangeNowStep(para);
+                }
             }
         }
     }

@@ -79,4 +79,6 @@ public class TbHtChange {
     private String processId;
 
     private String remark;
+
+    private String nowStep;
 }

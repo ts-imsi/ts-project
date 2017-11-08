@@ -56,6 +56,13 @@ public class TbProductService {
         return tbProductList;
     }
 
+    public List<TbProduct> queryTbProductList(){
+        return tbProductMapper.selectProduct();
+    }
+    public List<TbProModule> queryProModuleList(List<String> ProCodeList){
+        return tbProModuleMapper.queryProModuleList(ProCodeList);
+    }
+
     public List<String> selectCleckModule(String htNo){
         return tbProModuleMapper.selectCleckModule(htNo);
     }
