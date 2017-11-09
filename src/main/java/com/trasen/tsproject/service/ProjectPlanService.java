@@ -58,6 +58,10 @@ public class ProjectPlanService {
             TbProjectPlan projectPlan = tbProjectPlanLogMapper.getPlanToId(plan.getPlanId());
             //修改调研时间
             boolean upBoo = false;
+            if(plan.getWorkNum()!=null&&projectPlan.getWorkNum()!=null
+                    &&!plan.getWorkNum().equals(projectPlan.getWorkNum())){
+                upBoo = true;
+            }
             if(plan.getSurveyTime()!=null&&projectPlan.getSurveyTime()!=null
                     &&!plan.getSurveyTime().equals(projectPlan.getSurveyTime())){
                 TbProjectPlanLog log = new TbProjectPlanLog();

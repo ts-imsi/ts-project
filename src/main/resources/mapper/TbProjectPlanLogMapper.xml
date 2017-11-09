@@ -7,7 +7,7 @@
     </insert>
 
     <update id="updatePlanTime" parameterType="com.trasen.tsproject.model.TbProjectPlan">
-        update tb_project_plan set survey_time=#{surveyTime},approach_time=#{approachTime},
+        update tb_project_plan set actualize_manager=#{actualizeManager},work_num=#{workNum},survey_time=#{surveyTime},approach_time=#{approachTime},
         online_time=#{onlineTime},check_time=#{checkTime},
         is_survey=#{isSurvey},is_approach=#{isApproach},
         is_online=#{isOnline},is_check=#{isCheck},
