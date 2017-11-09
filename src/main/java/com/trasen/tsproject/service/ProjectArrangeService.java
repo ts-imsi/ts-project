@@ -61,6 +61,10 @@ public class ProjectArrangeService {
     @Transactional(rollbackFor = Exception.class)
     public boolean sendLetter(TbHtHandover tbHtHandover,TbProjectManager tbProjectManager){
         boolean boo=false;
+        if(!Optional.ofNullable(tbHtHandover.getChangeNo()).isPresent()){
+            return boo;
+        }
+        List<TbProduct> tbProductList= tbHtHandoverMapper.getProductByChangeNo(tbHtHandover.getChangeNo());
         tbHtHandoverMapper.updateProManage(tbHtHandover);
         TbMsg tbMsg=new TbMsg();
         tbMsg.setHtNo(tbHtHandover.getHtNo());
@@ -74,13 +78,8 @@ public class ProjectArrangeService {
         tbMsg.setTitle(tbHtHandover.getHtNo()+"项目经理任命书");
         tbMsgMapper.insertMsg(tbMsg);
         //todo 发送邮箱或者微信
-        List<TbProduct> tbProductList=new ArrayList<>();
 
-        tbProductList= tbHtHandoverMapper.getProductByChangeNo(tbHtHandover.getChangeNo());
-
-        if(Optional.ofNullable(tbProductList).isPresent()){
-            tbProductList.stream().forEach(tbProduct->saveProjectPlan(tbHtHandover,tbProduct));
-        }
+        tbProductList.stream().forEach(tbProduct->saveProjectPlan(tbHtHandover,tbProduct));
         boo=true;
         return boo;
     }

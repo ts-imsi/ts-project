@@ -100,9 +100,15 @@ public class ProjectArrangeController {
                 TbProjectManager tbProjectManager= new TbProjectManager();
                 Map<String,Object> manageMap= (Map<String, Object>) param.get("projectManage");
                 tbProjectManager=JSON.parseObject(JSON.toJSONString(manageMap), TbProjectManager.class);
-                projectArrangeService.sendLetter(tbHtHandover,tbProjectManager);
-                result.setSuccess(true);
-                result.setMessage("数据保存成功");
+                boolean boo=projectArrangeService.sendLetter(tbHtHandover,tbProjectManager);
+                if(boo){
+                    result.setSuccess(true);
+                    result.setMessage("数据保存成功");
+                }else{
+                    result.setSuccess(false);
+                    result.setMessage("数据保存失败");
+                }
+
             }
         }catch (Exception e){
             logger.error("数据保存失败"+e.getMessage(),e);
