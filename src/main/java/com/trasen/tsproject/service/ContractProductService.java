@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.trasen.tsproject.common.VisitInfoHolder;
+import com.trasen.tsproject.dao.TbHtHandoverMapper;
 import com.trasen.tsproject.dao.TbHtModuleMapper;
 import com.trasen.tsproject.dao.TbHtResolveMapper;
 import com.trasen.tsproject.dao.TbProModulePriceMapper;
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author luoyun
@@ -53,6 +55,9 @@ public class ContractProductService {
     * */
     @Autowired
     private TbProModulePriceMapper tbProModulePriceMapper;
+
+    @Autowired
+    private TbHtHandoverMapper tbHtHandoverMapper;
 
     public Map<String,Object> getcontractTransenList(Map<String,String> param){
         Map<String,Object> paramMap=new HashMap<String,Object>();
@@ -133,10 +138,32 @@ public class ContractProductService {
         if(dataJson.getBoolean("success")){
             String  jsonString=dataJson.getString("list");
             List<ContractInfo> list = JSON.parseArray(jsonString, ContractInfo.class);
+            List<String> htNoList=tbHtHandoverMapper.queryHandOverByOwerOfType(param);
+            if(Optional.ofNullable(list).isPresent()){
+                List<ContractInfo> contractInfoList=list.stream().filter(contractInfo -> filterList(contractInfo.getContractNo(),param.get("status"),htNoList)).collect(Collectors.toList());
+                return contractInfoList;
+            }
             return list;
         }else{
             logger.info("============"+"查询数据失败");
             return null;
+        }
+    }
+
+    public boolean filterList(String htNo,String status,List<String> htNoList){
+        boolean boo=htNoList.contains(htNo);
+        if(status.equals("1")){
+            if(!boo){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            if(boo){
+                return true;
+            }else{
+                return false;
+            }
         }
     }
 

@@ -140,14 +140,6 @@ public class ProjectPlanService {
     }
 
 
-    public PageInfo<TbHtHandover> selectProjecActualizetList(int page,int rows,TbHtHandover tbHtHandover){
-        PageHelper.startPage(page,rows);
-        List<TbHtHandover> tbHtHandoverList=tbHtHandoverMapper.selectProjectActualizeList(tbHtHandover);
-        PageInfo<TbHtHandover> pagehelper = new PageInfo<TbHtHandover>(tbHtHandoverList);
-        return pagehelper;
-    }
-
-
     @Transactional(rollbackFor = Exception.class)
     public boolean saveProjectActualizePlan(List<TbProjectPlan> tbProjectPlanList){
         boolean boo=false;

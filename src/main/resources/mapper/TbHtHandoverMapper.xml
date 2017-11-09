@@ -62,19 +62,17 @@
         select pro.* from tb_ht_handover hand LEFT JOIN tb_ht_resolve res on hand.change_no=res.ht_no LEFT JOIN tb_product pro on res.pro_code=pro.pro_code where hand.change_no=#{changeNo}
     </select>
 
-    <select id="selectProjectActualizeList" parameterType="com.trasen.tsproject.model.TbHtHandover" resultType="com.trasen.tsproject.model.TbHtHandover">
-        select hand.* from tb_ht_handover hand where `status`=2 and is_arrange=1
-        <if test="proManager!=null">and (ht_no like CONCAT('%',#{htNo},'%') or ht_name like CONCAT('%',#{htName},'%') or customer_name like CONCAT('%',#{customerName},'%') or pro_manager like CONCAT('%',#{proManager},'%'))</if>
-        <if test="isArrange==1"> and (select count(*) from tb_project_plan where handover_id=hand.pkid and actualize_manager is not null )=0</if>
-        <if test="isArrange==2"> and (select count(*) from tb_project_plan where handover_id=hand.pkid and actualize_manager is not null )>0</if>
-    </select>
-
     <update id="updateProPlan" parameterType="com.trasen.tsproject.model.TbHtHandover">
         update tb_ht_handover set pro_plan_time=#{proPlanTime},is_pro_plan=#{isProPlan} where pkid=#{pkid}
     </update>
 
     <select id="selectByProcessId" parameterType="String" resultType="com.trasen.tsproject.model.TbHtHandover">
         select * from tb_ht_handover where process_id=#{processId}
+    </select>
+    
+    <select id="queryHandOverByOwerOfType" parameterType="java.util.Map" resultType="String">
+        select ht_no from tb_ht_handover where  `type`='NEW'
+        <if test="contractOwner!=null"> and ht_owner=#{contractOwner}</if>
     </select>
 
 </mapper>

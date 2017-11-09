@@ -6,6 +6,7 @@ import com.trasen.tsproject.model.TbProduct;
 import com.trasen.tsproject.util.MyMapper;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
 
@@ -25,7 +26,6 @@ public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
 
     List<TbHtHandover> selectProjectArrangeList(TbHtHandover tbHtHandover);
 
-    List<TbHtHandover> selectProjectActualizeList(TbHtHandover tbHtHandover);
 
     int updateProManage(TbHtHandover tbHtHandover);
 
@@ -35,4 +35,6 @@ public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
     int updateProPlan(TbHtHandover tbHtHandover);
 
     TbHtHandover selectByProcessId(String processId);
+
+    List<String> queryHandOverByOwerOfType(Map<String,String> param);
 }

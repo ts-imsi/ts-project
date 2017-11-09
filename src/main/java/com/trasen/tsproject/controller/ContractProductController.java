@@ -2,6 +2,8 @@ package com.trasen.tsproject.controller;
 
 import cn.trasen.commons.util.StringUtil;
 import cn.trasen.core.entity.Result;
+import com.trasen.tsproject.common.VisitInfoHolder;
+import com.trasen.tsproject.model.ContractInfo;
 import com.trasen.tsproject.model.TbHtModule;
 import com.trasen.tsproject.model.TbHtResolve;
 import com.trasen.tsproject.service.ContractProductService;
@@ -13,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.ObjDoubleConsumer;
 
 /**
@@ -33,7 +37,32 @@ public class ContractProductController {
 
     @RequestMapping(value="/getcontractTransenList",method = RequestMethod.POST)
     public Map<String,Object> getcontractTransenList(@RequestBody Map<String,String> param){
-        return contractProductService.getcontractTransenList(param);
+        Map<String,Object> paramMap=new HashMap<>();
+        try{
+            if(param.isEmpty()){
+                paramMap.put("success",false);
+                paramMap.put("message","参数参入错误");
+            }
+            param.put("contractOwner", VisitInfoHolder.getShowName());
+            String status=Optional.ofNullable(param.get("status")).orElse("0");
+            if(status.equals("0")){
+                paramMap =contractProductService.getcontractTransenList(param);
+            }else{
+                List<ContractInfo> contractInfoList=contractProductService.getOaContractListByOwner(param);
+                paramMap.put("list",contractInfoList);
+                paramMap.put("totalPages",1);
+                paramMap.put("pageNo",1);
+                paramMap.put("totalCount",1);
+                paramMap.put("pageSize",1);
+                paramMap.put("success",true);
+            }
+
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            paramMap.put("success",false);
+            paramMap.put("message","数据查询失败");
+        }
+        return paramMap;
     }
 
     @RequestMapping(value="/queryHtResolve",method = RequestMethod.POST)
