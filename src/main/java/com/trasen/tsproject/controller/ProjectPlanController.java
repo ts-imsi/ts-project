@@ -55,9 +55,9 @@ public class ProjectPlanController {
         Result result=new Result();
         result.setSuccess(false);
         try {
-            boolean boo = projectPlanService.updatePlanTime(plan);
-            result.setSuccess(boo);
-            result.setObject(plan);
+            TbProjectPlan projectPlan = projectPlanService.updatePlanTime(plan);
+            result.setSuccess(true);
+            result.setObject(projectPlan);
         }catch (Exception e) {
             logger.error("提交交接单异常" + e.getMessage(), e);
             result.setSuccess(false);

@@ -53,8 +53,7 @@ public class ProjectPlanService {
      * 修改初步计划时间
      *
      * */
-    public boolean updatePlanTime(TbProjectPlan plan){
-        boolean boo = false;
+    public TbProjectPlan updatePlanTime(TbProjectPlan plan){
         if(plan!=null&&plan.getPlanId()!=null){
             TbProjectPlan projectPlan = tbProjectPlanLogMapper.getPlanToId(plan.getPlanId());
             //修改调研时间
@@ -117,10 +116,9 @@ public class ProjectPlanService {
             if(upBoo){
                 plan.setOperator(VisitInfoHolder.getShowName());
                 tbProjectPlanLogMapper.updatePlanTime(plan);
-                boo = true;
             }
         }
-        return boo;
+        return plan;
     }
 
     /**
