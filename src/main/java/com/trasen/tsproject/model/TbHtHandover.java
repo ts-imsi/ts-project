@@ -119,5 +119,8 @@ public class TbHtHandover {
     @Transient
     private List<TbProjectPlan> planList;
 
+    @Transient
+    private boolean ifOpen = false;
+
 
 }
