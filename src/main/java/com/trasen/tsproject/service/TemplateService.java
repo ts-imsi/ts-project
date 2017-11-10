@@ -72,5 +72,11 @@ public class TemplateService {
         return boo;
     }
 
+    public int saveTemplateItem(TbTemplateItem tbTemplateItem){
+        return tbTemplateItemMapper.saveTemplateItem(tbTemplateItem);
+    }
+    public int updateTemplateItem(TbTemplateItem tbTemplateItem){
+        return tbTemplateItemMapper.updateTemplateItem(tbTemplateItem);
+    }
 
 }

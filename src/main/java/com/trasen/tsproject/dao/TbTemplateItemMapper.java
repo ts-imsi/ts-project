@@ -8,4 +8,6 @@ import java.util.List;
 public interface TbTemplateItemMapper extends MyMapper<TbTemplateItem> {
 
     List<TbTemplateItem> queryItemList(String type);
+    int updateTemplateItem(TbTemplateItem tbTemplateItem);
+    int saveTemplateItem(TbTemplateItem tbTemplateItem);
 }

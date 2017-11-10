@@ -5,6 +5,11 @@
       select * from tb_template_item where type=#{type} and is_vaild=1 order by px
     </select>
 
-
+    <update id="updateTemplateItem" parameterType="com.trasen.tsproject.model.TbTemplateItem">
+        update tb_template_item set `name`=#{name},code=#{code},`type`=#{type},`input`=#{input},`level`=#{level},`module`=#{module},is_required=#{isRequired},`length`=#{length} where pkid=#{pkid}
+    </update>
+    <insert id="saveTemplateItem" parameterType="com.trasen.tsproject.model.TbTemplateItem">
+        insert into tb_template_item(`name`,code,`type`,`input`,`level`,`module`,is_required,`length`,px) values(#{name},#{code},#{type},#{input},#{level},#{module},#{isRequired},#{length},#{px})
+    </insert>
 
 </mapper>

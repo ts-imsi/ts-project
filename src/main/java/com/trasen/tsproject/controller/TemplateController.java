@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by zhangxiahui on 17/9/26.
@@ -114,6 +115,30 @@ public class TemplateController {
         return paramMap;
 
 
+    }
+
+    @RequestMapping(value="/saveTemplateItem",method = RequestMethod.POST)
+    public Result saveTemplateItem(@RequestBody TbTemplateItem tbTemplateItem){
+        Result result=new Result();
+        try{
+            if(Optional.ofNullable(tbTemplateItem).isPresent()){
+                if(Optional.ofNullable(tbTemplateItem.getPkid()).isPresent()){
+                    templateService.updateTemplateItem(tbTemplateItem);
+                }else{
+                    templateService.saveTemplateItem(tbTemplateItem);
+                }
+                result.setSuccess(true);
+                result.setMessage("数据保存或更新成功");
+            }else{
+                result.setMessage("数据参数失败");
+                result.setSuccess(false);
+            }
+        }catch (Exception e){
+            logger.error("数据保存或更新失败"+e.getMessage(),e);
+            result.setMessage("数据保存或更新失败");
+            result.setSuccess(false);
+        }
+        return result;
     }
 
 
