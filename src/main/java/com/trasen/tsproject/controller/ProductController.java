@@ -77,8 +77,8 @@ public class ProductController {
             if(param.get("hosLevel")==null||param.get("hosLevel").equals("")){
                 param.put("hosLevel",0);
             }
-            List<String> modIdList= (List<String>) param.get("moduleList");
-            tbProductService.saveTbProductModule(param.get("htNo").toString(),param.get("htPrice").toString(),param.get("hosLevel").toString(),modIdList);
+            List<String> modList= (List<String>) param.get("moduleList");
+            tbProductService.saveTbProductModule(param.get("htNo").toString(),param.get("htPrice").toString(),param.get("hosLevel").toString(),modList);
             result.setSuccess(true);
             result.setMessage("数据保存成功");
         }catch(Exception e){
@@ -137,5 +137,24 @@ public class ProductController {
             result.setMessage("数据查询失败");
         }
         return result;
+    }
+
+    @RequestMapping(value="/getAddModuleView/{htNo}",method = RequestMethod.POST)
+    public Map<String,Object> getAddModuleView(@PathVariable String htNo){
+        Map<String,Object> param=new HashMap<>();
+        try{
+            if(Optional.ofNullable(htNo).isPresent()){
+                param=tbProductService.getAddModuleView(htNo);
+                param.put("success",true);
+            }else{
+                param.put("success",false);
+                param.put("message","参数传入错误");
+            }
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            param.put("success",false);
+            param.put("message","数据查询失败");
+        }
+        return param;
     }
 }

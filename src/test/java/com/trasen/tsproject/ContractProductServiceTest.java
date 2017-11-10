@@ -54,15 +54,6 @@ public class ContractProductServiceTest {
         System.out.println("=========="+boo);
     }
 
-    @Test
-    @Rollback(true)
-    public void getOaContractListByOwner(){
-        Map<String,String> param=new HashMap<>();
-        param.put("contractOwner","周林燕");
-        List<ContractInfo> contractInfoList=contractProductService.getOaContractListByOwner(param);
-        for(ContractInfo contractInfo:contractInfoList){
-            System.out.println(contractInfo.getContractNo());
-        }
-    }
+
 
 }

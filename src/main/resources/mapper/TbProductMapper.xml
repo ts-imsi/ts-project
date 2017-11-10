@@ -4,4 +4,7 @@
   <select id="selectProduct" resultType="com.trasen.tsproject.model.TbProduct">
     select * from tb_product where is_vaild=1
   </select>
+  <select id="selectAddModuleView" resultType="com.trasen.tsproject.model.TbHtModule" parameterType="String">
+    select modu.*,pro.mod_name from tb_ht_module modu,tb_pro_module pro where modu.mod_id=pro.mod_id and modu.ht_no=#{htNo}
+  </select>
 </mapper>

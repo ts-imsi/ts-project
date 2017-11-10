@@ -17,9 +17,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author luoyun
@@ -68,16 +67,17 @@ public class TbProductService {
     }
 
     @Transactional(rollbackFor=Exception.class)
-    public void saveTbProductModule(String htNo, String price,String hospitalLevel, List<String> modIdList){
+    public void saveTbProductModule(String htNo, String price,String hospitalLevel, List<String> modList){
         tbHtModuleMapper.deleteHtModule(htNo);
-        modIdList.stream().forEach(modId->saveTbHtModule(modId,htNo,hospitalLevel));
+        modList.stream().forEach(mod->saveTbHtModule(mod,htNo,hospitalLevel));
         contractProductService.getOutputValueOrSubtotal(htNo,Double.valueOf(price));
     }
 
-    public void saveTbHtModule(String modId,String htNo,String hospitalLevel){
+    public void saveTbHtModule(String mod,String htNo,String hospitalLevel){
         TbHtModule htModule=new TbHtModule();
         TbProModulePrice tbProModulePrice=new TbProModulePrice();
-        TbProModule tbProModule=tbProModuleMapper.selectProCode(modId);
+        String[] modArray= mod.split(":");
+        TbProModule tbProModule=tbProModuleMapper.selectProCode(Optional.ofNullable(modArray[0]).orElse("0"));
         Optional<TbProModule> tb=Optional.ofNullable(tbProModule);
         htModule.setHtNo(htNo);
         htModule.setProCode(tb.orElse(null).getProCode());
@@ -145,5 +145,19 @@ public class TbProductService {
             }
         }
         return 0;
+    }
+
+    public Map<String,Object> getAddModuleView(String htNo){
+        Map<String,Object> param=new HashMap<>();
+        List<TbProduct> tbProductList=queryTbProductList();
+        List<TbHtModule> tbHtModuleList=tbProductMapper.selectAddModuleView(htNo);
+        List<String> ProCodeList=tbHtModuleList.stream().map(tbHtModule -> tbHtModule.getProCode()).collect(Collectors.toList());
+        List<String> newModuleList=tbHtModuleList.stream().map(tbHtModule -> tbHtModule.getModId()+":"+tbHtModule.getModName()).collect(Collectors.toList());
+        List<TbProModule> tbProModuleList=tbProModuleMapper.queryProModuleList(ProCodeList);
+        param.put("proList",tbProductList);
+        param.put("newProModuleList",ProCodeList);
+        param.put("newPModuleList",tbProModuleList);
+        param.put("newModuleList",newModuleList);
+        return param;
     }
 }
