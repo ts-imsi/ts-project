@@ -1,9 +1,7 @@
 package com.trasen.tsproject.controller;
 
 import com.trasen.tsproject.common.SocketSessionRegistry;
-import com.trasen.tsproject.model.RequestMessage;
-import com.trasen.tsproject.model.ResponseMessage;
-import com.trasen.tsproject.model.SocketMessage;
+import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.service.TbMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageHeaders;
@@ -22,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by zhangxiahui on 17/11/10.
@@ -74,19 +74,36 @@ public class WsController {
 
 
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 5*60*1000)
     public void sendMsgCount() throws Exception {
         // 网客户端发送待办消息
-        // TODO: 17/11/13 遍历订阅的客户掉,定时推送消息
-        if(webAgentSessionRegistry.getSessionIds("3")!=null&&webAgentSessionRegistry.getSessionIds("3").size()>0){
-            String sessionId=webAgentSessionRegistry.getSessionIds("3").stream().findFirst().get();
-
-            if(sessionId!=null){
-                Map<String,Object> map = tbMsgService.indexMsgCount("3");
-                messagingTemplate.convertAndSendToUser(sessionId,"/queue/notifications",map,createHeaders(sessionId));
+        ConcurrentMap<String, Set<String>> allUser = webAgentSessionRegistry.getAllSessionIds();
+        Set<String> userSet = allUser.keySet();
+        for(String userId : userSet){
+            if(webAgentSessionRegistry.getSessionIds(userId)!=null&&webAgentSessionRegistry.getSessionIds(userId).size()>0){
+                String sessionId=webAgentSessionRegistry.getSessionIds(userId).stream().findFirst().get();
+                if(sessionId!=null){
+                    Map<String,Object> map = tbMsgService.indexMsgCount(userId);
+                    messagingTemplate.convertAndSendToUser(sessionId,"/topic/message",map,createHeaders(sessionId));
+                }
             }
         }
+    }
 
+    /**
+     * 用于页面测试Ddemo (请不要删除)
+     * 同样的发送消息   只不过是ws版本  http请求不能访问
+     * 根据用户key发送消息
+     * @param message
+     * @return
+     * @throws Exception
+     */
+    @MessageMapping("/msg/hellosingle")
+    public void greeting2(InMessage message) throws Exception {
+        String sessionId=webAgentSessionRegistry.getSessionIds(message.getId()).stream().findFirst().get();
+        messagingTemplate.convertAndSendToUser(sessionId,"/topic/greetings",new OutMessage("single send to："+message.getId()+", from:" + message.getName() + "!"),createHeaders(sessionId));
+        messagingTemplate.convertAndSendToUser(message.getId(),"/topic/greetings",new OutMessage("single send to："+message.getId()+", from:" + message.getName() + "!"));
+        messagingTemplate.convertAndSend("/topic/"+message.getId()+"/callback", new OutMessage("single send to："+message.getId()+", from:" + message.getName() + "!"));
 
 
     }
