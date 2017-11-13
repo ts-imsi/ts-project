@@ -228,4 +228,19 @@ public class MessageController {
             }
         }
     }
+
+    @RequestMapping(value="/getMsgCount",method = RequestMethod.GET)
+    public Result getMsgCount(){
+        Result result=new Result();
+        try{
+            Map<String,Object> map = tbMsgService.indexMsgCount();
+            result.setSuccess(true);
+            result.setObject(map);
+        }catch (Exception e){
+            logger.error("getMsgCount查询失败=="+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("查询数据失败");
+        }
+        return result;
+    }
 }

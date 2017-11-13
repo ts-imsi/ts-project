@@ -111,4 +111,18 @@
     where process_id = #{processId}
   </update>
 
+  <select id="countTodoMsg" resultType="Integer" parameterType="String">
+    SELECT count(*) FROM tb_msg msg
+    LEFT JOIN tb_personnel per ON per.work_num = msg.work_num
+    LEFT JOIN t_user t_u ON t_u.per_id = per.per_id
+        where t_u.pkid=#{userId} and  msg.type='todo' and msg.status=0
+  </select>
+
+  <select id="queryTodoMsgLimit3" resultType="com.trasen.tsproject.model.TbMsg" parameterType="String">
+    SELECT msg.* FROM tb_msg msg
+    LEFT JOIN tb_personnel per ON per.work_num = msg.work_num
+    LEFT JOIN t_user t_u ON t_u.per_id = per.per_id
+        where t_u.pkid=#{userId} and  msg.type='todo' and msg.status=0 order by msg.send_time desc limit 3
+  </select>
+
 </mapper>

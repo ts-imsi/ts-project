@@ -39,12 +39,13 @@ public class TbMsgService {
 
 
     public PageInfo<TbMsg> selectTbMsg(int page,int rows,Map<String,String> param){
-        if(param!=null&&param.get("type")!=null&&param.get("status")!=null){
+        //待办消息同步由websocket统一处理
+        /*if(param!=null&&param.get("type")!=null&&param.get("status")!=null){
             if("todo".equals(param.get("type"))&&"0".equals(param.get("status"))){
                 //待办
                 synTodoHandOver(VisitInfoHolder.getUserId(),VisitInfoHolder.getShowName());
             }
-        }
+        }*/
 
         param.put("userId", VisitInfoHolder.getUserId());
         PageHelper.startPage(page,rows);
@@ -352,6 +353,25 @@ public class TbMsgService {
 
     public void updateStatus(Map<String,Object> para){
         tbMsgMapper.updateStatus(para);
+    }
+
+    public Map<String,Object> indexMsgCount(){
+        Map<String,Object> map = new HashMap<>();
+        synTodoHandOver(VisitInfoHolder.getUserId(),VisitInfoHolder.getShowName());
+        Integer count = tbMsgMapper.countTodoMsg(VisitInfoHolder.getUserId());
+        List<TbMsg> tbMsgList = tbMsgMapper.queryTodoMsgLimit3(VisitInfoHolder.getUserId());
+        map.put("msgCount",count);
+        map.put("msgList",tbMsgList);
+        map.put("userId",VisitInfoHolder.getUserId());
+        return map;
+    }
+    public Map<String,Object> indexMsgCount(String userId){
+        Map<String,Object> map = new HashMap<>();
+        Integer count = tbMsgMapper.countTodoMsg(userId);
+        List<TbMsg> tbMsgList = tbMsgMapper.queryTodoMsgLimit3(userId);
+        map.put("msgCount",count);
+        map.put("msgList",tbMsgList);
+        return map;
     }
 
 }

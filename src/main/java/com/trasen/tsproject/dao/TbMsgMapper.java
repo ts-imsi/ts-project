@@ -50,4 +50,8 @@ public interface TbMsgMapper extends MyMapper<TbMsg> {
     int updateArrange(Map<String,Object> para);
 
     int updateStatus(Map<String,Object> para);
+
+    int countTodoMsg(String userId);
+
+    List<TbMsg> queryTodoMsgLimit3(String userId);
 }
