@@ -3,6 +3,7 @@ package com.trasen.tsproject.controller;
 import com.trasen.tsproject.common.SocketSessionRegistry;
 import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.service.TbMsgService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -29,6 +29,8 @@ import java.util.concurrent.ConcurrentMap;
 @Controller
 @EnableScheduling
 public class WsController {
+
+    private static final Logger logger = Logger.getLogger(WsController.class);
 
 
     /**session操作类*/
@@ -79,6 +81,7 @@ public class WsController {
         // 网客户端发送待办消息
         ConcurrentMap<String, Set<String>> allUser = webAgentSessionRegistry.getAllSessionIds();
         Set<String> userSet = allUser.keySet();
+        logger.info("====webSocket发送给客户端消息,目前访问的客户端为["+userSet.size()+"]个==========");
         for(String userId : userSet){
             if(webAgentSessionRegistry.getSessionIds(userId)!=null&&webAgentSessionRegistry.getSessionIds(userId).size()>0){
                 String sessionId=webAgentSessionRegistry.getSessionIds(userId).stream().findFirst().get();
