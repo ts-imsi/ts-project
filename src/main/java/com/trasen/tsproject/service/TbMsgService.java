@@ -191,12 +191,13 @@ public class TbMsgService {
 
 
 
-    public void synTodoHandOver(String userId,String showName){
+    public void synTodoHandOver(String userId){
         if(userId!=null){
             List<Map<String,String>> tags = tbMsgMapper.getPersonTags(userId);
             for(Map<String,String> tagMap : tags){
                 String tagCode = tagMap.get("tag_id");
                 String workNum = tagMap.get("work_num");
+                String showName = tagMap.get("display_name");
                 if(tagCode.indexOf("tag_handover")>0){
                     String assignee = tagCode.substring(14,tagCode.length()-1);
                     String wf_todo = env.getProperty("wf_todo").replace("{assignee}",assignee);
@@ -357,7 +358,7 @@ public class TbMsgService {
 
     public Map<String,Object> indexMsgCount(){
         Map<String,Object> map = new HashMap<>();
-        synTodoHandOver(VisitInfoHolder.getUserId(),VisitInfoHolder.getShowName());
+        synTodoHandOver(VisitInfoHolder.getUserId());
         Integer count = tbMsgMapper.countTodoMsg(VisitInfoHolder.getUserId());
         List<TbMsg> tbMsgList = tbMsgMapper.queryTodoMsgLimit3(VisitInfoHolder.getUserId());
         map.put("msgCount",count);
@@ -366,6 +367,7 @@ public class TbMsgService {
         return map;
     }
     public Map<String,Object> indexMsgCount(String userId){
+        synTodoHandOver(userId);
         Map<String,Object> map = new HashMap<>();
         Integer count = tbMsgMapper.countTodoMsg(userId);
         List<TbMsg> tbMsgList = tbMsgMapper.queryTodoMsgLimit3(userId);

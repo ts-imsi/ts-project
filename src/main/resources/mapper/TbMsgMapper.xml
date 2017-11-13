@@ -27,7 +27,7 @@
   </update>
 
   <select id="getPersonTags" resultType="Map" parameterType="String">
-    select tag.tag_id,tag.work_num from tb_tag_personnel tag
+    select tag.tag_id,tag.work_num,u.display_name from tb_tag_personnel tag
     join tb_personnel p on p.work_num = tag.work_num
     join t_user u on u.per_id=p.per_id
     where u.pkid=#{userId}
