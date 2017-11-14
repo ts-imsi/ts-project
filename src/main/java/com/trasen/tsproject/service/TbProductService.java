@@ -153,7 +153,8 @@ public class TbProductService {
         List<TbHtModule> tbHtModuleList=tbProductMapper.selectAddModuleView(htNo);
         List<String> ProCodeList=tbHtModuleList.stream().map(tbHtModule -> tbHtModule.getProCode()).collect(Collectors.toList());
         List<String> newModuleList=tbHtModuleList.stream().map(tbHtModule -> tbHtModule.getModId()+":"+tbHtModule.getModName()).collect(Collectors.toList());
-        List<TbProModule> tbProModuleList=tbProModuleMapper.queryProModuleList(ProCodeList);
+        List<TbProModule> tbProModuleList=new ArrayList<>();
+        if(ProCodeList!=null&&ProCodeList.size()!=0) tbProModuleList=tbProModuleMapper.queryProModuleList(ProCodeList);
         param.put("proList",tbProductList);
         param.put("newProModuleList",ProCodeList);
         param.put("newPModuleList",tbProModuleList);
