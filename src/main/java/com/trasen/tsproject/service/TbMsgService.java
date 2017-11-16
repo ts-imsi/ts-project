@@ -119,7 +119,6 @@ public class TbMsgService {
                     if(nowStep==null){
                         nowStep = "完成派遣";
                     }
-                    if(!nowStep.equals("完成派遣")) nowStep="待"+nowStep;
                     Map<String,Object> para = new HashMap<>();
                     para.put("nowStep",nowStep);
                     para.put("operator",VisitInfoHolder.getShowName());
@@ -130,7 +129,6 @@ public class TbMsgService {
                     if(nowStep==null){
                         nowStep = "已完成";
                     }
-                    if(!nowStep.equals("已完成")) nowStep="待"+nowStep;
                     Map<String,Object> para = new HashMap<>();
                     para.put("nowStep",nowStep);
                     para.put("operator",VisitInfoHolder.getShowName());
