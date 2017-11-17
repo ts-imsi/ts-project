@@ -206,4 +206,19 @@ public class PlanTemplateController {
         return result;
     }
 
+    @RequestMapping(value="/selectTempView/{pkid}",method = RequestMethod.POST)
+    public Map<String,Object> selectTempView(@PathVariable Integer pkid){
+        Map<String,Object> result=new HashMap<>();
+        try{
+            Map<String,Object> param=planTemplateService.selectTempView(Optional.ofNullable(pkid).orElse(0));
+            param.put("success",true);
+            result=param;
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.put("success",false);
+            result.put("message","数据查询失败");
+        }
+        return result;
+    }
+
 }

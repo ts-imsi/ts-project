@@ -7,4 +7,14 @@
     <insert id="saveTemplateItem" parameterType="com.trasen.tsproject.model.TbTemplateItem">
         insert into tb_plan_template_item(temp_id,stage_id,stage_doc_id,role,operator,created) values(#{tempId},#{stageId},#{stageDocId},#{role},#{operator},#{created})
     </insert>
+    <select id="selectPlanItem" parameterType="Integer" resultType="com.trasen.tsproject.model.TbPlanTemplateItem">
+        SELECT
+	te.*, tag.pkid AS checkTagId,
+	tag.tag_name AS tagName,
+	tag.tag_id AS tagId,
+	tag.permission AS permission
+    FROM
+	tb_plan_template_item te
+    LEFT JOIN twf_check_tag tag ON te.role = tag.tag_id where temp_id = #{tempId}
+    </select>
 </mapper>
