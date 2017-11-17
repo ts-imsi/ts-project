@@ -3,7 +3,9 @@ package com.trasen.tsproject.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Transient;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -41,4 +43,5 @@ public class TwfStage {
      * 更新时间
      */
     private Date updated;
+
 }

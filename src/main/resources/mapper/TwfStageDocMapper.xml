@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TwfStageDocMapper" >
-    <select id="getTwfStageDocList" resultType="com.trasen.tsproject.model.TwfStageDoc">
-        Select *
-        from twf_stage_doc where stage_id in
-        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+    <select id="getTwfStageDocList" parameterType="Integer" resultType="com.trasen.tsproject.model.TwfStageDoc">
+        Select * from twf_stage_doc where stage_id =#{stageId} and is_vaild=1 order by px asc
     </select>
+    
+    <insert id="saveTwfStageDoc" parameterType="com.trasen.tsproject.model.TwfStageDoc">
+        insert into twf_stage_doc(`name`,stage_id,`output`,is_output,created,px)
+         values(#{name},#{stageId},#{output},#{isOutput},#{created},#{px})
+    </insert>
 
+    <update id="deleteDocByStageId" parameterType="Integer">
+        update twf_stage_doc set is_vaild=0 where stage_id=#{stageId}
+    </update>
+
+    <update id="deleteDocByPkid" parameterType="Integer">
+        update twf_stage_doc set is_vaild=0 where pkid=#{pkid}
+    </update>
 </mapper>

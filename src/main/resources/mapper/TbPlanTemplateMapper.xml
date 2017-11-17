@@ -4,4 +4,12 @@
     <select id="queryPlanTemp" resultType="com.trasen.tsproject.model.TbPlanTemplate">
         select * from tb_plan_template
     </select>
+
+    <insert id="savePlanTemp" parameterType="com.trasen.tsproject.model.TbPlanTemplate" useGeneratedKeys="true" keyProperty="pkid">
+        insert into tb_plan_template(temp_name,pro_code,pro_name,`type`,created,operator) values(#{tempName},#{proCode},#{proName},#{type},#{created},#{operator})
+    </insert>
+
+    <delete id="deletePlanTemp" parameterType="String">
+        delete from tb_plan_template where pro_code=#{proCode}
+    </delete>
 </mapper>

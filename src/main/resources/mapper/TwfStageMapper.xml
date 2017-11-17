@@ -4,4 +4,12 @@
     <select id="selectTwfStageList" resultType="com.trasen.tsproject.model.TwfStage">
         select * from twf_stage where is_vaild=1  order by px ASC
     </select>
+
+    <insert id="saveStageTemp" parameterType="com.trasen.tsproject.model.TwfStage">
+        insert into twf_stage(`name`,poit,created,operator,px) values(#{name},#{poit},#{created},#{operator},#{px})
+    </insert>
+
+    <update id="deleteStageTemp" parameterType="Integer">
+        update twf_stage set is_vaild=0 where pkid=#{pkid}
+    </update>
 </mapper>

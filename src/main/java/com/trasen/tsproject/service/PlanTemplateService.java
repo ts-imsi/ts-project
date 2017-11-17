@@ -2,16 +2,20 @@ package com.trasen.tsproject.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.trasen.tsproject.dao.TbPlanTemplateMapper;
-import com.trasen.tsproject.dao.TwfStageMapper;
-import com.trasen.tsproject.model.TbPlanTemplate;
-import com.trasen.tsproject.model.TwfStage;
+import com.trasen.tsproject.common.VisitInfoHolder;
+import com.trasen.tsproject.dao.*;
+import com.trasen.tsproject.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author luoyun
@@ -27,7 +31,16 @@ public class PlanTemplateService {
     TbPlanTemplateMapper tbPlanTemplateMapper;
 
     @Autowired
+    TbPlanTemplateItemMapper tbPlanTemplateItemMapper;
+
+    @Autowired
     TwfStageMapper twfStageMapper;
+
+    @Autowired
+    TwfStageDocMapper twfStageDocMapper;
+
+    @Autowired
+    TwfCheckTagMapper twfCheckTagMapper;
 
 
     public PageInfo<TbPlanTemplate> queryPlanTemp(int page, int rows){
@@ -40,4 +53,72 @@ public class PlanTemplateService {
     public List<TwfStage> selectTwfStageList(){
         return twfStageMapper.selectTwfStageList();
     }
+
+    public Map<String,Object> selectTwfStageTag(){
+        Map<String,Object> param=new HashMap<>();
+        param.put("twfStageList",twfStageMapper.selectTwfStageList());
+        param.put("twfCheckTagList",twfCheckTagMapper.selectCheckTag());
+        return param;
+    }
+
+    public List<TwfStageDoc> getTwfStageDocList(Integer stageId){
+        return twfStageDocMapper.getTwfStageDocList(stageId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void savePlanTemp(TbPlanTemplate tbPlanTemplate,List<String> tagSaveList,List<String> stageSaveList){
+        if(tbPlanTemplate.getPkid()==0){
+            tbPlanTemplate.setOperator(VisitInfoHolder.getShowName());
+            tbPlanTemplateMapper.savePlanTemp(tbPlanTemplate);
+        }else{
+            tbPlanTemplateItemMapper.deletePlanItem(tbPlanTemplate.getPkid());
+        }
+        List<TwfCheckTag> twfCheckTags=twfCheckTagMapper.selectCheckTag();
+        stageSaveList.stream().forEach(stage ->savaPlanTemplateItem(tbPlanTemplate,tagSaveList,stage,twfCheckTags));
+    }
+    public void savaPlanTemplateItem(TbPlanTemplate tbPlanTemplate,List<String> tagSaveList,String stage,List<TwfCheckTag> twfCheckTags){
+        String[] stages=stage.split(":");
+        tagSaveList.stream().forEach(tag->saveTemplateItem(tbPlanTemplate,tag,stages,twfCheckTags));
+    }
+
+    public void saveTemplateItem(TbPlanTemplate tbPlanTemplate,String tag,String[] stages,List<TwfCheckTag> twfCheckTags){
+        String[] tags=tag.split(":");
+        if(tags[0].equals(stages[1])){
+            TbPlanTemplateItem tbPlanTemplateItem=new TbPlanTemplateItem();
+            tbPlanTemplateItem.setTempId(tbPlanTemplate.getPkid());
+            tbPlanTemplateItem.setStageDocId(Integer.valueOf(tags[0]));
+            tbPlanTemplateItem.setStageId(Integer.valueOf(stages[0]));
+            tbPlanTemplateItem.setOperator(VisitInfoHolder.getShowName());
+            tbPlanTemplateItem.setCreated(new Date());
+            List<TwfCheckTag> checkTags=twfCheckTags.stream().filter(checkTag->checkTag.getPkid()==Integer.valueOf(tags[1])).collect(Collectors.toList());
+            tbPlanTemplateItem.setRole(checkTags.get(0).getTagId());
+            tbPlanTemplateItemMapper.saveTemplateItem(tbPlanTemplateItem);
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int saveStageTemp(TwfStage twfStage){
+        twfStage.setCreated(new Date());
+        twfStage.setOperator(VisitInfoHolder.getShowName());
+        return twfStageMapper.saveStageTemp(twfStage);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteStageTemp(int pkid){
+        twfStageMapper.deleteStageTemp(pkid);
+        return twfStageDocMapper.deleteDocByStageId(pkid);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteDocByPkid(int pkid){
+        return twfStageDocMapper.deleteDocByPkid(pkid);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int saveTwfStageDoc(TwfStageDoc twfStageDoc){
+        twfStageDoc.setCreated(new Date());
+        twfStageDoc.setOperator(VisitInfoHolder.getShowName());
+        return twfStageDocMapper.saveTwfStageDoc(twfStageDoc);
+    }
+
 }

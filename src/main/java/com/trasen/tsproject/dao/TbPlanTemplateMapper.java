@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TbPlanTemplateMapper extends MyMapper<TbPlanTemplate> {
     public List<TbPlanTemplate> queryPlanTemp();
+    int deletePlanTemp(String proCode);
+    int savePlanTemp(TbPlanTemplate tbPlanTemplate);
 }

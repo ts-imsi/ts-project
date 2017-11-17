@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TwfStageMapper extends MyMapper<TwfStage> {
     List<TwfStage> selectTwfStageList();
+    int saveStageTemp(TwfStage twfStage);
+    int deleteStageTemp(Integer pkid);
 }
