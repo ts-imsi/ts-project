@@ -2,8 +2,10 @@ package com.trasen.tsproject.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 
 @Getter
@@ -73,6 +75,9 @@ public class TbPlanDetail {
      * 操作人
      */
     private String operator;
+
+    @Transient
+    private List<TbPlanItem> tbPlanItems;
 
 
 }

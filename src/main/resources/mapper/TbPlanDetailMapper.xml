@@ -2,4 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbPlanDetailMapper" >
 
+    <select id="getPlanDetail" parameterType="Integer" resultType="com.trasen.tsproject.model.TbPlanDetail">
+        select * from tb_plan_detail where plan_id = #{planId} limit 1
+    </select>
+
+    <select id="getProjectPlan" parameterType="Integer" resultType="com.trasen.tsproject.model.TbProjectPlan">
+        select * from tb_project_plan where plan_id = #{planId}
+    </select>
+
+    <insert id="insertPlanDetail" parameterType="com.trasen.tsproject.model.TbPlanDetail">
+        <selectKey resultType="Integer" keyProperty="pkid">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into tb_plan_detail (plan_id,created,operator) values (#{planId},now(),#{operator})
+    </insert>
+
 </mapper>
