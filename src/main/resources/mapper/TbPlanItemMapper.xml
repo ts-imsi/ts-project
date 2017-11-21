@@ -2,4 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbPlanItemMapper" >
 
+    <select id="queryTemplatePlanItems" parameterType="Map" resultType="com.trasen.tsproject.model.TbPlanItem">
+        select s.`name` as stageName,s.poit,d.`name` as docName,d.is_output as isOutput,d.output from tb_plan_template t
+        left join tb_plan_template_item i on t.pkid = i.temp_id
+        left join twf_stage s on s.pkid= i.stage_id
+        left join twf_stage_doc d on d.pkid = i.stage_doc_id
+        where t.pro_code=#{proCode} and t.type=#{type}
+    </select>
+
+    <select id="queryPlanItems" parameterType="Map" resultType="com.trasen.tsproject.model.TbPlanItem">
+        select * from tb_plan_item where plan_id = #{planId} and detail_id = #{detailId}
+    </select>
+
+    <insert id="insertPlanItem" parameterType="com.trasen.tsproject.model.TbPlanItem">
+        <selectKey resultType="Integer" keyProperty="pkid">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into tb_plan_item (plan_id,detail_id,stage_name,poit,doc_name,`output`,created,operator)
+        values (#{planId},#{detailId},#{stageName},#{poit},#{docName},#{output},now(),#{operator})
+    </insert>
+
+
+
 </mapper>

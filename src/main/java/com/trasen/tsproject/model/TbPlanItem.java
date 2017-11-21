@@ -50,24 +50,11 @@ public class TbPlanItem {
     private Integer isOutput;
 
     /**
-     * 计划开始时间
+     * 计划时间
      */
-    private Date planStartTime;
+    private Date planTime;
 
-    /**
-     * 计划结束时间
-     */
-    private Date planEndTime;
 
-    /**
-     * 开始时间
-     */
-    private Date startTime;
-
-    /**
-     * 结束时间
-     */
-    private Date endTime;
 
     /**
      * 是否完成，0:未完成，1:完成
