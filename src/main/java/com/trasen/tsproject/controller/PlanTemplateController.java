@@ -3,10 +3,7 @@ package com.trasen.tsproject.controller;
 import cn.trasen.core.entity.Result;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
-import com.trasen.tsproject.model.TbHtHandover;
-import com.trasen.tsproject.model.TbPlanTemplate;
-import com.trasen.tsproject.model.TwfStage;
-import com.trasen.tsproject.model.TwfStageDoc;
+import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.service.PlanTemplateService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -217,6 +214,21 @@ public class PlanTemplateController {
             logger.error("数据查询失败"+e.getMessage(),e);
             result.put("success",false);
             result.put("message","数据查询失败");
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/querytwfCheckTagList",method = RequestMethod.POST)
+    public Result querytwfCheckTagList(){
+        Result result=new Result();
+        try{
+            List<TwfCheckTag> twfCheckTags=planTemplateService.querytwfCheckTagList();
+            result.setSuccess(true);
+            result.setObject(twfCheckTags);
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("数据查询失败");
         }
         return result;
     }

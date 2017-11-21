@@ -140,4 +140,8 @@ public class PlanTemplateService {
         return param;
     }
 
+    public List<TwfCheckTag> querytwfCheckTagList(){
+        return twfCheckTagMapper.selectCheckTag();
+    }
+
 }
