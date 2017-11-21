@@ -14,6 +14,8 @@ public class TbProjectPlanLog {
      */
     private Integer pkid;
 
+    private String type;
+
     /**
      * 计划id
      */
