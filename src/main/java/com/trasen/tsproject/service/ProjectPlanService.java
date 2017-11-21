@@ -65,6 +65,7 @@ public class ProjectPlanService {
             if(plan.getSurveyTime()!=null&&projectPlan.getSurveyTime()!=null
                     &&!plan.getSurveyTime().equals(projectPlan.getSurveyTime())){
                 TbProjectPlanLog log = new TbProjectPlanLog();
+                log.setType("projectPlan");
                 log.setPlanId(plan.getPlanId());
                 log.setOldTime(projectPlan.getSurveyTime());
                 log.setNewTime(plan.getSurveyTime());
@@ -79,6 +80,7 @@ public class ProjectPlanService {
             if(plan.getApproachTime()!=null&&projectPlan.getApproachTime()!=null
                     &&!plan.getApproachTime().equals(projectPlan.getApproachTime())){
                 TbProjectPlanLog log = new TbProjectPlanLog();
+                log.setType("projectPlan");
                 log.setPlanId(plan.getPlanId());
                 log.setOldTime(projectPlan.getApproachTime());
                 log.setNewTime(plan.getApproachTime());
@@ -93,6 +95,7 @@ public class ProjectPlanService {
             if(plan.getOnlineTime()!=null&&projectPlan.getOnlineTime()!=null
                     &&!plan.getOnlineTime().equals(projectPlan.getOnlineTime())){
                 TbProjectPlanLog log = new TbProjectPlanLog();
+                log.setType("projectPlan");
                 log.setPlanId(plan.getPlanId());
                 log.setOldTime(projectPlan.getOnlineTime());
                 log.setNewTime(plan.getOnlineTime());
@@ -107,6 +110,7 @@ public class ProjectPlanService {
             if(plan.getCheckTime()!=null&&projectPlan.getCheckTime()!=null
                     &&!plan.getCheckTime().equals(projectPlan.getCheckTime())){
                 TbProjectPlanLog log = new TbProjectPlanLog();
+                log.setType("projectPlan");
                 log.setPlanId(plan.getPlanId());
                 log.setOldTime(projectPlan.getCheckTime());
                 log.setNewTime(plan.getCheckTime());
@@ -129,12 +133,13 @@ public class ProjectPlanService {
      * 获取时间修改日志
      *
      * */
-    public List<TbProjectPlanLog> queryPlanUpdateLog(String code,Integer planId){
+    public List<TbProjectPlanLog> queryPlanUpdateLog(String code,Integer planId,String type){
         List<TbProjectPlanLog> list = new ArrayList<>();
         if(code!=null&&planId!=null){
             Map<String,Object> param = new HashMap<>();
             param.put("code",code);
             param.put("planId",planId);
+            param.put("type",type);
             list = tbProjectPlanLogMapper.queryPlanLogList(param);
 
         }

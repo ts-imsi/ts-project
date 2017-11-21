@@ -35,7 +35,7 @@ public class ProjectPlanController {
         Result result=new Result();
         result.setSuccess(false);
         try {
-            List<TbProjectPlanLog> list = projectPlanService.queryPlanUpdateLog(code,planId);
+            List<TbProjectPlanLog> list = projectPlanService.queryPlanUpdateLog(code,planId,"projectPlan");
             result.setObject(list);
             result.setSuccess(true);
         }catch (Exception e) {

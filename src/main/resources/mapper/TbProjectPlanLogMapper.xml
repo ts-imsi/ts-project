@@ -15,7 +15,7 @@
     </update>
 
     <select id="queryPlanLogList" parameterType="Map" resultType="com.trasen.tsproject.model.TbProjectPlanLog">
-        select * from tb_project_plan_log where plan_id = #{planId} and code = #{code} order by created desc
+        select * from tb_project_plan_log where plan_id = #{planId} and code = #{code} and `type`=#{type} order by created desc
     </select>
 
     <select id="getPlanToId" parameterType="Integer" resultType="com.trasen.tsproject.model.TbProjectPlan">

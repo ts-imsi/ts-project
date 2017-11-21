@@ -5,10 +5,9 @@ import com.trasen.tsproject.model.TbPlanDetail;
 import com.trasen.tsproject.service.PlanDetailService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 /**
  * Created by zhangxiahui on 17/11/18.
@@ -36,6 +35,26 @@ public class PlanDetailController {
             result.setMessage("获取计划详情异常");
         }
         return  result;
+    }
+
+    @RequestMapping(value="/savePlanDetail",method = RequestMethod.POST)
+    public Result savePlanDetail(@RequestBody TbPlanDetail tbPlanDetail){
+        Result result=new Result();
+        try{
+            if(Optional.ofNullable(tbPlanDetail).isPresent()){
+                planDetailService.savePlanDetail(tbPlanDetail);
+                result.setSuccess(true);
+                result.setMessage("数据保存成功");
+            }else{
+                result.setSuccess(false);
+                result.setMessage("参数参入错误");
+            }
+        }catch (Exception e){
+            logger.error("数据保存失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("数据保存失败");
+        }
+        return result;
     }
 
 }

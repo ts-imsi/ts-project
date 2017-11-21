@@ -5,16 +5,15 @@ import com.trasen.tsproject.dao.TbPlanDetailMapper;
 import com.trasen.tsproject.dao.TbPlanItemMapper;
 import com.trasen.tsproject.model.TbPlanDetail;
 import com.trasen.tsproject.model.TbPlanItem;
+import com.trasen.tsproject.model.TbPlanStage;
 import com.trasen.tsproject.model.TbProjectPlan;
+import com.trasen.tsproject.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhangxiahui on 17/11/16.
@@ -38,7 +37,6 @@ public class PlanDetailService {
                 List<TbPlanItem> planItems = new ArrayList<>();
                 List<TbPlanItem> list = new ArrayList<>();
                 detail = tbPlanDetailMapper.getPlanDetail(projectPlan.getPlanId());
-                String tempStr = "";
                 if(detail==null){
                     detail = new TbPlanDetail();
                     detail.setPlanId(projectPlan.getPlanId());
@@ -62,29 +60,45 @@ public class PlanDetailService {
                     itemMap.put("detailId",detail.getPkid());
                     list = tbPlanItemMapper.queryPlanItems(itemMap);
                 }
+                Map<String,TbPlanStage> stageMap = new HashMap<>();
                 for(TbPlanItem planItem: list){
-                    if(!tempStr.equals(planItem.getStageName())){
-                        TbPlanItem item = new TbPlanItem();
-                        item.setStageName(planItem.getStageName());
-                        item.setPlanStartTime(planItem.getPlanStartTime());
-                        tempStr = planItem.getStageName();
-                        planItems.add(item);
+                    TbPlanStage stage;
+                    if(stageMap.get(planItem.getStageName())==null){
+                        stage = new TbPlanStage();
+                        List<TbPlanItem> tbPlanItems = new ArrayList<>();
+                        tbPlanItems.add(planItem);
+                        stage.setTbPlanItems(tbPlanItems);
+                        stage.setStageName(planItem.getStageName());
+                        if(planItem.getPlanTime()!=null){
+                            stage.setPlanStartTime(DateUtils.getDate(planItem.getPlanTime(),"yyyy-MM-dd"));
+                        }
+                        stageMap.put(planItem.getStageName(),stage);
                     }else{
-                        planItem.setStageName("");
+                        stage = stageMap.get(planItem.getStageName());
+                        stage.getTbPlanItems().add(planItem);
+                        if(planItem.getPlanTime()!=null){
+                            if(stage.getPlanStartTime()!=null){
+                                stage.setPlanEndTime(DateUtils.getDate(planItem.getPlanTime(),"yyyy-MM-dd"));
+                            }else{
+                                stage.setPlanStartTime(DateUtils.getDate(planItem.getPlanTime(),"yyyy-MM-dd"));
+                            }
+                        }
                     }
-                    planItems.add(planItem);
-
-
                 }
-
-
-
-
-                detail.setTbPlanItems(planItems);
+                List<TbPlanStage> stageList = new ArrayList<>();
+                stageList.addAll(stageMap.values());
+                detail.setTbPlanStages(stageList);
             }
         }
-
         return detail;
+    }
+
+
+    public void savePlanDetail(TbPlanDetail tbPlanDetail){
+        if(tbPlanDetail!=null&&tbPlanDetail.getPkid()!=null){
+            tbPlanDetail.setOperator(VisitInfoHolder.getShowName());
+            tbPlanDetailMapper.updatePlanDetail(tbPlanDetail);
+        }
     }
 
 

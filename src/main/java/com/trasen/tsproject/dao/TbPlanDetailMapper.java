@@ -11,4 +11,6 @@ public interface TbPlanDetailMapper extends MyMapper<TbPlanDetail> {
     TbProjectPlan getProjectPlan(Integer planId);
 
     void insertPlanDetail(TbPlanDetail tbPlanDetail);
+
+    void updatePlanDetail(TbPlanDetail tbPlanDetail);
 }

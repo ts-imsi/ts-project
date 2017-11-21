@@ -77,7 +77,7 @@ public class TbPlanDetail {
     private String operator;
 
     @Transient
-    private List<TbPlanItem> tbPlanItems;
+    private List<TbPlanStage> tbPlanStages;
 
 
 }

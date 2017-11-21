@@ -17,4 +17,11 @@
         insert into tb_plan_detail (plan_id,created,operator) values (#{planId},now(),#{operator})
     </insert>
 
+    <update id="updatePlanDetail" parameterType="com.trasen.tsproject.model.TbPlanDetail">
+        update tb_plan_detail set total=#{total},plan_cycle=#{planCycle},cycle=#{cycle},
+        take_dase=#{takeDase},init_take=#{initTake},end_take=#{endTake},
+        init_hard=#{initHard},end_hard=#{endHard},updated=now(),operator=#{operator}
+        where pkid=#{pkid}
+    </update>
+
 </mapper>
