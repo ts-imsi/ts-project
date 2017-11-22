@@ -70,7 +70,7 @@ public class PlanDetailService {
                         stage.setTbPlanItems(tbPlanItems);
                         stage.setStageName(planItem.getStageName());
                         if(planItem.getPlanTime()!=null){
-                            stage.setPlanStartTime(DateUtils.getDate(planItem.getPlanTime(),"yyyy-MM-dd"));
+                            stage.setPlanStartTime(planItem.getPlanTime());
                         }
                         stageMap.put(planItem.getStageName(),stage);
                     }else{
@@ -78,9 +78,9 @@ public class PlanDetailService {
                         stage.getTbPlanItems().add(planItem);
                         if(planItem.getPlanTime()!=null){
                             if(stage.getPlanStartTime()!=null){
-                                stage.setPlanEndTime(DateUtils.getDate(planItem.getPlanTime(),"yyyy-MM-dd"));
+                                stage.setPlanEndTime(planItem.getPlanTime());
                             }else{
-                                stage.setPlanStartTime(DateUtils.getDate(planItem.getPlanTime(),"yyyy-MM-dd"));
+                                stage.setPlanStartTime(planItem.getPlanTime());
                             }
                         }
                     }
