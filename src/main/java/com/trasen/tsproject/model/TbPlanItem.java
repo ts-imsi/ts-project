@@ -52,7 +52,7 @@ public class TbPlanItem {
     /**
      * 计划时间
      */
-    private Date planTime;
+    private String planTime;
 
 
 
