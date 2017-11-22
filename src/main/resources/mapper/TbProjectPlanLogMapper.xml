@@ -22,4 +22,11 @@
         select * from tb_project_plan where plan_id=#{planId} limit 1
     </select>
 
+    <select id="queryPlonTimechangeLog" parameterType="Map" resultType="com.trasen.tsproject.model.TbProjectPlanLog">
+        select l.*,i.stage_name , i.doc_name from tb_project_plan_log l left join tb_plan_item i
+        on i.pkid = l.plan_id
+        where  l.code =#{code} and l.type=#{type} and i.plan_id=#{planId}
+        order by l.created desc
+    </select>
+
 </mapper>

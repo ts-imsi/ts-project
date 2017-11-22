@@ -54,6 +54,8 @@ public class TbPlanItem {
      */
     private String planTime;
 
+    private Integer isUpdate;
+
 
 
     /**
@@ -95,6 +97,12 @@ public class TbPlanItem {
      * 操作人
      */
     private String operator;
+
+
+    @Transient
+    private String remark;
+
+
 
 
 }

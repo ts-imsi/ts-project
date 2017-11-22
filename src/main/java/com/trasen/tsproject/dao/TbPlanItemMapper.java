@@ -17,4 +17,6 @@ public interface TbPlanItemMapper extends MyMapper<TbPlanItem> {
     void insertPlanItem(TbPlanItem tbPlanItem);
 
     void updatePlanItemTime(TbPlanItem tbPlanItem);
+
+    TbPlanItem getPlanItem(Integer pkid);
 }

@@ -51,5 +51,11 @@ public class TbProjectPlanLog {
      */
     private String operator;
 
+    @Transient
+    private String stageName;
+
+    @Transient
+    private String docName;
+
 
 }

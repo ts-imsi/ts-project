@@ -4,6 +4,7 @@ import cn.trasen.core.entity.Result;
 import com.trasen.tsproject.model.TbPlanDetail;
 import com.trasen.tsproject.model.TbPlanItem;
 import com.trasen.tsproject.model.TbProjectPlan;
+import com.trasen.tsproject.model.TbProjectPlanLog;
 import com.trasen.tsproject.service.PlanDetailService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +61,8 @@ public class PlanDetailController {
         return result;
     }
 
-    @RequestMapping(value="/updatePlanItemTime",method = RequestMethod.POST)
-    public Result updatePlanItemTime(@RequestBody List<TbPlanItem> planItems){
+    @RequestMapping(value="/savePlanItemTime",method = RequestMethod.POST)
+    public Result savePlanItemTime(@RequestBody List<TbPlanItem> planItems){
         Result result=new Result();
         try{
             if(!Optional.ofNullable(planItems).isPresent()){
@@ -79,5 +80,39 @@ public class PlanDetailController {
         }
         return result;
     }
+
+    @RequestMapping(value="/updatePlanTime",method = RequestMethod.POST)
+    public Result updatePlanTime(@RequestBody TbPlanItem planItem){
+        Result result=new Result();
+        try{
+            TbPlanItem item = planDetailService.updatePlanTime(planItem);
+            result.setSuccess(true);
+            result.setObject(item);
+        }catch (Exception e){
+            logger.error("数据保存失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("数据保存失败");
+        }
+        return result;
+    }
+
+
+    @RequestMapping(value="/{code}/updateLog/{planId}",method = RequestMethod.POST)
+    public Result queryPlanUpdateLog(@PathVariable String code,@PathVariable Integer planId){
+        Result result=new Result();
+        result.setSuccess(false);
+        try {
+            List<TbProjectPlanLog> list = planDetailService.queryPlonTimechangeLog(code,planId,"actualizePlan");
+            result.setObject(list);
+            result.setSuccess(true);
+        }catch (Exception e) {
+            logger.error("查询初步计划时间修改历史记录异常" + e.getMessage(), e);
+            result.setSuccess(false);
+            result.setMessage("查询初步计划时间修改历史记录失败");
+        }
+        return  result;
+
+    }
+
 
 }

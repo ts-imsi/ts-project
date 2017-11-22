@@ -17,6 +17,8 @@ public interface TbProjectPlanLogMapper extends MyMapper<TbProjectPlanLog> {
 
     TbProjectPlan getPlanToId(Integer planId);
 
+    List<TbProjectPlanLog> queryPlonTimechangeLog(Map<String,Object> param);
+
 
 
 }

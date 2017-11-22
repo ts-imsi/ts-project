@@ -4,10 +4,8 @@ import cn.trasen.commons.util.DataUtil;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbPlanDetailMapper;
 import com.trasen.tsproject.dao.TbPlanItemMapper;
-import com.trasen.tsproject.model.TbPlanDetail;
-import com.trasen.tsproject.model.TbPlanItem;
-import com.trasen.tsproject.model.TbPlanStage;
-import com.trasen.tsproject.model.TbProjectPlan;
+import com.trasen.tsproject.dao.TbProjectPlanLogMapper;
+import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +27,9 @@ public class PlanDetailService {
 
     @Autowired
     TbPlanItemMapper tbPlanItemMapper;
+
+    @Autowired
+    TbProjectPlanLogMapper tbProjectPlanLogMapper;
 
     public TbPlanDetail getPlanItemList(Integer planId, String type){
         TbPlanDetail detail = null;
@@ -117,9 +118,52 @@ public class PlanDetailService {
         for(TbPlanItem planItem : planItemList){
             if(planItem.getPlanTime()!=null){
                 planItem.setOperator(VisitInfoHolder.getShowName());
+                planItem.setIsUpdate(0);
                 tbPlanItemMapper.updatePlanItemTime(planItem);
             }
         }
+    }
+
+    public TbPlanItem updatePlanTime(TbPlanItem planItem){
+        if(planItem!=null&&planItem.getPkid()!=null){
+            boolean upBoo = false;
+            TbPlanItem item = tbPlanItemMapper.getPlanItem(planItem.getPkid());
+            if(item.getPlanTime()!=null&&planItem.getPlanTime()!=null
+                    &&!item.getPlanTime().equals(planItem.getPlanTime())){
+                TbProjectPlanLog log = new TbProjectPlanLog();
+                log.setType("actualizePlan");
+                log.setPlanId(planItem.getPkid());
+                log.setOldTime(item.getPlanTime());
+                log.setNewTime(planItem.getPlanTime());
+                log.setCode("doc");// TODO: 17/11/2 类型写入常量类
+                log.setRemark(planItem.getRemark());
+                log.setOperator(VisitInfoHolder.getShowName());
+                tbProjectPlanLogMapper.insertPlanLog(log);
+                planItem.setIsUpdate(1);
+                upBoo = true;
+            }
+            if(upBoo){
+                planItem.setOperator(VisitInfoHolder.getShowName());
+                tbPlanItemMapper.updatePlanItemTime(planItem);
+            }
+
+        }
+        return planItem;
+
+    }
+
+
+    public List<TbProjectPlanLog> queryPlonTimechangeLog(String code,Integer planId,String type){
+        List<TbProjectPlanLog> list = new ArrayList<>();
+        if(code!=null&&planId!=null){
+            Map<String,Object> param = new HashMap<>();
+            param.put("code",code);
+            param.put("planId",planId);
+            param.put("type",type);
+            list = tbProjectPlanLogMapper.queryPlonTimechangeLog(param);
+
+        }
+        return list;
     }
 
 
