@@ -69,8 +69,12 @@ public class PlanTemplateService {
     public void savePlanTemp(TbPlanTemplate tbPlanTemplate,List<String> tagSaveList,List<String> stageSaveList){
         if(tbPlanTemplate.getPkid()==0){
             tbPlanTemplate.setOperator(VisitInfoHolder.getShowName());
+            tbPlanTemplate.setCreated(new Date());
             tbPlanTemplateMapper.savePlanTemp(tbPlanTemplate);
         }else{
+            tbPlanTemplate.setOperator(VisitInfoHolder.getShowName());
+            tbPlanTemplate.setUpdated(new Date());
+            tbPlanTemplateMapper.updatePlanTemp(tbPlanTemplate);
             tbPlanTemplateItemMapper.deletePlanItem(tbPlanTemplate.getPkid());
         }
         List<TwfCheckTag> twfCheckTags=twfCheckTagMapper.selectCheckTag();
@@ -119,6 +123,25 @@ public class PlanTemplateService {
         twfStageDoc.setCreated(new Date());
         twfStageDoc.setOperator(VisitInfoHolder.getShowName());
         return twfStageDocMapper.saveTwfStageDoc(twfStageDoc);
+    }
+
+    public Map<String,Object> selectTempView(Integer pkid){
+        Map<String,Object> param=new HashMap<>();
+        List<TbPlanTemplateItem> tbPlanTemplateItems=tbPlanTemplateItemMapper.selectPlanItem(pkid);
+        TbPlanTemplate tbPlanTemplate=tbPlanTemplateMapper.selectPlanTemp(pkid);
+        List<String> stagePlan=tbPlanTemplateItems.stream().map(item->item.getStageId()+":"+item.getStageDocId()).collect(Collectors.toList());
+        List<String> tagPlan=tbPlanTemplateItems.stream().map(planTag->planTag.getStageDocId()+":"+planTag.getCheckTagId()).collect(Collectors.toList());
+        List<Integer> stageList=tbPlanTemplateItems.stream().map(stage->stage.getStageId()).collect(Collectors.toList());
+        List<Integer> stageModuleList=stageList.stream().distinct().collect(Collectors.toList());
+        param.put("tbPlanTemplate",tbPlanTemplate);
+        param.put("stageSaveList",stagePlan);
+        param.put("tagSaveList",tagPlan);
+        param.put("stageModuleList",stageModuleList);
+        return param;
+    }
+
+    public List<TwfCheckTag> querytwfCheckTagList(){
+        return twfCheckTagMapper.selectCheckTag();
     }
 
 }

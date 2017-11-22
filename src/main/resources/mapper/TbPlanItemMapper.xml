@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbPlanItemMapper" >
+    <select id="selectExceptionPlan" parameterType="java.util.Map" resultType="com.trasen.tsproject.model.ExceptionPlan">
+        SELECT
+          item.pkid,
+	      hand.ht_no,
+	      hand.customer_name,
+	      prop.pro_name,
+	      prop.pro_code,
+	      prop.actualize_manager,
+	      item.stage_name,
+          item.doc_name,
+	      item.plan_time
+      FROM
+	    tb_plan_item item
+      LEFT JOIN tb_project_plan prop ON prop.plan_id = item.plan_id
+      LEFT JOIN tb_ht_handover hand ON hand.pkid = prop.handover_id where item.is_complete=0
+      <if test="status==0"></if>
+      <if test="status==1"> and now()>item.plan_time and item.is_submit=0</if>
+      <if test="status==2"> and item.is_submit=1 and item.submit_time>item.plan_time</if>
+      <if test="dtStart!=null"> and  <![CDATA[  #{dtStart}=<item.plan_time]]></if>
+      <if test="dtEnd!=null">and <![CDATA[ #{dtEnd}>=item.plan_time]]></if>
+      <if test="checkTagCount!=null"> and #{checkTagCount}=(select count(*) from tb_plan_check ch where ch.check_tag in (#{checkTag}) and item_id=item.pkid and `status`=1)</if>
+      <if test="noCheckTagCount!=null"> and #{noCheckTagCount}=(select count(*) from tb_plan_check ch where ch.check_tag in (#{noCheckTag}) and item_id=item.pkid and `status`=0) </if>
+
+    </select>
 
     <select id="queryTemplatePlanItems" parameterType="Map" resultType="com.trasen.tsproject.model.TbPlanItem">
         select s.`name` as stageName,s.poit,d.`name` as docName,d.is_output as isOutput,d.output from tb_plan_template t
@@ -21,7 +45,4 @@
         insert into tb_plan_item (plan_id,detail_id,stage_name,poit,doc_name,`output`,created,operator)
         values (#{planId},#{detailId},#{stageName},#{poit},#{docName},#{output},now(),#{operator})
     </insert>
-
-
-
 </mapper>

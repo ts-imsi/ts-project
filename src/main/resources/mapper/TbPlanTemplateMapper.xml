@@ -5,11 +5,20 @@
         select * from tb_plan_template
     </select>
 
+    <select id="selectPlanTemp" parameterType="Integer" resultType="com.trasen.tsproject.model.TbPlanTemplate">
+        select * from tb_plan_template where pkid=#{pkid}
+    </select>
+
     <insert id="savePlanTemp" parameterType="com.trasen.tsproject.model.TbPlanTemplate" useGeneratedKeys="true" keyProperty="pkid">
         insert into tb_plan_template(temp_name,pro_code,pro_name,`type`,created,operator) values(#{tempName},#{proCode},#{proName},#{type},#{created},#{operator})
     </insert>
+    
+    <update id="updatePlanTemp" parameterType="com.trasen.tsproject.model.TbPlanTemplate">
+        update tb_plan_template set temp_name=#{tempName},pro_code=#{proCode},pro_name=#{proName},`type`=#{type},updated=#{updated},operator=#{operator} where pkid=#{pkid}
+    </update>
 
     <delete id="deletePlanTemp" parameterType="String">
         delete from tb_plan_template where pro_code=#{proCode}
     </delete>
+    
 </mapper>

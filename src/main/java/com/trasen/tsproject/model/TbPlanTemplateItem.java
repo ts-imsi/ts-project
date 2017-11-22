@@ -38,4 +38,9 @@ public class TbPlanTemplateItem {
      */
     private String operator;
 
+    private Integer checkTagId;
+    private String tagName;
+    private String tagId;
+    private String permission;
+
 }
