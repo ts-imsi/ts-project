@@ -49,7 +49,7 @@ public class ExceptionPlan {
     /**
      * 计划时间
      */
-    private Date planTime;
+    private String planTime;
 
     /**
      * 是否提交，0:为提交，1:已提交

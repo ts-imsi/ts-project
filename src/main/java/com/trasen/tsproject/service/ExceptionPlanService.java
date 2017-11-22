@@ -27,12 +27,12 @@ public class ExceptionPlanService {
         List<String> checkTagList=(List<String>)param.get("checkTag");
         List<String> noCheckTagList=(List<String>)param.get("noCheckTag");
 
-        StringBuffer checkBuff=new StringBuffer();
+        /*StringBuffer checkBuff=new StringBuffer();
         checkTagList.stream().forEach(s->checkBuff.append("'"+s+"'"+","));
         param.put("checkTag", StringUtils.substringBeforeLast(checkBuff.toString(),","));
         StringBuffer noCheckBuff=new StringBuffer();
         noCheckTagList.stream().forEach(s->noCheckBuff.append("'"+s+"'"+","));
-        param.put("noCheckTag", StringUtils.substringBeforeLast(noCheckBuff.toString(),","));
+        param.put("noCheckTag", StringUtils.substringBeforeLast(noCheckBuff.toString(),","));*/
         if(checkTagList!=null&&checkTagList.size()!=0){
             param.put("checkTagCount",checkTagList.size());
         }

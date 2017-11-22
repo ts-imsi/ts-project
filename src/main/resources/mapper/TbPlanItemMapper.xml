@@ -16,13 +16,25 @@
 	    tb_plan_item item
       LEFT JOIN tb_project_plan prop ON prop.plan_id = item.plan_id
       LEFT JOIN tb_ht_handover hand ON hand.pkid = prop.handover_id where item.is_complete=0
+      <if test="htNo!=null and htNo!=''">hand.ht_no =#{htNo}</if>
+      <if test="customerName!=null and customerName!=''">hand.customer_name =#{customerName}</if>
+      <if test="proName!=null and proName!=''">prop.pro_name =#{proName}</if>
       <if test="status==0"></if>
-      <if test="status==1"> and now()>item.plan_time and item.is_submit=0</if>
+      <if test="status==1"> and date(now())>item.plan_time and item.is_submit=0</if>
       <if test="status==2"> and item.is_submit=1 and item.submit_time>item.plan_time</if>
-      <if test="dtStart!=null"> and  <![CDATA[  #{dtStart}=<item.plan_time]]></if>
-      <if test="dtEnd!=null">and <![CDATA[ #{dtEnd}>=item.plan_time]]></if>
-      <if test="checkTagCount!=null"> and #{checkTagCount}=(select count(*) from tb_plan_check ch where ch.check_tag in (#{checkTag}) and item_id=item.pkid and `status`=1)</if>
-      <if test="noCheckTagCount!=null"> and #{noCheckTagCount}=(select count(*) from tb_plan_check ch where ch.check_tag in (#{noCheckTag}) and item_id=item.pkid and `status`=0) </if>
+      <if test="dtStart!=null and dtStart!=''"> and  <![CDATA[  #{dtStart}=<item.plan_time]]></if>
+      <if test="dtEnd!=null and dtEnd!=''">and <![CDATA[ #{dtEnd}>=item.plan_time]]></if>
+      <if test="checkTagCount!=null"> and
+          #{checkTagCount}=(select count(*) from tb_plan_check ch where ch.check_tag in
+          <foreach item="item1" index="index" collection="checkTag" open="(" separator="," close=")">
+          #{item1}
+          </foreach>  and item_id=item.pkid and `status`=1)</if>
+      <if test="noCheckTagCount!=null"> and
+          #{noCheckTagCount}=(select count(*) from tb_plan_check ch where ch.check_tag in
+          <foreach item="item2" index="index" collection="noCheckTag" open="(" separator="," close=")">
+              #{item2}
+          </foreach>
+          and item_id=item.pkid and `status`=0) </if>
 
     </select>
 
