@@ -16,13 +16,13 @@
 	    tb_plan_item item
       LEFT JOIN tb_project_plan prop ON prop.plan_id = item.plan_id
       LEFT JOIN tb_ht_handover hand ON hand.pkid = prop.handover_id where item.is_complete=0
-      <if test="htNo!=null and htNo!=''">hand.ht_no =#{htNo}</if>
-      <if test="customerName!=null and customerName!=''">hand.customer_name =#{customerName}</if>
-      <if test="proName!=null and proName!=''">prop.pro_name =#{proName}</if>
+      <if test="htNo!=null and htNo!=''"> and hand.ht_no =#{htNo}</if>
+      <if test="customerName!=null and customerName!=''"> and hand.customer_name like CONCAT('%',#{customerName},'%')</if>
+      <if test="proName!=null and proName!=''"> and prop.pro_name like CONCAT('%',#{proName},'%')</if>
       <if test="status==0"></if>
       <if test="status==1"> and date(now())>item.plan_time and item.is_submit=0</if>
       <if test="status==2"> and item.is_submit=1 and item.submit_time>item.plan_time</if>
-      <if test="dtStart!=null and dtStart!=''"> and  <![CDATA[  #{dtStart}=<item.plan_time]]></if>
+      <if test="dtStart!=null and dtStart!=''"> and  <![CDATA[  #{dtStart}<=item.plan_time]]></if>
       <if test="dtEnd!=null and dtEnd!=''">and <![CDATA[ #{dtEnd}>=item.plan_time]]></if>
       <if test="checkTagCount!=null"> and
           #{checkTagCount}=(select count(*) from tb_plan_check ch where ch.check_tag in
@@ -35,7 +35,7 @@
               #{item2}
           </foreach>
           and item_id=item.pkid and `status`=0) </if>
-
+      order by item.pkid desc
     </select>
 
     <select id="queryTemplatePlanItems" parameterType="Map" resultType="com.trasen.tsproject.model.TbPlanItem">
