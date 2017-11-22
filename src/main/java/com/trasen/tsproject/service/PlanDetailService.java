@@ -1,5 +1,6 @@
 package com.trasen.tsproject.service;
 
+import cn.trasen.commons.util.DataUtil;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbPlanDetailMapper;
 import com.trasen.tsproject.dao.TbPlanItemMapper;
@@ -34,7 +35,6 @@ public class PlanDetailService {
         if(planId!=null){
             TbProjectPlan projectPlan = tbPlanDetailMapper.getProjectPlan(planId);
             if(projectPlan!=null&&projectPlan.getProCode()!=null&&projectPlan.getPlanId()!=null&&type!=null){
-                List<TbPlanItem> planItems = new ArrayList<>();
                 List<TbPlanItem> list = new ArrayList<>();
                 detail = tbPlanDetailMapper.getPlanDetail(projectPlan.getPlanId());
                 if(detail==null){
@@ -42,8 +42,13 @@ public class PlanDetailService {
                     detail.setPlanId(projectPlan.getPlanId());
                     detail.setOperator(VisitInfoHolder.getShowName());
                     tbPlanDetailMapper.insertPlanDetail(detail);
-
-
+                }else{
+                    Map<String,Object> itemMap = new HashMap<>();
+                    itemMap.put("planId",detail.getPlanId());
+                    itemMap.put("detailId",detail.getPkid());
+                    list = tbPlanItemMapper.queryPlanItems(itemMap);
+                }
+                if(list.size()==0){
                     Map<String,Object> param = new HashMap<>();
                     param.put("proCode",projectPlan.getProCode());
                     param.put("type",type);
@@ -54,12 +59,9 @@ public class PlanDetailService {
                         item.setOperator(VisitInfoHolder.getShowName());
                         tbPlanItemMapper.insertPlanItem(item);
                     }
-                }else{
-                    Map<String,Object> itemMap = new HashMap<>();
-                    itemMap.put("planId",detail.getPlanId());
-                    itemMap.put("detailId",detail.getPkid());
-                    list = tbPlanItemMapper.queryPlanItems(itemMap);
                 }
+
+
                 Map<String,TbPlanStage> stageMap = new HashMap<>();
                 for(TbPlanItem planItem: list){
                     TbPlanStage stage;
@@ -71,6 +73,7 @@ public class PlanDetailService {
                         stage.setStageName(planItem.getStageName());
                         if(planItem.getPlanTime()!=null){
                             stage.setPlanStartTime(planItem.getPlanTime());
+                            stage.setPlanEndTime(planItem.getPlanTime());
                         }
                         stageMap.put(planItem.getStageName(),stage);
                     }else{
@@ -78,9 +81,18 @@ public class PlanDetailService {
                         stage.getTbPlanItems().add(planItem);
                         if(planItem.getPlanTime()!=null){
                             if(stage.getPlanStartTime()!=null){
-                                stage.setPlanEndTime(planItem.getPlanTime());
+                                if(DateUtils.strToDate(stage.getPlanStartTime(),"yyyy-MM-dd").getTime()>DateUtils.strToDate(planItem.getPlanTime(),"yyyy-MM-dd").getTime()){
+                                    stage.setPlanStartTime(planItem.getPlanTime());
+                                }
                             }else{
                                 stage.setPlanStartTime(planItem.getPlanTime());
+                            }
+                            if(stage.getPlanEndTime()!=null){
+                                if(DateUtils.strToDate(stage.getPlanEndTime(),"yyyy-MM-dd").getTime()<DateUtils.strToDate(planItem.getPlanTime(),"yyyy-MM-dd").getTime()){
+                                    stage.setPlanEndTime(planItem.getPlanTime());
+                                }
+                            }else{
+                                stage.setPlanEndTime(planItem.getPlanTime());
                             }
                         }
                     }
@@ -98,6 +110,15 @@ public class PlanDetailService {
         if(tbPlanDetail!=null&&tbPlanDetail.getPkid()!=null){
             tbPlanDetail.setOperator(VisitInfoHolder.getShowName());
             tbPlanDetailMapper.updatePlanDetail(tbPlanDetail);
+        }
+    }
+
+    public void updatePlanItemTime(List<TbPlanItem> planItemList){
+        for(TbPlanItem planItem : planItemList){
+            if(planItem.getPlanTime()!=null){
+                planItem.setOperator(VisitInfoHolder.getShowName());
+                tbPlanItemMapper.updatePlanItemTime(planItem);
+            }
         }
     }
 

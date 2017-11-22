@@ -54,7 +54,11 @@
         <selectKey resultType="Integer" keyProperty="pkid">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into tb_plan_item (plan_id,detail_id,stage_name,poit,doc_name,`output`,created,operator)
-        values (#{planId},#{detailId},#{stageName},#{poit},#{docName},#{output},now(),#{operator})
+        insert into tb_plan_item (plan_id,detail_id,stage_name,poit,doc_name,`output`,is_output,created,operator)
+        values (#{planId},#{detailId},#{stageName},#{poit},#{docName},#{output},#{isOutput},now(),#{operator})
     </insert>
+
+    <update id="updatePlanItemTime" parameterType="com.trasen.tsproject.model.TbPlanItem">
+        update tb_plan_item set plan_time=#{planTime},updated=now(),operator=#{operator} where pkid = #{pkid}
+    </update>
 </mapper>

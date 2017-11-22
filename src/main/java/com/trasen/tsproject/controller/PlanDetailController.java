@@ -2,11 +2,14 @@ package com.trasen.tsproject.controller;
 
 import cn.trasen.core.entity.Result;
 import com.trasen.tsproject.model.TbPlanDetail;
+import com.trasen.tsproject.model.TbPlanItem;
+import com.trasen.tsproject.model.TbProjectPlan;
 import com.trasen.tsproject.service.PlanDetailService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -48,6 +51,26 @@ public class PlanDetailController {
             }else{
                 result.setSuccess(false);
                 result.setMessage("参数参入错误");
+            }
+        }catch (Exception e){
+            logger.error("数据保存失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("数据保存失败");
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/updatePlanItemTime",method = RequestMethod.POST)
+    public Result updatePlanItemTime(@RequestBody List<TbPlanItem> planItems){
+        Result result=new Result();
+        try{
+            if(!Optional.ofNullable(planItems).isPresent()){
+                result.setMessage("传入参数错误");
+                result.setSuccess(false);
+            }else{
+                planDetailService.updatePlanItemTime(planItems);
+                result.setMessage("实施计划保存成功");
+                result.setSuccess(true);
             }
         }catch (Exception e){
             logger.error("数据保存失败"+e.getMessage(),e);

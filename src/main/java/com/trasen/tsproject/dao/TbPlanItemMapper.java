@@ -15,4 +15,6 @@ public interface TbPlanItemMapper extends MyMapper<TbPlanItem> {
     List<TbPlanItem> queryPlanItems(Map<String,Object> param);
 
     void insertPlanItem(TbPlanItem tbPlanItem);
+
+    void updatePlanItemTime(TbPlanItem tbPlanItem);
 }
