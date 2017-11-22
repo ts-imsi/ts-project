@@ -15,7 +15,7 @@
       FROM
 	    tb_plan_item item
       LEFT JOIN tb_project_plan prop ON prop.plan_id = item.plan_id
-      LEFT JOIN tb_ht_handover hand ON hand.pkid = prop.handover_id where item.is_complete=0
+      LEFT JOIN tb_ht_handover hand ON hand.pkid = prop.handover_id where 1=1
       <if test="htNo!=null and htNo!=''"> and hand.ht_no =#{htNo}</if>
       <if test="customerName!=null and customerName!=''"> and hand.customer_name like CONCAT('%',#{customerName},'%')</if>
       <if test="proName!=null and proName!=''"> and prop.pro_name like CONCAT('%',#{proName},'%')</if>
