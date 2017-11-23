@@ -11,4 +11,6 @@ public interface TbHtChangeMapper extends MyMapper<TbHtChange> {
     int saveHtChange(TbHtChange tbHtChange);
 
     int updateHtChange(TbHtChange tbHtChange);
+
+    TbHtChange queryHtChangeByProcess(String processId);
 }

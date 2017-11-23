@@ -17,5 +17,9 @@
   <update id="updateHtChange" parameterType="com.trasen.tsproject.model.TbHtChange">
     update tb_ht_change set process_id=#{processId} where pkid=#{pkid}
   </update>
+  
+  <select id="queryHtChangeByProcess" resultType="com.trasen.tsproject.model.TbHtChange" parameterType="String">
+    select * from tb_ht_change where process_id=#{processId} limit 1
+  </select>
 
 </mapper>

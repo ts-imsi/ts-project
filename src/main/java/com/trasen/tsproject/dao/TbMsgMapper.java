@@ -54,4 +54,6 @@ public interface TbMsgMapper extends MyMapper<TbMsg> {
     int countTodoMsg(String userId);
 
     List<TbMsg> queryTodoMsgLimit3(String userId);
+
+    List<TbMsg> queryMobileTransactList(Map<String,Object> param);
 }

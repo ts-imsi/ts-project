@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
+import com.trasen.tsproject.dao.TbHtChangeMapper;
 import com.trasen.tsproject.dao.TbHtHandoverMapper;
 import com.trasen.tsproject.dao.TbMsgMapper;
 import com.trasen.tsproject.model.*;
@@ -32,6 +33,9 @@ public class TbMsgService {
 
     @Autowired
     private TbHtHandoverMapper tbHtHandoverMapper;
+
+    @Autowired
+    TbHtChangeMapper tbHtChangeMapper;
 
     @Autowired
     private Environment env;
@@ -371,6 +375,27 @@ public class TbMsgService {
         List<TbMsg> tbMsgList = tbMsgMapper.queryTodoMsgLimit3(userId);
         map.put("msgCount",count);
         map.put("msgList",tbMsgList);
+        return map;
+    }
+
+    public List<TbMsg> queryMobileTransactList(Map<String,Object> param){
+        return tbMsgMapper.queryMobileTransactList(param);
+    }
+
+    public Map<String,Object> queryMobileTreatedByPkid(Integer pkid){
+        Map<String,Object> map=new HashMap<>();
+        TbMsg tbMsg=tbMsgMapper.getTbMsgById(pkid);
+        if(tbMsg.getProcessKey().contains("addChange")){
+            TbHtChange tbHtChange=tbHtChangeMapper.queryHtChangeByProcess(tbMsg.getProcessId());
+            map.put("type","addChange");
+            map.put("change",tbHtChange);
+        }
+        if(tbMsg.getProcessKey().contains("handover")){
+            TbHtHandover tbHtHandover=tbHtHandoverMapper.selectByProcessId(tbMsg.getProcessId());
+            map.put("type","handover");
+            map.put("handover",tbHtHandover);
+        }
+        map.put("msg",tbMsg);
         return map;
     }
 
