@@ -13,4 +13,21 @@
         WHERE
         per.work_num=tag.work_num and tag.tag_id='|tag_handover_PD|' and tag_code like CONCAT('%',#{depId},'%')
    </select>
+    
+    <select id="selectTbuserByOpenId" parameterType="String" resultType="com.trasen.tsproject.model.TbUser">
+    SELECT
+	  t_u.pkid AS pkid,
+	  t_u.`name` AS `name`,
+	  t_u.password AS `password`,
+	  t_u.display_name AS displayName,
+	  t_u.per_id AS perId
+    FROM
+	tb_personnel per,
+	t_user t_u,
+	tb_weixin_user we
+    WHERE
+	t_u.per_id = per.per_id
+    AND we.work_num = per.work_num
+    AND we.open_id =#{openId}
+    </select>
 </mapper>

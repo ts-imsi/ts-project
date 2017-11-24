@@ -1,6 +1,7 @@
 package com.trasen.tsproject.controller;
 
 import cn.trasen.core.entity.Result;
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.TbMsg;
 import com.trasen.tsproject.service.TbMsgService;
 import org.apache.log4j.Logger;
@@ -29,13 +30,13 @@ public class MobileTransactController {
     @Autowired
     TbMsgService tbMsgService;
 
-    @RequestMapping(value="/queryMobileTransactList/{openId}/{status}",method = RequestMethod.POST)
-    public Result queryMobileTransactList(@PathVariable String openId, @PathVariable Integer status){
+    @RequestMapping(value="/queryMobileTransactList/{status}",method = RequestMethod.POST)
+    public Result queryMobileTransactList(@PathVariable Integer status){
         Result result=new Result();
         try{
-            if(Optional.ofNullable(openId).isPresent()&&Optional.ofNullable(status).isPresent()){
+            if(Optional.ofNullable(status).isPresent()){
                 Map<String,Object> param=new HashMap<>();
-                param.put("openId",openId);
+                param.put("userId", VisitInfoHolder.getUserId());
                 param.put("status",status);
                 List<TbMsg> tbMsgList=tbMsgService.queryMobileTransactList(param);
                 result.setObject(tbMsgList);

@@ -2,6 +2,7 @@ package com.trasen.tsproject.dao;
 
 import com.trasen.tsproject.model.Select;
 import com.trasen.tsproject.model.TbPersonnel;
+import com.trasen.tsproject.model.TbUser;
 import com.trasen.tsproject.util.MyMapper;
 
 import java.util.List;
@@ -15,4 +16,5 @@ import java.util.List;
 public interface TbPersonnelMapper extends MyMapper<TbPersonnel> {
     TbPersonnel selectTbPersonnel(String userId);
     List<Select> selectTbPersonnelList(String depId);
+    TbUser selectTbuserByOpenId(String openId);
 }
