@@ -187,6 +187,21 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
+        <!-- word excel 转 pdf -->
+        <dependency>
+            <groupId>com.aspose.cells</groupId>
+            <artifactId>aspose-cells</artifactId>
+            <version>8.5.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aspose.words</groupId>
+            <artifactId>aspose-words</artifactId>
+            <version>16.8.0</version>
+            <classifier>jdk16</classifier>
+        </dependency>
+
+
     </dependencies>
 
     <build>
