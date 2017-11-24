@@ -28,7 +28,7 @@ public class DownloadController {
     private Environment env;
 
     @RequestMapping(value = "/file", method = RequestMethod.GET)
-    public void fileUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam("filePath") String filePath) throws Exception{
+    public void fileUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam("fileName") String fileName) throws Exception{
         //一个简单的鉴权
         /*String userSign = SecurityCheck.getCookieValue(request,"userSign");
         logger.info("userSign鉴权===获取到userSign[" + userSign + "]");
@@ -38,7 +38,8 @@ public class DownloadController {
         if(!SecurityCheck.checkUserSigner(userSign)){
             return;
         }*/
-        File file = new File(filePath);
+        String filePath = env.getProperty("saveFileUrl");
+        File file = new File(filePath+fileName);
         if (!file.exists()) {
             return;
         }
@@ -52,7 +53,7 @@ public class DownloadController {
 
 
     @RequestMapping(value = "/view", method = RequestMethod.GET)
-    public void view(HttpServletRequest request, HttpServletResponse response, @RequestParam("filePath") String filePath) throws Exception{
+    public void view(HttpServletRequest request, HttpServletResponse response, @RequestParam("fileName") String fileName) throws Exception{
         //一个简单的鉴权
         /*String userSign = SecurityCheck.getCookieValue(request,"userSign");
         logger.info("userSign鉴权===获取到userSign[" + userSign + "]");
@@ -62,7 +63,9 @@ public class DownloadController {
         if(!SecurityCheck.checkUserSigner(userSign)){
             return;
         }*/
-        File file = new File(filePath);
+        String filePath = env.getProperty("saveFileUrl");
+        String pdfName = fileName.split("\\.")[0]+".pdf";
+        File file = new File(filePath+pdfName);
         if (!file.exists()) {
             return;
         }

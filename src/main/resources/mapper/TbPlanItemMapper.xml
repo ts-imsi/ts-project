@@ -65,4 +65,8 @@
     <select id="getPlanItem" parameterType="Integer" resultType="com.trasen.tsproject.model.TbPlanItem">
         select * from tb_plan_item where pkid = #{pkid}
     </select>
+
+    <update id="updatePlanItemDocFile" parameterType="com.trasen.tsproject.model.TbPlanItem">
+        update tb_plan_item set submitter = #{submitter},is_submit = 1,submit_time=now(),file_name = #{fileName} where pkid = #{pkid}
+    </update>
 </mapper>

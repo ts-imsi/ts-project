@@ -166,6 +166,10 @@ public class PlanDetailService {
         return list;
     }
 
+    public void updatePlanItemDocFile(TbPlanItem tbPlanItem){
+        tbPlanItemMapper.updatePlanItemDocFile(tbPlanItem);
+    }
+
 
 
 

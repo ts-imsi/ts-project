@@ -1,6 +1,11 @@
 package com.trasen.tsproject.controller;
 
 import cn.trasen.core.entity.Result;
+import com.trasen.tsproject.common.VisitInfoHolder;
+import com.trasen.tsproject.model.TbPlanItem;
+import com.trasen.tsproject.service.PlanDetailService;
+import com.trasen.tsproject.util.Excel2PDFUtil;
+import com.trasen.tsproject.util.Work2PDFUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +33,9 @@ public class FileUploadController {
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    PlanDetailService planDetailService;
 
 
     /**
@@ -50,7 +57,7 @@ public class FileUploadController {
                     // 获取图片的扩展名
                     String extensionName = StringUtils.substringAfter(fileName, ".");
                     // 新的图片文件名 = 获取时间戳+"."图片扩展名
-                    String newFileName = String.valueOf(System.currentTimeMillis()) + "." + extensionName;
+                    String newFileName = id + "." + extensionName;
                     // 数据库保存的目录
                     // 文件路径
                     String filePath = env.getProperty("saveFileUrl");
@@ -59,29 +66,30 @@ public class FileUploadController {
                     if (!dest.getParentFile().exists()) {
                         dest.getParentFile().mkdirs();
                     }
-                    // 判断是否有旧头像，如果有就先删除旧头像，再上传
-                    /*SUser userInfo = sUserService.findUserInfo(userId.toString());
-                    if (StringUtils.isNotBlank(userInfo.getUserHead())) {
-                        String oldFilePath = webUploadPath.concat(userInfo.getUserHead());
-                        File oldFile = new File(oldFilePath);
-                        if (oldFile.exists()) {
-                            oldFile.delete();
-                        }
-                    }*/
-                    // 上传到指定目录
-                    file.transferTo(dest);
+                    byte[] bytes = file.getBytes();
+                    BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(dest));
+                    stream.write(bytes);
+                    stream.close();
 
-                    // 将图片流转换进行BASE64加码
-                    //BASE64Encoder encoder = new BASE64Encoder();
-                    //String data = encoder.encode(file.getBytes());
+                    boolean boo = false;
 
-                    // 将反斜杠转换为正斜杠
-                    String data = newFileName;
-                    Map<String, Object> resultMap = new HashMap<>();
-                    resultMap.put("file", data);
-                    result.setObject(resultMap);
-                    result.setStatusCode(1);
-                    result.setMessage("上传成功!");
+                    if(extensionName.indexOf("doc")>-1){
+                        boo = Work2PDFUtil.execute(new FileInputStream(filePath+newFileName),new File(filePath+id+".pdf"));
+                    }
+
+                    if(extensionName.indexOf("xls")>-1){
+                        boo = Excel2PDFUtil.execute(filePath+newFileName,filePath+id+".pdf");
+                    }
+
+                    if(boo){
+                        TbPlanItem item = new TbPlanItem();
+                        item.setSubmitter(VisitInfoHolder.getShowName());
+                        item.setPkid(id);
+                        item.setFileName(newFileName);
+                        planDetailService.updatePlanItemDocFile(item);
+                        result.setStatusCode(1);
+                        result.setMessage("上传成功!");
+                    }
                 } catch (IOException e) {
                     result.setStatusCode(0);
                     result.setMessage("上传失败!");
