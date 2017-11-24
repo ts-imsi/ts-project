@@ -1,7 +1,9 @@
 package com.trasen.tsproject.common;
 
+import com.alibaba.fastjson.JSONObject;
 import com.trasen.tsproject.util.PropertiesUtils;
 import com.trasen.tsproject.util.SignConvertUtil;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -9,6 +11,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Map;
 
 /**
@@ -53,6 +56,39 @@ public class SecurityCheck {
             if(contentSign.equals(sign)) {
                 //鉴权成功
                 alongBoo = true;
+            }
+        }
+        return alongBoo;
+    }
+
+    public static boolean checkUserSigner(String xToken) {
+        boolean alongBoo = false;
+        String sign = null;
+        String name = null;
+        String pwd = null;
+        String showName = null;
+        String userId = null;
+        Map<String, String> parameters = new HashedMap();
+        if(xToken!=null){
+            String [] token = xToken.split("\\.");
+            if(token.length==2){
+                sign = token[0];
+                String json = null;
+                try {
+                    json = new String(Base64.getDecoder().decode(token[1]),"utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                JSONObject jsonObject = (JSONObject) JSONObject.parse(json);
+                name = jsonObject.getString("name");
+                pwd = jsonObject.getString("pwd");
+                showName = jsonObject.getString("showName");
+                userId = jsonObject.getString("userId");
+                parameters.put("name", name);
+                parameters.put("pwd", pwd);
+                parameters.put("showName", showName);
+                parameters.put("userId",userId);
+                alongBoo = SecurityCheck.checkSigner(parameters,sign);
             }
         }
         return alongBoo;
