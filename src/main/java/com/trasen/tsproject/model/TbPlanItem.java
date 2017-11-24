@@ -78,6 +78,8 @@ public class TbPlanItem {
      */
     private Date submitTime;
 
+    private String fileName;
+
     /**
      * 评分
      */
