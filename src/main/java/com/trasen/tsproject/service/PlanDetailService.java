@@ -50,6 +50,14 @@ public class PlanDetailService {
                     itemMap.put("detailId",detail.getPkid());
                     list = tbPlanItemMapper.queryPlanItems(itemMap);
                 }
+
+                //角色权限
+
+                String userRole = tbPlanItemMapper.getUserRoleTag(VisitInfoHolder.getUserId());
+                detail.setUserRole(userRole);
+
+
+
                 if(list.size()==0){
                     Map<String,Object> param = new HashMap<>();
                     param.put("proCode",projectPlan.getProCode());
@@ -63,14 +71,19 @@ public class PlanDetailService {
                     }
                 }
 
+                String checkRole = "";
+
                 for(TbPlanItem planItem: list){
+                    String role = planItem.getRole();
+                    if(role!=null&&checkRole.length()<role.length()){
+                        checkRole = role;
+                    }
                     List<TbPlanCheck> planChecks = tbPlanCheckMapper.queryPlanCheck(planItem);
                     if(planChecks.size()>0){
                         planItem.setPlanChecks(planChecks);
                     }else{
                         planChecks = new ArrayList<>();
                         planItem.setPlanChecks(planChecks);
-                        String role = planItem.getRole();
                         if(role!=null){
                             String [] tags = role.split("\\|");
                             if(tags!=null&&tags.length>1){
@@ -136,6 +149,7 @@ public class PlanDetailService {
                 List<TbPlanStage> stageList = new ArrayList<>();
                 stageList.addAll(stageMap.values());
                 detail.setTbPlanStages(stageList);
+                detail.setCheckRole(checkRole);
             }
         }
         return detail;
@@ -203,6 +217,40 @@ public class PlanDetailService {
 
     public void updatePlanItemDocFile(TbPlanItem tbPlanItem){
         tbPlanItemMapper.updatePlanItemDocFile(tbPlanItem);
+        tbPlanItemMapper.reUpload(tbPlanItem.getPkid());
+    }
+
+    public boolean checkOk(TbPlanItem item){
+        boolean boo = false;
+        if(item!=null&&item.getPkid()!=null&&item.getUserRole()!=null){
+            tbPlanItemMapper.updateItemScore(item);
+            Map<String,Object> param = new HashMap<>();
+            param.put("status",1);
+            param.put("operator",VisitInfoHolder.getShowName());
+            param.put("itemId",item.getPkid());
+            param.put("checkTag",item.getUserRole());
+            tbPlanItemMapper.updateCheck(param);
+            if("|tag_check_XMZ|".equals(item.getUserRole())){
+                tbPlanItemMapper.updateItemComplete(item);
+            }
+            boo = true;
+        }
+        return boo;
+    }
+
+    public boolean checkBack(TbPlanItem item){
+        boolean boo = false;
+        if(item!=null&&item.getPkid()!=null&&item.getUserRole()!=null){
+            tbPlanItemMapper.planItemDocBack(item);
+            Map<String,Object> param = new HashMap<>();
+            param.put("status",2);
+            param.put("operator",VisitInfoHolder.getShowName());
+            param.put("itemId",item.getPkid());
+            param.put("checkTag",item.getUserRole());
+            tbPlanItemMapper.updateCheck(param);
+            boo = true;
+        }
+        return boo;
     }
 
 

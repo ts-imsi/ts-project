@@ -110,6 +110,9 @@ public class TbPlanItem {
     @Transient
     private List<TbPlanCheck> planChecks;
 
+    @Transient
+    private String userRole;
+
 
 
 

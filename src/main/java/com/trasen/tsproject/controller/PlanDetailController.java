@@ -114,5 +114,47 @@ public class PlanDetailController {
 
     }
 
+    @RequestMapping(value="/check/ok",method = RequestMethod.POST)
+    public Result checkOk(@RequestBody TbPlanItem planItem){
+        Result result=new Result();
+        result.setSuccess(false);
+        try {
+            boolean boo = planDetailService.checkOk(planItem);
+            if(boo){
+                result.setSuccess(true);
+                result.setMessage("确认成功!");
+            }else{
+                result.setMessage("确认失败!");
+            }
+
+        }catch (Exception e) {
+            logger.error("计划确认异常异常" + e.getMessage(), e);
+            result.setSuccess(false);
+            result.setMessage("计划确认异常");
+        }
+        return  result;
+    }
+
+    @RequestMapping(value="/check/back",method = RequestMethod.POST)
+    public Result checkBack(@RequestBody TbPlanItem planItem){
+        Result result=new Result();
+        result.setSuccess(false);
+        try {
+            boolean boo = planDetailService.checkBack(planItem);
+            if(boo){
+                result.setSuccess(true);
+                result.setMessage("驳回成功!");
+            }else{
+                result.setMessage("驳回失败!");
+            }
+
+        }catch (Exception e) {
+            logger.error("计划驳回异常" + e.getMessage(), e);
+            result.setSuccess(false);
+            result.setMessage("计划驳回异常");
+        }
+        return  result;
+    }
+
 
 }

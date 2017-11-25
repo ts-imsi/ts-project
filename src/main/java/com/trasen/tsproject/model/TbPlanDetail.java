@@ -79,5 +79,11 @@ public class TbPlanDetail {
     @Transient
     private List<TbPlanStage> tbPlanStages;
 
+    @Transient
+    private String checkRole;
+
+    @Transient
+    private String userRole;
+
 
 }

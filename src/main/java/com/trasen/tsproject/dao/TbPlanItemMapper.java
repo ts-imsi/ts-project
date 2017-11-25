@@ -21,4 +21,16 @@ public interface TbPlanItemMapper extends MyMapper<TbPlanItem> {
     TbPlanItem getPlanItem(Integer pkid);
 
     void updatePlanItemDocFile(TbPlanItem tbPlanItem);
+
+    String getUserRoleTag(String userId);
+
+    void updateItemScore(TbPlanItem tbPlanItem);
+
+    void planItemDocBack(TbPlanItem tbPlanItem);
+
+    void updateItemComplete(TbPlanItem tbPlanItem);
+
+    void updateCheck(Map<String,Object> param);
+
+    void reUpload(Integer itemId);
 }
