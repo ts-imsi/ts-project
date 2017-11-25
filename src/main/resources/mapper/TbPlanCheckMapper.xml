@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbPlanCheckMapper" >
+    <insert id="insertPlanCheck" parameterType="com.trasen.tsproject.model.TbPlanCheck">
+        <selectKey resultType="Integer" keyProperty="pkid">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into tb_plan_check (plan_id,detail_id,item_id,check_tag,check_name,status,permission,created,operator)
+        values (#{planId},#{detailId},#{itemId},#{checkTag},#{checkName},0,#{permission},now(),#{operator})
+    </insert>
+
+    <select id="getCheckTag" parameterType="String" resultType="com.trasen.tsproject.model.TwfCheckTag">
+        select * from twf_check_tag where tag_id = #{tagId} and is_vaild=1
+    </select>
+
+    <select id="queryPlanCheck" parameterType="com.trasen.tsproject.model.TbPlanItem" resultType="com.trasen.tsproject.model.TbPlanCheck">
+        select * from tb_plan_check where plan_id=#{planId} and detail_id=#{detailId} and item_id=#{pkid}
+    </select>
 
 </mapper>

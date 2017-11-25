@@ -39,7 +39,7 @@
     </select>
 
     <select id="queryTemplatePlanItems" parameterType="Map" resultType="com.trasen.tsproject.model.TbPlanItem">
-        select s.`name` as stageName,s.poit,d.`name` as docName,d.is_output as isOutput,d.output from tb_plan_template t
+        select s.`name` as stageName,s.poit,d.`name` as docName,d.is_output as isOutput,d.output,i.role from tb_plan_template t
         left join tb_plan_template_item i on t.pkid = i.temp_id
         left join twf_stage s on s.pkid= i.stage_id
         left join twf_stage_doc d on d.pkid = i.stage_doc_id
@@ -54,8 +54,8 @@
         <selectKey resultType="Integer" keyProperty="pkid">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into tb_plan_item (plan_id,detail_id,stage_name,poit,doc_name,`output`,is_output,created,operator,is_update)
-        values (#{planId},#{detailId},#{stageName},#{poit},#{docName},#{output},#{isOutput},now(),#{operator},0)
+        insert into tb_plan_item (plan_id,detail_id,stage_name,poit,doc_name,`output`,is_output,created,operator,is_update,role)
+        values (#{planId},#{detailId},#{stageName},#{poit},#{docName},#{output},#{isOutput},now(),#{operator},0,#{role})
     </insert>
 
     <update id="updatePlanItemTime" parameterType="com.trasen.tsproject.model.TbPlanItem">

@@ -3,8 +3,9 @@ package com.trasen.tsproject.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Transient;
 import java.util.Date;
-import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -100,9 +101,14 @@ public class TbPlanItem {
      */
     private String operator;
 
+    private String role;
+
 
     @Transient
     private String remark;
+
+    @Transient
+    private List<TbPlanCheck> planChecks;
 
 
 

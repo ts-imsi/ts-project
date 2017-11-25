@@ -2,9 +2,7 @@ package com.trasen.tsproject.service;
 
 import cn.trasen.commons.util.DataUtil;
 import com.trasen.tsproject.common.VisitInfoHolder;
-import com.trasen.tsproject.dao.TbPlanDetailMapper;
-import com.trasen.tsproject.dao.TbPlanItemMapper;
-import com.trasen.tsproject.dao.TbProjectPlanLogMapper;
+import com.trasen.tsproject.dao.*;
 import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.util.DateUtils;
 import org.slf4j.Logger;
@@ -30,6 +28,9 @@ public class PlanDetailService {
 
     @Autowired
     TbProjectPlanLogMapper tbProjectPlanLogMapper;
+
+    @Autowired
+    TbPlanCheckMapper tbPlanCheckMapper;
 
     public TbPlanDetail getPlanItemList(Integer planId, String type){
         TbPlanDetail detail = null;
@@ -60,6 +61,40 @@ public class PlanDetailService {
                         item.setOperator(VisitInfoHolder.getShowName());
                         tbPlanItemMapper.insertPlanItem(item);
                     }
+                }
+
+                for(TbPlanItem planItem: list){
+                    List<TbPlanCheck> planChecks = tbPlanCheckMapper.queryPlanCheck(planItem);
+                    if(planChecks.size()>0){
+                        planItem.setPlanChecks(planChecks);
+                    }else{
+                        planChecks = new ArrayList<>();
+                        planItem.setPlanChecks(planChecks);
+                        String role = planItem.getRole();
+                        if(role!=null){
+                            String [] tags = role.split("\\|");
+                            if(tags!=null&&tags.length>1){
+                                for(String tagId : tags){
+                                    TwfCheckTag tag = tbPlanCheckMapper.getCheckTag("|"+tagId+"|");
+                                    if(tag==null){
+                                        continue;
+                                    }
+                                    TbPlanCheck check = new TbPlanCheck();
+                                    check.setPlanId(planItem.getPlanId());
+                                    check.setDetailId(planItem.getDetailId());
+                                    check.setItemId(planItem.getPkid());
+                                    check.setCheckTag(tag.getTagId());
+                                    check.setCheckName(tag.getTagName());
+                                    check.setPermission(tag.getPermission());
+                                    check.setOperator(VisitInfoHolder.getShowName());
+                                    check.setStatus(0);
+                                    tbPlanCheckMapper.insertPlanCheck(check);
+                                    planItem.getPlanChecks().add(check);
+                                }
+                            }
+                        }
+                    }
+
                 }
 
 
