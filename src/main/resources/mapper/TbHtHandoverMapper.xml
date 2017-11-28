@@ -75,4 +75,9 @@
         <if test="contractOwner!=null"> and ht_owner=#{contractOwner}</if>
     </select>
 
+    <select id="queryHandOverList" parameterType="java.util.Map" resultType="com.trasen.tsproject.model.TbHtHandover">
+        select * from tb_ht_handover where status!=2
+        <if test="htOwner!=null and htOwner!=''"> and ht_owner=#{htOwner}</if>
+    </select>
+
 </mapper>

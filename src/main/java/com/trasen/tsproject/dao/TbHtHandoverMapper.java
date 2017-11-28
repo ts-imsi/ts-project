@@ -37,4 +37,6 @@ public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
     TbHtHandover selectByProcessId(String processId);
 
     List<String> queryHandOverByOwerOfType(Map<String,String> param);
+
+    List<TbHtHandover> queryHandOverList(Map<String,String> param);
 }

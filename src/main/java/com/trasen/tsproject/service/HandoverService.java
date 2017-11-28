@@ -396,4 +396,10 @@ public class HandoverService {
         }
         return list;
     }
+
+    public List<TbHtHandover> queryHandOverList(Map<String,String> param){
+        return htHandoverMapper.queryHandOverList(param);
+    }
+
+
 }
