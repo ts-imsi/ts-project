@@ -77,29 +77,38 @@ public class PlanTemplateService {
             tbPlanTemplateMapper.updatePlanTemp(tbPlanTemplate);
             tbPlanTemplateItemMapper.deletePlanItem(tbPlanTemplate.getPkid());
         }
+        List<String> checkTagSaveList=tagSaveList.stream().sorted().collect(Collectors.toList());
+        List<String> checkStageSaveList=stageSaveList.stream().sorted().collect(Collectors.toList());
         List<TwfCheckTag> twfCheckTags=twfCheckTagMapper.selectCheckTag();
-        stageSaveList.stream().forEach(stage ->savaPlanTemplateItem(tbPlanTemplate,tagSaveList,stage,twfCheckTags));
+        checkStageSaveList.stream().forEach(stage ->savaPlanTemplateItem(tbPlanTemplate,checkTagSaveList,stage,twfCheckTags));
     }
     public void savaPlanTemplateItem(TbPlanTemplate tbPlanTemplate,List<String> tagSaveList,String stage,List<TwfCheckTag> twfCheckTags){
         String[] stages=stage.split(":");
-        tagSaveList.stream().forEach(tag->saveTemplateItem(tbPlanTemplate,tag,stages,twfCheckTags));
+
+        List<String> tagName=tagSaveList.stream().map(tag->analysisPlan(tag,stages,twfCheckTags)).collect(Collectors.toList());
+        String tagId=String.join("",tagName);
+        TbPlanTemplateItem tbPlanTemplateItem=new TbPlanTemplateItem();
+        tbPlanTemplateItem.setTempId(tbPlanTemplate.getPkid());
+        tbPlanTemplateItem.setStageDocId(Integer.valueOf(stages[1]));
+        tbPlanTemplateItem.setStageId(Integer.valueOf(stages[0]));
+        tbPlanTemplateItem.setOperator(VisitInfoHolder.getShowName());
+        tbPlanTemplateItem.setCreated(new Date());
+        String role=tagId.replace("||","|");
+        tbPlanTemplateItem.setRole(role);
+        tbPlanTemplateItemMapper.saveTemplateItem(tbPlanTemplateItem);
     }
 
-    public void saveTemplateItem(TbPlanTemplate tbPlanTemplate,String tag,String[] stages,List<TwfCheckTag> twfCheckTags){
-        String[] tags=tag.split(":");
-        if(tags[0].equals(stages[1])){
-            TbPlanTemplateItem tbPlanTemplateItem=new TbPlanTemplateItem();
-            tbPlanTemplateItem.setTempId(tbPlanTemplate.getPkid());
-            tbPlanTemplateItem.setStageDocId(Integer.valueOf(tags[0]));
-            tbPlanTemplateItem.setStageId(Integer.valueOf(stages[0]));
-            tbPlanTemplateItem.setOperator(VisitInfoHolder.getShowName());
-            tbPlanTemplateItem.setCreated(new Date());
-            List<TwfCheckTag> checkTags=twfCheckTags.stream().filter(checkTag->checkTag.getPkid()==Integer.valueOf(tags[1])).collect(Collectors.toList());
-            tbPlanTemplateItem.setRole(checkTags.get(0).getTagId());
-            tbPlanTemplateItemMapper.saveTemplateItem(tbPlanTemplateItem);
+    public String analysisPlan(String tag,String[] stages,List<TwfCheckTag> twfCheckTags){
+        String[] sz=tag.split(":");
+        String tagName="";
+        if(stages[1].equals(sz[0])){
+            List<String> check=twfCheckTags.stream().filter(checkTag->checkTag.getPkid()==Integer.valueOf(sz[1])).map(n->n.getTagId()).collect(Collectors.toList());
+            tagName+=check.get(0);
         }
+        System.out.println("=============="+tagName);
+        logger.info("=============="+tagName);
+        return tagName;
     }
-
     @Transactional(rollbackFor = Exception.class)
     public int saveStageTemp(TwfStage twfStage){
         twfStage.setCreated(new Date());
@@ -130,7 +139,9 @@ public class PlanTemplateService {
         List<TbPlanTemplateItem> tbPlanTemplateItems=tbPlanTemplateItemMapper.selectPlanItem(pkid);
         TbPlanTemplate tbPlanTemplate=tbPlanTemplateMapper.selectPlanTemp(pkid);
         List<String> stagePlan=tbPlanTemplateItems.stream().map(item->item.getStageId()+":"+item.getStageDocId()).collect(Collectors.toList());
+
         List<String> tagPlan=tbPlanTemplateItems.stream().map(planTag->planTag.getStageDocId()+":"+planTag.getCheckTagId()).collect(Collectors.toList());
+
         List<Integer> stageList=tbPlanTemplateItems.stream().map(stage->stage.getStageId()).collect(Collectors.toList());
         List<Integer> stageModuleList=stageList.stream().distinct().collect(Collectors.toList());
         param.put("tbPlanTemplate",tbPlanTemplate);

@@ -15,6 +15,6 @@
 	tag.permission AS permission
     FROM
 	tb_plan_template_item te
-    LEFT JOIN twf_check_tag tag ON te.role = tag.tag_id where temp_id = #{tempId}
+    LEFT JOIN twf_check_tag tag ON locate(tag.tag_id,te.role)>0  where temp_id = #{tempId}
     </select>
 </mapper>
