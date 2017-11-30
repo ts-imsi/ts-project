@@ -92,4 +92,13 @@ public class ProjectArrangeService {
         tbProjectPlanMapper.saveProjectPlan(tbProjectPlan);
     }
 
+    public List<TbHtHandover> selectMobileProjectArrangeList(TbHtHandover tbHtHandover){
+        List<TbHtHandover> tbHtHandoverList=tbHtHandoverMapper.selectMobileProjectArrangeList(tbHtHandover);
+        for(TbHtHandover handover : tbHtHandoverList){
+            List<TbProjectPlan> list=tbProjectPlanMapper.getProjectPlanByHandOverId(handover.getPkid().toString());
+            handover.setPlanList(list);
+        }
+        return tbHtHandoverList;
+    }
+
 }

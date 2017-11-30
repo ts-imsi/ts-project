@@ -178,6 +178,9 @@ public class ProjectPlanService {
     }
 
 
+    public TbHtHandover selectHandOverByPlanId(Integer planId){
+        return tbProjectPlanMapper.selectHandOverByPlanId(planId);
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package com.trasen.tsproject.dao;
 
+import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbProjectPlan;
 import com.trasen.tsproject.util.MyMapper;
 
@@ -10,4 +11,5 @@ public interface TbProjectPlanMapper extends MyMapper<TbProjectPlan> {
     List<TbProjectPlan> getProjectPlanByHandOverId(String handoverId);
     int updateProjectActualizePlan(TbProjectPlan tbProjectPlan);
     int selectCountManage(String handoverId);
+    TbHtHandover selectHandOverByPlanId(Integer planId);
 }

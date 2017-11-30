@@ -74,7 +74,7 @@
         select t.tag_id from tb_tag_personnel t
         left join tb_personnel p on p.work_num = t.work_num
         left join t_user u on u.per_id = p.per_id
-        where u.pkid = 3 and tag_id like '|tag_check_%' limit 1
+        where u.pkid = #{userId} and tag_id like '|tag_check_%' limit 1
     </select>
     
     <update id="updateItemScore" parameterType="com.trasen.tsproject.model.TbPlanItem">
