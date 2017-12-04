@@ -64,6 +64,7 @@ public class MobileImitationController {
     @RequestMapping(value="/oauth2/{code}",method = RequestMethod.GET)
     public Map<String,Object> oauth2(@PathVariable String code){
         Map<String,Object> result=new HashMap<>();
+        HttpURLConnection urlConn=null;
         try{
             String imitationOpenid=env.getProperty("imitation_openid");
 
@@ -71,7 +72,7 @@ public class MobileImitationController {
                 imitationOpenid=imitationOpenid.replace("{code}",code);
                 StringBuffer str = new StringBuffer();
                 URL url = new URL(imitationOpenid);
-                HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+                urlConn = (HttpURLConnection) url.openConnection();
                 urlConn.setConnectTimeout(1000 * 60 * 5);
                 urlConn.setReadTimeout(1000 * 60 * 5);
                 urlConn.connect();
@@ -103,6 +104,8 @@ public class MobileImitationController {
             logger.error("数据查询失败"+e.getMessage(),e);
             result.put("message","数据查询失败");
             result.put("success",false);
+        }finally {
+            urlConn.disconnect();
         }
         return result;
     }
