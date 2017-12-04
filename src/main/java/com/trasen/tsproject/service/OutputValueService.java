@@ -95,6 +95,7 @@ public class OutputValueService {
         for(OutputValueVo outputValueVo : outputValueVoList){
             TbOutputValue tbOutputValue = new TbOutputValue();
             tbOutputValue.setHtNo(outputValueVo.getId());
+            tbOutputValue.setStatus(outputValue.getStatus());
             List<TbOutputValue> tbOutputValues = tbOutputValueMapper.queryOutputValue(tbOutputValue);
             outputValueVo.setOutputValueList(tbOutputValues);
         }
