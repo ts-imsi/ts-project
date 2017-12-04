@@ -1,8 +1,10 @@
 package com.trasen.tsproject.controller;
 
+import cn.trasen.core.entity.Result;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.model.OutputValueVo;
 import com.trasen.tsproject.model.TbOutputValue;
+import com.trasen.tsproject.model.TbPlanDetail;
 import com.trasen.tsproject.service.OutputValueService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by zhangxiahui on 17/12/1.
@@ -37,8 +41,16 @@ public class OutputValueController {
                 result.put("message","参数为空");
             }
 
+            Integer status = null;
+
+            if(param.get("status")!=null){
+                status = Integer.valueOf(param.get("status"));
+            }
+
+
             PageInfo<OutputValueVo> pageInfo = new PageInfo<>();
             TbOutputValue outputValue = new TbOutputValue();
+            outputValue.setStatus(status);
             if(param.get("type")!=null){
                 if("dept".equals(param.get("type"))){
                     outputValue.setDepName(param.get("name"));
@@ -59,6 +71,27 @@ public class OutputValueController {
             logger.error("数据查询失败"+e.getMessage(),e);
             result.put("success",false);
             result.put("message","数据查询失败");
+        }
+        return result;
+    }
+
+
+    @RequestMapping(value="/checkOutput",method = RequestMethod.POST)
+    public Result checkOutput(@RequestBody List<TbOutputValue> outputList){
+        Result result=new Result();
+        try{
+            if(outputList!=null){
+                outputValueService.updateOutputValue(outputList);
+                result.setSuccess(true);
+                result.setMessage("产值确认成功!");
+            }else{
+                result.setSuccess(false);
+                result.setMessage("参数参入错误");
+            }
+        }catch (Exception e){
+            logger.error("产值确认失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("产值确认失败!");
         }
         return result;
     }

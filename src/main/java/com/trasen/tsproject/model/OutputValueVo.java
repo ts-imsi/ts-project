@@ -24,5 +24,8 @@ public class OutputValueVo {
     @Transient
     private boolean ifOpen = false;
 
+    @Transient
+    private boolean checked = false;
+
 
 }

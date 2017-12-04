@@ -61,11 +61,13 @@ public class OutputValueService {
     }
 
 
-    public boolean updateOutputValue(TbOutputValue outputValue){
+    public boolean updateOutputValue(List<TbOutputValue> outputList){
         boolean boo = false;
-        if(outputValue!=null&&outputValue.getPkid()!=null){
-            outputValue.setOperator(VisitInfoHolder.getShowName());
-            tbOutputValueMapper.updateOutputValue(outputValue);
+        if(outputList!=null){
+            for (TbOutputValue outputValue : outputList){
+                outputValue.setOperator(VisitInfoHolder.getShowName());
+                tbOutputValueMapper.updateOutputValue(outputValue);
+            }
             boo = true;
         }
         return boo;
@@ -79,6 +81,7 @@ public class OutputValueService {
         for(OutputValueVo outputValueVo : outputValueVoList){
             TbOutputValue tbOutputValue = new TbOutputValue();
             tbOutputValue.setDepId(outputValueVo.getId());
+            tbOutputValue.setStatus(outputValue.getStatus());
             List<TbOutputValue> tbOutputValues = tbOutputValueMapper.queryOutputValue(tbOutputValue);
             outputValueVo.setOutputValueList(tbOutputValues);
         }

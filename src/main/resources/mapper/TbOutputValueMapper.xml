@@ -38,6 +38,9 @@
     <if test="htName!=null">
       AND ht_name LIKE CONCAT('%',#{htName},'%')
     </if>
+    <if test="status!=null">
+      AND status = #{status}
+    </if>
     group by dep_id
   </select>
 
@@ -49,6 +52,9 @@
     <if test="htName!=null">
       AND ht_name LIKE CONCAT('%',#{htName},'%')
     </if>
+    <if test="status!=null">
+      AND status = #{status}
+    </if>
     group by ht_no
   </select>
 
@@ -59,6 +65,9 @@
     </if>
     <if test="htNo!=null">
       and ht_no = #{htNo}
+    </if>
+    <if test="status!=null">
+      AND status = #{status}
     </if>
 
   </select>
