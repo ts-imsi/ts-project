@@ -91,5 +91,9 @@ public class TbOutputValue {
     @Transient
     private boolean checked = false;
 
+    private String proLine;
+
+    private String remark;
+
 
 }

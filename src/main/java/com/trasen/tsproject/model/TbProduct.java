@@ -47,4 +47,6 @@ public class TbProduct {
 
     @Transient
     private List<TbProModule> proModuleList;
+
+    private String proLine;
 }
