@@ -78,13 +78,14 @@ public class OutputValueService {
     public PageInfo<OutputValueVo> queryOutputValueDept(int page, int rows, TbOutputValue outputValue){
         PageHelper.startPage(page,rows);
         List<OutputValueVo> outputValueVoList = tbOutputValueMapper.queryOutputValueToDept(outputValue);
-        for(OutputValueVo outputValueVo : outputValueVoList){
+        /*for(OutputValueVo outputValueVo : outputValueVoList){
             TbOutputValue tbOutputValue = new TbOutputValue();
             tbOutputValue.setDepId(outputValueVo.getId());
             tbOutputValue.setStatus(outputValue.getStatus());
             List<TbOutputValue> tbOutputValues = tbOutputValueMapper.queryOutputValue(tbOutputValue);
             outputValueVo.setOutputValueList(tbOutputValues);
-        }
+        }*/
+        outputValueVoList.stream().forEach(outputValueVo -> setOutputValueList(outputValueVo,outputValue));
         PageInfo<OutputValueVo> pagehelper = new PageInfo<>(outputValueVoList);
         return pagehelper;
     }
@@ -104,9 +105,19 @@ public class OutputValueService {
     }
 
 
+    public List<OutputValueVo> selectOutputValueDept(TbOutputValue outputValue){
+        List<OutputValueVo> outputValueVoList = tbOutputValueMapper.queryOutputValueToDept(outputValue);
+        outputValueVoList.stream().forEach(outputValueVo -> setOutputValueList(outputValueVo,outputValue));
+        return outputValueVoList;
+    }
 
-
-
+    public void setOutputValueList(OutputValueVo outputValueVo,TbOutputValue outputValue){
+        TbOutputValue tbOutputValue = new TbOutputValue();
+        tbOutputValue.setDepId(outputValueVo.getId());
+        tbOutputValue.setStatus(outputValue.getStatus());
+        List<TbOutputValue> tbOutputValues = tbOutputValueMapper.queryOutputValue(tbOutputValue);
+        outputValueVo.setOutputValueList(tbOutputValues);
+    }
 
 
 }
