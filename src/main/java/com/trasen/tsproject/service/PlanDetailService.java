@@ -123,6 +123,12 @@ public class PlanDetailService {
                         tbPlanItems.add(planItem);
                         stage.setTbPlanItems(tbPlanItems);
                         stage.setStageName(planItem.getStageName());
+                        stage.setAllPoit(planItem.getPoit());
+                        if(planItem.getIsComplete()==1){
+                            stage.setPoit(planItem.getPoit());
+                        }else{
+                            stage.setPoit(0d);
+                        }
                         if(planItem.getPlanTime()!=null){
                             stage.setPlanStartTime(planItem.getPlanTime());
                             stage.setPlanEndTime(planItem.getPlanTime());
@@ -131,6 +137,10 @@ public class PlanDetailService {
                     }else{
                         stage = stageMap.get(planItem.getStageName());
                         stage.getTbPlanItems().add(planItem);
+                        stage.setAllPoit(stage.getAllPoit()+planItem.getPoit());
+                        if(planItem.getIsComplete()==1){
+                            stage.setPoit(stage.getPoit()+planItem.getPoit());
+                        }
                         if(planItem.getPlanTime()!=null){
                             if(stage.getPlanStartTime()!=null){
                                 if(DateUtils.strToDate(stage.getPlanStartTime(),"yyyy-MM-dd").getTime()>DateUtils.strToDate(planItem.getPlanTime(),"yyyy-MM-dd").getTime()){
@@ -237,12 +247,26 @@ public class PlanDetailService {
                 tbPlanItemMapper.updateItemComplete(item);
                 //自动加入待确认产值
                 outputValueService.addOutputValue(item);
-
-                // TODO: 17/12/6 更新进度
+                //自动更新进度
+                updatePoit(item.getPlanId());
             }
             boo = true;
         }
         return boo;
+    }
+
+    public void updatePoit(Integer planId){
+        Double poit = tbPlanItemMapper.getPoit(planId);
+        Map<String,Object> poitMap = new HashMap<>();
+        poitMap.put("poit",poit);
+        poitMap.put("planId",planId);
+        tbPlanItemMapper.updatePlanPoit(poitMap);
+        Integer handId = tbPlanItemMapper.getHandoverIdToPlanId(planId);
+        Double handPoin = tbPlanItemMapper.getProPoit(handId);
+        Map<String,Object> handMap = new HashMap<>();
+        handMap.put("poit",handPoin);
+        handMap.put("handId",handId);
+        tbPlanItemMapper.updateHandPoit(handMap);
     }
 
     public boolean checkBack(TbPlanItem item){

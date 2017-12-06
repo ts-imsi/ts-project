@@ -23,6 +23,8 @@ public class TbPlanStage {
     private String planEndTime;
 
 
+    private Double allPoit;
+
     private Double poit;
 
 

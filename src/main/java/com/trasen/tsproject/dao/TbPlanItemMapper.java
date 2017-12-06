@@ -4,6 +4,7 @@ import com.trasen.tsproject.model.ExceptionPlan;
 import com.trasen.tsproject.model.TbPlanItem;
 import com.trasen.tsproject.util.MyMapper;
 
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 
@@ -33,4 +34,14 @@ public interface TbPlanItemMapper extends MyMapper<TbPlanItem> {
     void updateCheck(Map<String,Object> param);
 
     void reUpload(Integer itemId);
+
+    Double getPoit(Integer planId);
+
+    void updatePlanPoit(Map<String,Object> param);
+
+    Integer getHandoverIdToPlanId(Integer planId);
+
+    Double getProPoit(Integer handId);
+
+    void updateHandPoit(Map<String,Object> param);
 }

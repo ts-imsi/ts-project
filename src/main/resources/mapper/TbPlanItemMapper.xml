@@ -96,4 +96,29 @@
     <update id="reUpload" parameterType="Integer">
         update tb_plan_check set status=0 where item_id=#{itemId}
     </update>
+
+    <select id="getPoit" parameterType="Integer" resultType="Double">
+        select sum(poit) from tb_plan_item where is_complete=1 and plan_id=#{planId}
+    </select>
+
+    <update id="updatePlanPoit" parameterType="Map" >
+        update tb_project_plan set poit=#{poit} where plan_id=#{planId}
+    </update>
+
+    <select id="getHandoverIdToPlanId" parameterType="Integer" resultType="Integer">
+        select handover_id from tb_project_plan where plan_id=#{planId};
+    </select>
+
+    <select id="getProPoit" parameterType="Integer" resultType="Double">
+        select sum(poit) from tb_project_plan where handover_id=#{handId};
+    </select>
+
+    <update id="updateHandPoit" parameterType="Map">
+        update tb_ht_handover set poit=#{poit} where pkid = #{handId}
+    </update>
+
+
+
+
+
 </mapper>
