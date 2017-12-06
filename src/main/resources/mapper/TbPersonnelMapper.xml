@@ -30,4 +30,11 @@
     AND we.work_num = per.work_num
     AND we.open_id =#{openId}
     </select>
+
+    <select id="getParentTree" resultType="com.trasen.tsproject.model.TbTree">
+        select * from tb_tree where parent is null limit 1
+    </select>
+    <select id="getDeptTreeList" parameterType="String" resultType="com.trasen.tsproject.model.TbTree">
+        select * from tb_tree where parent = #{pkid} and is_vaild=1 and `type`='dept'
+    </select>
 </mapper>

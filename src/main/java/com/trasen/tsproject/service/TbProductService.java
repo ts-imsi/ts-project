@@ -2,15 +2,14 @@ package com.trasen.tsproject.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbHtModuleMapper;
 import com.trasen.tsproject.dao.TbProModuleMapper;
 import com.trasen.tsproject.dao.TbProModulePriceMapper;
 import com.trasen.tsproject.dao.TbProductMapper;
-import com.trasen.tsproject.model.TbHtModule;
-import com.trasen.tsproject.model.TbProModule;
-import com.trasen.tsproject.model.TbProModulePrice;
-import com.trasen.tsproject.model.TbProduct;
+import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -165,5 +164,27 @@ public class TbProductService {
         param.put("proM",proM);
         param.put("newModuleList",newModuleList);
         return param;
+    }
+
+    public PageInfo<TbProduct> queryProductModelList(int rows,int page,Map<String,String> param){
+        PageHelper.startPage(page,rows);
+        List<TbProduct> tbProductList=tbProductMapper.queryProductModelList(param);
+        PageInfo<TbProduct> pagehelper = new PageInfo<TbProduct>(tbProductList);
+        return pagehelper;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public TbProduct saveTbProduct(TbProduct tbProduct){
+        tbProductMapper.saveTbProduct(tbProduct);
+        return tbProduct;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int  updateTbProduct(TbProduct tbProduct){
+        return tbProductMapper.updateTbProduct(tbProduct);
+    }
+
+    public int deleteTbProduct(Integer pkid){
+        return tbProductMapper.deleteTbProduct(pkid);
     }
 }

@@ -1,17 +1,15 @@
 package com.trasen.tsproject.controller;
 
 import cn.trasen.core.entity.Result;
-import com.trasen.tsproject.model.TbProModule;
-import com.trasen.tsproject.model.TbProduct;
+import com.github.pagehelper.PageInfo;
+import com.trasen.tsproject.model.*;
+import com.trasen.tsproject.service.TbPersonnelService;
 import com.trasen.tsproject.service.TbProductService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author luoyun
@@ -27,6 +25,9 @@ public class ProductController {
 
     @Autowired
     private TbProductService tbProductService;
+
+    @Autowired
+    TbPersonnelService tbPersonnelService;
 
     @RequestMapping(value="/getTbProductList/{htNo}",method = RequestMethod.POST)
     public Map<String,Object> getTbProductList(@PathVariable String htNo){
@@ -171,5 +172,87 @@ public class ProductController {
             param.put("message","数据查询失败");
         }
         return param;
+    }
+
+    @RequestMapping(value="/queryProductModelList",method = RequestMethod.POST)
+    public Map<String,Object> queryProductModelList(@RequestBody Map<String,String> param){
+        Map<String,Object> mapParam=new HashMap<>();
+        try{
+            if(param.get("page")==null||param.get("rows")==null){
+                mapParam.put("messages","参数错误");
+                mapParam.put("success",false);
+            }else{
+                PageInfo<TbProduct> productPageInfo=tbProductService.queryProductModelList(Integer.valueOf(param.get("rows")),Integer.valueOf(param.get("page")),param);
+                logger.info("数据查询条数"+productPageInfo.getList().size());
+                mapParam.put("totalPages",productPageInfo.getPages());
+                mapParam.put("pageNo",productPageInfo.getPageNum());
+                mapParam.put("totalCount",productPageInfo.getTotal());
+                mapParam.put("pageSize",productPageInfo.getPageSize());
+                mapParam.put("list",productPageInfo.getList());
+                mapParam.put("success",true);
+            }
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            mapParam.put("messages","数据查询失败");
+            mapParam.put("success",false);
+        }
+        return mapParam;
+    }
+
+    @RequestMapping(value="/saveTbProduct",method = RequestMethod.POST)
+    public Result saveTbProduct(@RequestBody TbProduct tbProduct){
+        Result result=new Result();
+        try{
+            if(tbProduct!=null){
+                if(tbProduct.getPkid()==null){
+                    tbProduct=tbProductService.saveTbProduct(tbProduct);
+                    result.setSuccess(true);
+                    result.setObject(tbProduct);
+                    result.setMessage("数据保存成功");
+                }else{
+                    tbProductService.updateTbProduct(tbProduct);
+                    result.setObject(tbProduct);
+                    result.setSuccess(true);
+                    result.setMessage("数据更新成功");
+                }
+
+            }else{
+                result.setSuccess(false);
+                result.setMessage("参数传入失败");
+            }
+
+        }catch (Exception e){
+            logger.error("数据保存失败"+e.getMessage(),e);
+            result.setMessage("数据保存失败");
+            result.setSuccess(false);
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/deleteTbProduct/{pkid}",method = RequestMethod.POST)
+    public Result deleteTbProduct(@PathVariable Integer pkid){
+        Result result=new Result();
+        try{
+            tbProductService.deleteTbProduct(Optional.ofNullable(pkid).orElse(0));
+            result.setSuccess(true);
+            result.setMessage("数据删除成功");
+        }catch (Exception e){
+            logger.error("数据删除失败"+e.getMessage(),e);
+            result.setMessage("数据删除失败");
+            result.setSuccess(false);
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/getDeptOrganization",method = RequestMethod.POST)
+    public Result getDeptOrganization(){
+        Result result=new Result();
+        TbTree tree = tbPersonnelService.getParentTree();
+        TreeVo treeVo = tbPersonnelService.getDeptTree(tree);
+        List<TreeVo> list = new ArrayList<>();
+        list.add(treeVo);
+        result.setObject(list);
+        result.setSuccess(true);
+        return result;
     }
 }

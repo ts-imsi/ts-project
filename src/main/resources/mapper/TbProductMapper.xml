@@ -7,4 +7,21 @@
   <select id="selectAddModuleView" resultType="com.trasen.tsproject.model.TbHtModule" parameterType="String">
     select modu.*,pro.mod_name from tb_ht_module modu,tb_pro_module pro where modu.mod_id=pro.mod_id and modu.ht_no=#{htNo}
   </select>
+
+  <select id="queryProductModelList" parameterType="java.util.Map" resultType="com.trasen.tsproject.model.TbProduct">
+    select * from tb_product where 1=1
+    <if test="selectName!=null"> and (pro_name like CONCAT('%',#{selectName},'%') or dep_name like CONCAT('%',#{selectName},'%') or pro_line like CONCAT('%',#{selectName},'%'))</if>
+  </select>
+
+  <insert id="saveTbProduct" parameterType="com.trasen.tsproject.model.TbProduct" useGeneratedKeys="true" keyProperty="pkid">
+    insert into tb_product(pro_name,pro_code,pro_line,dep_id,dep_name,created) values(#{proName},#{proCode},#{proLine},#{depId},#{depName},now())
+  </insert>
+
+  <update id="updateTbProduct" parameterType="com.trasen.tsproject.model.TbProduct">
+      update tb_product set pro_name=#{proName},pro_code=#{proCode},dep_id=#{depId},dep_name=#{depName},pro_line=#{proLine} where pkid=#{pkid}
+  </update>
+
+  <delete id="deleteTbProduct" parameterType="Integer">
+    delete from tb_product where pkid=#{pkid}
+  </delete>
 </mapper>
