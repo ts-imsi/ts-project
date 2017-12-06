@@ -89,4 +89,9 @@ public class TbProjectPlan {
 
     private Integer isCheck;
 
+    /**
+     * 进度
+     */
+    private Double poit;
+
 }

@@ -122,5 +122,10 @@ public class TbHtHandover {
     @Transient
     private boolean ifOpen = false;
 
+    /**
+     * 进度
+     */
+    private Double poit;
+
 
 }

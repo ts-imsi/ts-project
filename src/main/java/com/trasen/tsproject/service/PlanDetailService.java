@@ -32,6 +32,9 @@ public class PlanDetailService {
     @Autowired
     TbPlanCheckMapper tbPlanCheckMapper;
 
+    @Autowired
+    OutputValueService outputValueService;
+
     public TbPlanDetail getPlanItemList(Integer planId, String type){
         TbPlanDetail detail = null;
         if(planId!=null){
@@ -232,6 +235,10 @@ public class PlanDetailService {
             tbPlanItemMapper.updateCheck(param);
             if("|tag_check_XMZ|".equals(item.getUserRole())){
                 tbPlanItemMapper.updateItemComplete(item);
+                //自动加入待确认产值
+                outputValueService.addOutputValue(item);
+
+                // TODO: 17/12/6 更新进度
             }
             boo = true;
         }

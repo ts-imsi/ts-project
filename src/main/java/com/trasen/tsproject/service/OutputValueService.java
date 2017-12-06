@@ -59,6 +59,7 @@ public class OutputValueService {
                 TbProduct product = tbOutputValueMapper.getProduct(plan.getProCode());
                 outputValue.setDepId(product.getDepId());
                 outputValue.setDepName(product.getDepName());
+                outputValue.setProLine(product.getProLine());
             }
             outputValue.setStatus(0);
             tbOutputValueMapper.insertOutputValue(outputValue);

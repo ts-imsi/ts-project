@@ -82,7 +82,7 @@
     </update>
 
     <update id="planItemDocBack" parameterType="com.trasen.tsproject.model.TbPlanItem">
-        update tb_plan_item set submitter=null,is_submit=null,submit_time=null,file_name=null,updated=now(),operator=#{operator} where pkid=#{pkid}
+        update tb_plan_item set submitter=null,is_submit=0,submit_time=null,file_name=null,updated=now(),operator=#{operator} where pkid=#{pkid}
     </update>
 
     <update id="updateItemComplete" parameterType="com.trasen.tsproject.model.TbPlanItem">
