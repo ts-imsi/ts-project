@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,9 @@ public class OutputValueService {
 
     @Autowired
     TbOutputValueMapper tbOutputValueMapper;
+
+    @Autowired
+    TbHtChangeService tbHtChangeService;
 
     public void addOutputValue(TbPlanItem item){
         if(item!=null&&item.getPlanId()!=null){
@@ -56,6 +60,7 @@ public class OutputValueService {
                 outputValue.setDepId(product.getDepId());
                 outputValue.setDepName(product.getDepName());
             }
+            outputValue.setStatus(0);
             tbOutputValueMapper.insertOutputValue(outputValue);
         }
     }
@@ -117,6 +122,37 @@ public class OutputValueService {
         tbOutputValue.setStatus(outputValue.getStatus());
         List<TbOutputValue> tbOutputValues = tbOutputValueMapper.queryOutputValue(tbOutputValue);
         outputValueVo.setOutputValueList(tbOutputValues);
+    }
+
+    public List<TbOutputValue> queryProLine(){
+        return tbOutputValueMapper.queryProLine();
+    }
+
+    public List<TbOutputValue> queryHtProduct(String htNo){
+        List<TbOutputValue> list = new ArrayList<>();
+        if(htNo != null){
+            Map<String,Object> con = tbHtChangeService.getContractByHtNo(htNo);
+            if(con!=null&&con.get("object")!=null){
+                ContractInfo contractInfo = (ContractInfo) con.get("object");
+                list = tbOutputValueMapper.queryHtPro(htNo);
+                for(TbOutputValue outputValue : list){
+                    outputValue.setHtNo(contractInfo.getContractNo());
+                    outputValue.setHtName(contractInfo.getContractName());
+                    outputValue.setCustomerName(contractInfo.getCustomerName());
+                }
+            }
+        }
+        return list;
+    }
+
+    public void insertOutputValue(List<TbOutputValue> outputValueList){
+        for(TbOutputValue outputValue : outputValueList){
+            tbOutputValueMapper.insertOutputValue(outputValue);
+        }
+    }
+
+    public Integer findOutputToHtNo(String htNo){
+        return tbOutputValueMapper.findOutputToHtNo(htNo);
     }
 
 

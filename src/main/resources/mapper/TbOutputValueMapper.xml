@@ -20,10 +20,10 @@
   
   <insert id="insertOutputValue" parameterType="com.trasen.tsproject.model.TbOutputValue">
     insert into tb_output_value (ht_no,ht_name,customer_name,status,pro_code,pro_name,
-    dep_name,dep_id,item_id,doc_name,`output`,subtotal,total,created,operator)
+    dep_name,dep_id,item_id,doc_name,`output`,subtotal,total,created,operator,pro_line,remark)
     values
-    (#{htNo},#{htName},#{customerName},0,#{proCode},#{proName},
-    #{depName},#{depId},#{itemId},#{docName},#{output},#{subtotal},#{total},now(),#{operator})
+    (#{htNo},#{htName},#{customerName},#{status},#{proCode},#{proName},
+    #{depName},#{depId},#{itemId},#{docName},#{output},#{subtotal},#{total},now(),#{operator},#{proLine},#{remark})
   </insert>
 
   <update id="updateOutputValue" parameterType="com.trasen.tsproject.model.TbOutputValue">
@@ -41,6 +41,7 @@
     <if test="status!=null">
       AND status = #{status}
     </if>
+    and dep_id is not null 
     group by dep_id
   </select>
 
@@ -55,6 +56,7 @@
     <if test="status!=null">
       AND status = #{status}
     </if>
+    and ht_no is not null
     group by ht_no
   </select>
 
@@ -70,6 +72,19 @@
       AND status = #{status}
     </if>
 
+  </select>
+
+  <select id="queryProLine" resultType="com.trasen.tsproject.model.TbOutputValue">
+    select pro_line,dep_id,dep_name from tb_product where pro_line is not null GROUP BY pro_line
+  </select>
+
+  <select id="queryHtPro" parameterType="String" resultType="com.trasen.tsproject.model.TbOutputValue">
+    select r.pro_code,p.pro_name,p.pro_line,p.dep_id,p.dep_name,r.total from tb_ht_resolve r
+    left join tb_product p on p.pro_code = r.pro_code where r.ht_no=#{htNo}
+  </select>
+
+  <select id="findOutputToHtNo" parameterType="String" resultType="Integer">
+    select count(*) from tb_output_value where ht_no = #{htNo} and item_id is null
   </select>
 
 
