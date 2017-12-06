@@ -57,6 +57,9 @@ public class OutputValueController {
                 }else if("ht".equals(param.get("type"))){
                     outputValue.setHtName(param.get("name"));
                     pageInfo = outputValueService.queryOutputValueHT(Integer.valueOf(param.get("page")),Integer.valueOf(param.get("rows")),outputValue);
+                }else if("proLine".equals(param.get("type"))){
+                    outputValue.setHtName(param.get("name"));
+                    pageInfo = outputValueService.queryOutputValueToProLine(Integer.valueOf(param.get("page")),Integer.valueOf(param.get("rows")),outputValue);
                 }
             }
             logger.info("数据查询条数"+pageInfo.getList().size());

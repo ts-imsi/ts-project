@@ -60,6 +60,21 @@
     group by ht_no
   </select>
 
+  <select id="queryOutputValueToProLine" parameterType="com.trasen.tsproject.model.TbOutputValue" resultType="com.trasen.tsproject.model.OutputValueVo">
+    select pro_line as id,pro_line as name,sum(subtotal) as totle from tb_output_value where 1=1
+    <if test="depName!=null">
+      AND dep_name LIKE CONCAT('%',#{depName},'%')
+    </if>
+    <if test="htName!=null">
+      AND ht_name LIKE CONCAT('%',#{htName},'%')
+    </if>
+    <if test="status!=null">
+      AND status = #{status}
+    </if>
+    and pro_line is not null
+    group by pro_line
+  </select>
+
   <select id="queryOutputValue" parameterType="com.trasen.tsproject.model.TbOutputValue" resultType="com.trasen.tsproject.model.TbOutputValue">
     select * from tb_output_value where 1=1
     <if test="depId!=null">
@@ -70,6 +85,9 @@
     </if>
     <if test="status!=null">
       AND status = #{status}
+    </if>
+    <if test="proLine!=null">
+      AND pro_line LIKE CONCAT('%',#{proLine},'%')
     </if>
 
   </select>

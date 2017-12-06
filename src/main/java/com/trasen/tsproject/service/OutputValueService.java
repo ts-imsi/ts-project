@@ -155,5 +155,19 @@ public class OutputValueService {
         return tbOutputValueMapper.findOutputToHtNo(htNo);
     }
 
+    public PageInfo<OutputValueVo> queryOutputValueToProLine(int page, int rows, TbOutputValue outputValue){
+        PageHelper.startPage(page,rows);
+        List<OutputValueVo> outputValueVoList = tbOutputValueMapper.queryOutputValueToProLine(outputValue);
+        for(OutputValueVo outputValueVo : outputValueVoList){
+            TbOutputValue tbOutputValue = new TbOutputValue();
+            tbOutputValue.setProLine(outputValueVo.getName());
+            tbOutputValue.setStatus(outputValue.getStatus());
+            List<TbOutputValue> tbOutputValues = tbOutputValueMapper.queryOutputValue(tbOutputValue);
+            outputValueVo.setOutputValueList(tbOutputValues);
+        }
+        PageInfo<OutputValueVo> pagehelper = new PageInfo<>(outputValueVoList);
+        return pagehelper;
+    }
+
 
 }
