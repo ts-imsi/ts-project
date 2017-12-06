@@ -26,5 +26,10 @@ public interface TbOutputValueMapper extends MyMapper<TbOutputValue> {
 
     List<TbOutputValue> queryOutputValue(TbOutputValue outputValue);
 
+    List<TbOutputValue> queryProLine();
+
+    List<TbOutputValue> queryHtPro(String htNo);
+
+
 
 }

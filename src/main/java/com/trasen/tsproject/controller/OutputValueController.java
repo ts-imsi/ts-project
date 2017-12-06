@@ -2,9 +2,11 @@ package com.trasen.tsproject.controller;
 
 import cn.trasen.core.entity.Result;
 import com.github.pagehelper.PageInfo;
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.OutputValueVo;
 import com.trasen.tsproject.model.TbOutputValue;
 import com.trasen.tsproject.model.TbPlanDetail;
+import com.trasen.tsproject.model.TbPlanItem;
 import com.trasen.tsproject.service.OutputValueService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by zhangxiahui on 17/12/1.
@@ -92,6 +91,51 @@ public class OutputValueController {
             logger.error("产值确认失败"+e.getMessage(),e);
             result.setSuccess(false);
             result.setMessage("产值确认失败!");
+        }
+        return result;
+    }
+
+
+    @RequestMapping(value="/queryProLine",method = RequestMethod.POST)
+    public Result queryProLine(){
+        Result result=new Result();
+        result.setSuccess(false);
+        try {
+            List<TbOutputValue> list = outputValueService.queryProLine();
+            result.setObject(list);
+            result.setSuccess(true);
+        }catch (Exception e) {
+            logger.error("查询产品线异常" + e.getMessage(), e);
+            result.setSuccess(false);
+            result.setMessage("查询产品线异常");
+        }
+        return  result;
+    }
+
+
+    @RequestMapping(value="/saveNoHtOutput",method = RequestMethod.POST)
+    public Result saveNoHtOutput(@RequestBody TbOutputValue outputValue){
+        Result result=new Result();
+        result.setSuccess(false);
+        result.setMessage("产值添加失败!");
+        try{
+            if(outputValue!=null&&outputValue.getProLine()!=null&&outputValue.getTotal()!=null){
+                outputValue.setStatus(1);
+                outputValue.setSubtotal(outputValue.getTotal());
+                outputValue.setOperator(VisitInfoHolder.getShowName());
+                outputValue.setDocName(outputValue.getRemark());
+                outputValue.setOutput(1d);
+                List<TbOutputValue> list = new ArrayList<>();
+                list.add(outputValue);
+                outputValueService.insertOutputValue(list);
+                result.setSuccess(true);
+                result.setMessage("产值添加成功!");
+
+            }
+        }catch (Exception e){
+            logger.error("保存无合同产值失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("保存无合同产值失败!");
         }
         return result;
     }
