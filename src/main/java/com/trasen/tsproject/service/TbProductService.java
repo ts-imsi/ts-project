@@ -58,6 +58,10 @@ public class TbProductService {
     public List<TbProduct> queryTbProductList(){
         return tbProductMapper.selectProduct();
     }
+
+    public List<TbProModule> selectProModule(String proCode){
+        return tbProModuleMapper.selectProModule(proCode);
+    }
     public List<TbProModule> queryProModuleList(List<String> ProCodeList){
         return tbProModuleMapper.queryProModuleList(ProCodeList);
     }
@@ -153,11 +157,12 @@ public class TbProductService {
         List<TbHtModule> tbHtModuleList=tbProductMapper.selectAddModuleView(htNo);
         List<String> ProCodeList=tbHtModuleList.stream().map(tbHtModule -> tbHtModule.getProCode()).collect(Collectors.toList());
         List<String> newModuleList=tbHtModuleList.stream().map(tbHtModule -> tbHtModule.getModId()+":"+tbHtModule.getModName()).collect(Collectors.toList());
-        List<TbProModule> tbProModuleList=new ArrayList<>();
-        if(ProCodeList!=null&&ProCodeList.size()!=0) tbProModuleList=tbProModuleMapper.queryProModuleList(ProCodeList);
+        List<String> proM=tbHtModuleList.stream().map(tbHtModule -> tbHtModule.getProCode()+"|"+tbHtModule.getModId()+":"+tbHtModule.getModName()).collect(Collectors.toList());
+        //List<TbProModule> tbProModuleList=new ArrayList<>();
+        //if(ProCodeList!=null&&ProCodeList.size()!=0) tbProModuleList=tbProModuleMapper.queryProModuleList(ProCodeList);
         param.put("proList",tbProductList);
         param.put("newProModuleList",ProCodeList);
-        param.put("newPModuleList",tbProModuleList);
+        param.put("proM",proM);
         param.put("newModuleList",newModuleList);
         return param;
     }

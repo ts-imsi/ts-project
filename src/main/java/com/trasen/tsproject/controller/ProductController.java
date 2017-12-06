@@ -60,6 +60,21 @@ public class ProductController {
         return param;
     }
 
+    @RequestMapping(value="/selectProModule/{proCode}",method = RequestMethod.POST)
+    public Result selectProModule(@PathVariable String proCode){
+        Result result=new Result();
+        try{
+            List<TbProModule> tbProModuleList=tbProductService.selectProModule(Optional.ofNullable(proCode).orElse(""));
+            result.setSuccess(true);
+            result.setObject(tbProModuleList);
+        }catch (Exception e){
+            logger.error("查询数据失败"+e.getMessage(),e);
+            result.setMessage("查询数据失败");
+            result.setSuccess(false);
+        }
+        return result;
+    }
+
     @RequestMapping(value="/saveTbProductModule",method = RequestMethod.POST)
     public Result saveTbProductModule(@RequestBody Map<String,Object> param){
         Result result=new Result();
