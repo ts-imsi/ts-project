@@ -151,5 +151,9 @@ public class OutputValueService {
         }
     }
 
+    public Integer findOutputToHtNo(String htNo){
+        return tbOutputValueMapper.findOutputToHtNo(htNo);
+    }
+
 
 }

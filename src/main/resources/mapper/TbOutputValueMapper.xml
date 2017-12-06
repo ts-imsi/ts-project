@@ -83,6 +83,10 @@
     left join tb_product p on p.pro_code = r.pro_code where r.ht_no=#{htNo}
   </select>
 
+  <select id="findOutputToHtNo" parameterType="String" resultType="Integer">
+    select count(*) from tb_output_value where ht_no = #{htNo} and item_id is null
+  </select>
+
 
 
 </mapper>

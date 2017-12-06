@@ -30,6 +30,8 @@ public interface TbOutputValueMapper extends MyMapper<TbOutputValue> {
 
     List<TbOutputValue> queryHtPro(String htNo);
 
+    Integer findOutputToHtNo(String htNo);
+
 
 
 }
