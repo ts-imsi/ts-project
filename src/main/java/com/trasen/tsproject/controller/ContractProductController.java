@@ -43,7 +43,10 @@ public class ContractProductController {
                 paramMap.put("success",false);
                 paramMap.put("message","参数参入错误");
             }
-            param.put("contractOwner", VisitInfoHolder.getShowName());
+            if(param.get("showAll")==null||!"all".equals(param.get("showAll"))){
+                //列表权限
+                param.put("contractOwner", VisitInfoHolder.getShowName());
+            }
             String status=Optional.ofNullable(param.get("status")).orElse("0");
             if(status.equals("0")){
                 paramMap =contractProductService.getcontractTransenList(param);

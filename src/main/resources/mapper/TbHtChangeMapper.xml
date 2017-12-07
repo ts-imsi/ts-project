@@ -7,6 +7,7 @@
     <if test="htNo!=null">and (ht_no like CONCAT('%',#{htNo},'%') or ht_name like CONCAT('%',#{htName},'%') or customer_name like CONCAT('%',#{customerName},'%'))</if>
     <if test="type!=null"> and `type`=#{type}</if>
     <if test="status!=null"> and status=#{status}</if>
+    <if test="htOwner!=null"> and ht_owner = #{htOwner} </if>
   </select>
   
   <insert id="saveHtChange" parameterType="com.trasen.tsproject.model.TbHtChange" useGeneratedKeys="true" keyProperty="pkid">

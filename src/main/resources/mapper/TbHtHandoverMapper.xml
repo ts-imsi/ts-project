@@ -36,6 +36,7 @@
         <if test="htNo!=null">and (ht_no like CONCAT('%',#{htNo},'%') or ht_name like CONCAT('%',#{htName},'%') or customer_name like CONCAT('%',#{customerName},'%'))</if>
         <if test="type!=null"> and `type`=#{type}</if>
         <if test="nowStep!=null"> and now_step like CONCAT('%',#{nowStep},'%') </if>
+        <if test="htOwner!=null"> and ht_owner = #{htOwner} </if>
     </select>
 
     <select id="getMsgToTaskId" parameterType="String" resultType="com.trasen.tsproject.model.TbMsg">
@@ -46,8 +47,9 @@
 
     <select id="selectProjectArrangeList" parameterType="com.trasen.tsproject.model.TbHtHandover" resultType="com.trasen.tsproject.model.TbHtHandover">
         select * from tb_ht_handover where `status`=2
-        <if test="proManager!=null">and (ht_no like CONCAT('%',#{htNo},'%') or ht_name like CONCAT('%',#{htName},'%') or customer_name like CONCAT('%',#{customerName},'%') or pro_manager like CONCAT('%',#{proManager},'%'))</if>
+        <if test="htNo!=null">and (ht_no like CONCAT('%',#{htNo},'%') or ht_name like CONCAT('%',#{htNo},'%') or customer_name like CONCAT('%',#{htNo},'%') or pro_manager like CONCAT('%',#{htNo},'%'))</if>
         <if test="isArrange!=null">and is_arrange=#{isArrange}</if>
+        <if test="htOwner!=null"> and ( ht_owner = #{htOwner} or pro_manager = #{htOwner} ) </if>
     </select>
 
     <update id="updateProManage" parameterType="com.trasen.tsproject.model.TbHtHandover" >

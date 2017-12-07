@@ -184,6 +184,11 @@ public class PlanDetailService {
                 tbPlanItemMapper.updatePlanItemTime(planItem);
             }
         }
+        if(planItemList!=null&&planItemList.size()>0){
+            tbPlanDetailMapper.finishPlanDetail(planItemList.get(0).getPlanId());
+        }
+
+
     }
 
     public TbPlanItem updatePlanTime(TbPlanItem planItem){

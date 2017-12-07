@@ -85,5 +85,7 @@ public class TbPlanDetail {
     @Transient
     private String userRole;
 
+    private Integer isPlan;
+
 
 }

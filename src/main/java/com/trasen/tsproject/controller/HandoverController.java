@@ -3,6 +3,7 @@ package com.trasen.tsproject.controller;
 import cn.trasen.commons.util.StringUtil;
 import cn.trasen.core.entity.Result;
 import com.github.pagehelper.PageInfo;
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.service.HandoverService;
 import org.apache.log4j.Logger;
@@ -111,6 +112,11 @@ public class HandoverController {
             if(!StringUtil.isEmpty(param.get("nowStep"))){
                 tbHtHandover.setNowStep(param.get("nowStep"));
             }
+            if(param.get("showAll")==null||!"all".equals(param.get("showAll"))){
+                //列表权限
+                tbHtHandover.setHtOwner(VisitInfoHolder.getShowName());
+            }
+
             PageInfo<TbHtHandover> tbHtHandoverPageInfo=handoverService.getHtHandoverList(Integer.valueOf(param.get("page")),Integer.valueOf(param.get("rows")),tbHtHandover);
             logger.info("数据查询条数"+tbHtHandoverPageInfo.getList().size());
             paramMap.put("totalPages",tbHtHandoverPageInfo.getPages());

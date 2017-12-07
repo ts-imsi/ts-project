@@ -60,6 +60,11 @@ public class HtChangeController {
             if(!StringUtil.isEmpty(param.get("status"))){
                 tbHtChange.setStatus(Integer.valueOf(param.get("status")));
             }
+            if(param.get("showAll")==null||!"all".equals(param.get("showAll"))){
+                //列表权限
+                tbHtChange.setHtOwner(VisitInfoHolder.getShowName());
+            }
+
             PageInfo<TbHtChange> tbHtChangePageInfo=tbHtChangeService.getHtChangeList(Integer.valueOf(param.get("page")),Integer.valueOf(param.get("rows")),tbHtChange);
             logger.info("数据查询条数"+tbHtChangePageInfo.getList().size());
             paramMap.put("totalPages",tbHtChangePageInfo.getPages());

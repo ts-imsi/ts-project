@@ -4,6 +4,7 @@ package com.trasen.tsproject.controller;
 import cn.trasen.core.entity.Result;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbProjectManager;
 import com.trasen.tsproject.service.ProjectArrangeService;
@@ -45,15 +46,17 @@ public class ProjectArrangeController {
             Optional<String> opt=Optional.ofNullable(param.get("selectName"));
             TbHtHandover htHandover=new TbHtHandover();
             if(opt.isPresent()&&!opt.get().equals("")){
-                htHandover.setCustomerName(opt.get());
                 htHandover.setHtNo(opt.get());
-                htHandover.setHtName(opt.get());
-                htHandover.setProManager(opt.get());
             }
             Optional<String> opS=Optional.ofNullable(param.get("isArrange"));
             if(opS.isPresent()&&!opS.get().equals("")){
                 htHandover.setIsArrange(Integer.valueOf(opS.get()));
             }
+            if(param.get("showAll")==null||!"all".equals(param.get("showAll"))){
+                //列表权限
+                htHandover.setHtOwner(VisitInfoHolder.getShowName());
+            }
+
             PageInfo<TbHtHandover> pageInfo= projectArrangeService.selectProjectArrangeList(Integer.valueOf(param.get("page")),Integer.valueOf(param.get("rows")),htHandover);
             logger.info("数据查询条数"+pageInfo.getList().size());
             result.put("totalPages",pageInfo.getPages());
