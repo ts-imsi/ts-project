@@ -4,4 +4,20 @@
   <select id="selectStandardPrice" parameterType="com.trasen.tsproject.model.TbProModulePrice" resultType="com.trasen.tsproject.model.TbProModulePrice">
     select * from tb_pro_module_price where hospital_level=#{hospitalLevel} and mod_id=#{modId}
   </select>
+
+  <select id="queryModelPriceList" parameterType="String" resultType="com.trasen.tsproject.model.TbProModulePrice">
+    select * from tb_pro_module_price where  mod_id=#{modId}
+  </select>
+
+  <update id="updateStandardPrice" parameterType="com.trasen.tsproject.model.TbProModulePrice">
+     update tb_pro_module_price set hospital_level=#{hospitalLevel},standard_price=#{standardPrice} where pkid=#{pkid}
+  </update>
+
+  <insert id="insertStandardPrice" parameterType="com.trasen.tsproject.model.TbProModulePrice">
+    insert into  tb_pro_module_price(mod_id,hospital_level,standard_price) values(#{modId},#{hospitalLevel},#{standardPrice})
+  </insert>
+
+  <delete id="deleteStandardPrice" parameterType="Integer">
+    delete from tb_pro_module_price where pkid=#{pkid}
+  </delete>
 </mapper>

@@ -244,6 +244,128 @@ public class ProductController {
         return result;
     }
 
+    @RequestMapping(value="/queryTbProModuleList",method = RequestMethod.POST)
+    public Map<String,Object>  queryTbProModuleList(@RequestBody Map<String,String> param){
+        Map<String,Object> result=new HashMap<>();
+        try{
+            if(param.isEmpty()||param.get("page")==null||param.get("rows")==null||param.get("proCode")==null) {
+                result.put("messages", "参数错误");
+                result.put("success", false);
+            }else{
+                PageInfo<TbProModule> tbProModulePageInfo=tbProductService.queryTbProModuleList(Integer.valueOf(param.get("rows")),Integer.valueOf(param.get("page")),param.get("proCode"));
+                logger.info("数据查询条数"+tbProModulePageInfo.getList().size());
+                result.put("totalPages",tbProModulePageInfo.getPages());
+                result.put("pageNo",tbProModulePageInfo.getPageNum());
+                result.put("totalCount",tbProModulePageInfo.getTotal());
+                result.put("pageSize",tbProModulePageInfo.getPageSize());
+                result.put("list",tbProModulePageInfo.getList());
+                result.put("success",true);
+            }
+
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.put("messages","数据查询失败");
+            result.put("success",false);
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/saveOrUpdateProductModel",method = RequestMethod.POST)
+    public Result saveOrUpdateProductModel(@RequestBody TbProModule tbProModule){
+        Result result=new Result();
+        try{
+            if(tbProModule!=null){
+                if(tbProModule.getModId()!=null){
+                    tbProductService.updateProModel(tbProModule);
+                    result.setSuccess(true);
+                    result.setMessage("数据更新成功");
+                }else{
+                    tbProductService.saveProModel(tbProModule);
+                    result.setSuccess(true);
+                    result.setMessage("数据保存成功");
+                }
+            }else {
+                result.setSuccess(false);
+                result.setMessage("参数传入错误");
+            }
+        }catch (Exception e){
+            logger.error("数据保存或更新失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("数据保存或更新失败");
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/deleteProModel/{modId}",method = RequestMethod.POST)
+    public Result deleteProModel(@PathVariable String modId){
+        Result result=new Result();
+        try{
+            tbProductService.updateIsVaild(Optional.ofNullable(modId).orElse("0"));
+            result.setSuccess(true);
+            result.setMessage("数据删除成功");
+        }catch (Exception e){
+            result.setSuccess(false);
+            result.setMessage("数据删除失败");
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/queryModelPriceList",method = RequestMethod.POST)
+    public Map<String,Object> queryModelPriceList(@RequestBody  Map<String,String> param){
+        Map<String,Object> result=new HashMap<>();
+        try{
+            if(param.isEmpty()||param.get("page")==null||param.get("rows")==null||param.get("modId")==null) {
+                result.put("messages", "参数错误");
+                result.put("success", false);
+            }else{
+                PageInfo<TbProModulePrice> tbProModulePricePageInfo=tbProductService.queryModelPriceList(Integer.valueOf(param.get("rows")),Integer.valueOf(param.get("page")),param.get("modId"));
+                logger.info("数据查询条数"+tbProModulePricePageInfo.getList().size());
+                result.put("totalPages",tbProModulePricePageInfo.getPages());
+                result.put("pageNo",tbProModulePricePageInfo.getPageNum());
+                result.put("totalCount",tbProModulePricePageInfo.getTotal());
+                result.put("pageSize",tbProModulePricePageInfo.getPageSize());
+                result.put("list",tbProModulePricePageInfo.getList());
+                result.put("success",true);
+            }
+
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.put("messages","数据查询失败");
+            result.put("success",false);
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/saveModelPrice",method = RequestMethod.POST)
+    public Result saveModelPrice(@RequestBody TbProModulePrice tbProModulePrice){
+        Result result=new Result();
+        try{
+            tbProductService.insertStandardPrice(tbProModulePrice);
+            result.setSuccess(true);
+            result.setMessage("数据保存成功");
+        }catch (Exception e){
+            logger.error("数据保存失败"+e.getMessage(),e);
+            result.setMessage("数据保存失败");
+            result.setSuccess(false);
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/deleteModelPrice/{pkid}",method = RequestMethod.POST)
+    public Result deleteModelPrice(@PathVariable Integer pkid){
+        Result result=new Result();
+        try{
+            tbProductService.deleteStandardPrice(Optional.ofNullable(pkid).orElse(0));
+            result.setMessage("删除数据成功");
+            result.setSuccess(true);
+        }catch (Exception e){
+            logger.error("删除数据失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("删除数据失败");
+        }
+        return result;
+    }
+
     @RequestMapping(value="/getDeptOrganization",method = RequestMethod.POST)
     public Result getDeptOrganization(){
         Result result=new Result();
@@ -253,6 +375,21 @@ public class ProductController {
         list.add(treeVo);
         result.setObject(list);
         result.setSuccess(true);
+        return result;
+    }
+
+    @RequestMapping(value="/selectTwfDictByType/{type}",method = RequestMethod.POST)
+    public Result selectTwfDictByType(@PathVariable String type){
+        Result result=new Result();
+        try{
+            List<TwfDict> twfDicts=tbPersonnelService.selectTwfDictByType(Optional.ofNullable(type).orElse("0"));
+            result.setObject(twfDicts);
+            result.setSuccess(true);
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("数据查询失败");
+        }
         return result;
     }
 }

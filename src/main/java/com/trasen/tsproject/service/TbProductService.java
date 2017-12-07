@@ -187,4 +187,45 @@ public class TbProductService {
     public int deleteTbProduct(Integer pkid){
         return tbProductMapper.deleteTbProduct(pkid);
     }
+
+    public PageInfo<TbProModule> queryTbProModuleList(int rows,int page,String proCode){
+        PageHelper.startPage(page,rows);
+        List<TbProModule> tbProModuleList=tbProModuleMapper.queryTbProModuleList(proCode);
+        PageInfo<TbProModule> pagehelper = new PageInfo<TbProModule>(tbProModuleList);
+        return pagehelper;
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public int updateProModel(TbProModule tbProModule){
+        return tbProModuleMapper.updateProModel(tbProModule);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int updateIsVaild(String modId){
+        return tbProModuleMapper.updateIsVaild(modId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void saveProModel(TbProModule tbProModule){
+        tbProModule.setModId(UUID.randomUUID().toString());
+        tbProModule.setCreated(new Date());
+        tbProModule.setVersion("1");
+        tbProModuleMapper.saveProduct(tbProModule);
+    }
+
+    public PageInfo<TbProModulePrice> queryModelPriceList(int rows,int page,String modId){
+        PageHelper.startPage(page,rows);
+        List<TbProModulePrice> tbProModulePrices=tbProModulePriceMapper.queryModelPriceList(modId);
+        PageInfo<TbProModulePrice> pagehelper = new PageInfo<TbProModulePrice>(tbProModulePrices);
+        return pagehelper;
+    }
+
+    public int updateStandardPrice(TbProModulePrice tbProModulePrice){
+        return tbProModulePriceMapper.updateStandardPrice(tbProModulePrice);
+    }
+    public int insertStandardPrice(TbProModulePrice tbProModulePrice){
+        return tbProModulePriceMapper.insertStandardPrice(tbProModulePrice);
+    }
+    public int deleteStandardPrice(Integer pkid){
+        return tbProModulePriceMapper.deleteStandardPrice(pkid);
+    }
 }

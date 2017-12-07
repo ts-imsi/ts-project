@@ -21,7 +21,7 @@
       update tb_product set pro_name=#{proName},pro_code=#{proCode},dep_id=#{depId},dep_name=#{depName},pro_line=#{proLine} where pkid=#{pkid}
   </update>
 
-  <delete id="deleteTbProduct" parameterType="Integer">
-    delete from tb_product where pkid=#{pkid}
-  </delete>
+  <update id="deleteTbProduct" parameterType="Integer">
+    update tb_product set is_vaild=0 where pkid=#{pkid}
+  </update>
 </mapper>
