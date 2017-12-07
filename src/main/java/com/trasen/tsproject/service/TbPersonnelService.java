@@ -54,4 +54,8 @@ public class TbPersonnelService {
         return tbPersonnelMapper.getParentTree();
     }
 
+    public List<TwfDict> selectTwfDictByType(String type){
+        return tbPersonnelMapper.selectTwfDictByType(type);
+    }
+
 }

@@ -37,4 +37,8 @@
     <select id="getDeptTreeList" parameterType="String" resultType="com.trasen.tsproject.model.TbTree">
         select * from tb_tree where parent = #{pkid} and is_vaild=1 and `type`='dept'
     </select>
+
+    <select id="selectTwfDictByType" parameterType="String" resultType="com.trasen.tsproject.model.TwfDict">
+        select * from twf_dict where `type`=#{type}
+    </select>
 </mapper>

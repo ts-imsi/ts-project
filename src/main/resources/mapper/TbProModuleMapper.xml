@@ -4,6 +4,11 @@
   <select id="selectProModule" parameterType="String" resultType="com.trasen.tsproject.model.TbProModule">
     select * from tb_pro_module where pro_code=#{proCode} and is_vaild=1
   </select>
+  
+  <select id="queryTbProModuleList" parameterType="String" resultType="com.trasen.tsproject.model.TbProModule">
+    select * from tb_pro_module where pro_code=#{proCode}
+  </select>
+
 
   <select id="selectCleckModule" parameterType="String" resultType="String">
     select pro.mod_id as modId from tb_ht_module ht,tb_pro_module pro where ht.mod_id=pro.mod_id and ht.ht_no=#{htNo}
@@ -22,6 +27,14 @@
     insert into tb_pro_module(mod_id,mod_name,mod_no,pro_code,version,is_vaild,created)
     values(#{modId},#{modName},#{modNo},#{proCode},#{version},#{isVaild},#{created})
   </insert>
+
+  <update id="updateProModel" parameterType="com.trasen.tsproject.model.TbProModule">
+    update tb_pro_module set mod_name=#{modName},mod_no=#{modNo},pro_code=#{proCode},version=#{version} where mod_id=#{modId}
+  </update>
+
+  <update id="updateIsVaild" parameterType="String">
+    update tb_pro_module set is_vaild=0 where mod_id=#{modId}
+  </update>
 
   <select id="queryProModuleList" resultType="com.trasen.tsproject.model.TbProModule">
     Select *

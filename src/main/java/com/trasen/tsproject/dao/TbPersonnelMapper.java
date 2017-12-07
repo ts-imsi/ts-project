@@ -1,9 +1,6 @@
 package com.trasen.tsproject.dao;
 
-import com.trasen.tsproject.model.Select;
-import com.trasen.tsproject.model.TbPersonnel;
-import com.trasen.tsproject.model.TbTree;
-import com.trasen.tsproject.model.TbUser;
+import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.util.MyMapper;
 
 import java.util.List;
@@ -20,5 +17,6 @@ public interface TbPersonnelMapper extends MyMapper<TbPersonnel> {
     TbUser selectTbuserByOpenId(String openId);
     TbTree getParentTree();
     List<TbTree> getDeptTreeList(String pkid);
+    List<TwfDict> selectTwfDictByType(String type);
 
 }
