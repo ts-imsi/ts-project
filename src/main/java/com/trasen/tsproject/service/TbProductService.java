@@ -208,7 +208,7 @@ public class TbProductService {
     public void saveProModel(TbProModule tbProModule){
         tbProModule.setModId(UUID.randomUUID().toString());
         tbProModule.setCreated(new Date());
-        tbProModule.setVersion("1");
+        tbProModule.setIsVaild(1);
         tbProModuleMapper.saveProduct(tbProModule);
     }
 
