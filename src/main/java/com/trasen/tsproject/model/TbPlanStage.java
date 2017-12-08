@@ -23,9 +23,9 @@ public class TbPlanStage {
     private String planEndTime;
 
 
-    private Double allPoit;
+    private Double allPoit = 0d;
 
-    private Double poit;
+    private Double poit = 0d;
 
 
     private List<TbPlanItem> tbPlanItems;
