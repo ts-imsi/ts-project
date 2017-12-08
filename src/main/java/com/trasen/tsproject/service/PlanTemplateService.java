@@ -138,11 +138,11 @@ public class PlanTemplateService {
         Map<String,Object> param=new HashMap<>();
         List<TbPlanTemplateItem> tbPlanTemplateItems=tbPlanTemplateItemMapper.selectPlanItem(pkid);
         TbPlanTemplate tbPlanTemplate=tbPlanTemplateMapper.selectPlanTemp(pkid);
-        List<String> stagePlan=tbPlanTemplateItems.stream().map(item->item.getStageId()+":"+item.getStageDocId()).collect(Collectors.toList());
+        List<String> stagePlan=tbPlanTemplateItems.stream().map(item->item.getStageId()+":"+item.getStageDocId()).distinct().collect(Collectors.toList());
 
-        List<String> tagPlan=tbPlanTemplateItems.stream().map(planTag->planTag.getStageDocId()+":"+planTag.getCheckTagId()).collect(Collectors.toList());
+        List<String> tagPlan=tbPlanTemplateItems.stream().map(planTag->planTag.getStageDocId()+":"+planTag.getCheckTagId()).distinct().collect(Collectors.toList());
 
-        List<Integer> stageList=tbPlanTemplateItems.stream().map(stage->stage.getStageId()).collect(Collectors.toList());
+        List<Integer> stageList=tbPlanTemplateItems.stream().map(stage->stage.getStageId()).distinct().collect(Collectors.toList());
         List<Integer> stageModuleList=stageList.stream().distinct().collect(Collectors.toList());
         param.put("tbPlanTemplate",tbPlanTemplate);
         param.put("stageSaveList",stagePlan);
