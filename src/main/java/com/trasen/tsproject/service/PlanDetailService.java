@@ -279,7 +279,9 @@ public class PlanDetailService {
                 item.setPoit(poit);
                 tbPlanItemMapper.updateItemComplete(item);
                 //自动加入待确认产值
-                outputValueService.addOutputValue(item);
+                if(item.getIsOutput()==1){
+                    outputValueService.addOutputValue(item);
+                }
                 //自动更新进度
                 updatePoit(item.getPlanId());
             }
