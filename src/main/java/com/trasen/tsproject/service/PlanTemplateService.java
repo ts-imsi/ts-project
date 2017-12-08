@@ -142,8 +142,8 @@ public class PlanTemplateService {
 
         List<String> tagPlan=tbPlanTemplateItems.stream().map(planTag->planTag.getStageDocId()+":"+planTag.getCheckTagId()).distinct().collect(Collectors.toList());
 
-        List<Integer> stageList=tbPlanTemplateItems.stream().map(stage->stage.getStageId()).distinct().collect(Collectors.toList());
-        List<Integer> stageModuleList=stageList.stream().distinct().collect(Collectors.toList());
+        List<Integer> stageModuleList=tbPlanTemplateItems.stream().map(stage->stage.getStageId()).distinct().collect(Collectors.toList());
+        //List<Integer> stageModuleList=stageList.stream().distinct().collect(Collectors.toList());
         param.put("tbPlanTemplate",tbPlanTemplate);
         param.put("stageSaveList",stagePlan);
         param.put("tagSaveList",tagPlan);
