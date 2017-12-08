@@ -66,4 +66,6 @@ public class TbHtResolve {
 
     private String proName;
 
+    private String htPrice;
+
 }
