@@ -1,5 +1,6 @@
 package com.trasen.tsproject.dao;
 
+import com.fasterxml.jackson.databind.node.DoubleNode;
 import com.trasen.tsproject.model.ExceptionPlan;
 import com.trasen.tsproject.model.TbPlanItem;
 import com.trasen.tsproject.util.MyMapper;
@@ -44,4 +45,12 @@ public interface TbPlanItemMapper extends MyMapper<TbPlanItem> {
     Double getProPoit(Integer handId);
 
     void updateHandPoit(Map<String,Object> param);
+
+    Integer getPlanStageCount(TbPlanItem item);
+
+    Double getTwfStagePoit(TbPlanItem item);
+
+    Map<String,Object> getPlanPoitFinsh(TbPlanItem item);
+
+    List<String> sortStage();
 }

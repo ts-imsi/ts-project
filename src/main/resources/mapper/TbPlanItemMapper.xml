@@ -86,7 +86,7 @@
     </update>
 
     <update id="updateItemComplete" parameterType="com.trasen.tsproject.model.TbPlanItem">
-        update tb_plan_item set is_complete=1,updated=now(),operator=#{operator} where pkid=#{pkid}
+        update tb_plan_item set is_complete=1,updated=now(),operator=#{operator},poit = #{poit} where pkid=#{pkid}
     </update>
 
     <update id="updateCheck" parameterType="Map">
@@ -110,12 +110,35 @@
     </select>
 
     <select id="getProPoit" parameterType="Integer" resultType="Double">
-        select sum(poit) from tb_project_plan where handover_id=#{handId};
+        select sum(poit)/count(*) from tb_project_plan where handover_id=#{handId};
     </select>
 
     <update id="updateHandPoit" parameterType="Map">
         update tb_ht_handover set poit=#{poit} where pkid = #{handId}
     </update>
+
+
+    <!-- 优化项目进度指标 -->
+
+
+
+
+
+    <select id="getPlanStageCount" parameterType="com.trasen.tsproject.model.TbPlanItem" resultType="Integer">
+        select count(*) as sumNum from tb_plan_item where plan_id=#{planId} and stage_name=#{stageName}
+    </select>
+
+    <select id="getTwfStagePoit" parameterType="com.trasen.tsproject.model.TbPlanItem" resultType="Double">
+        select poit from twf_stage where `name`=#{stageName}
+    </select>
+
+    <select id="getPlanPoitFinsh" parameterType="com.trasen.tsproject.model.TbPlanItem" resultType="Map">
+        select sum(poit) as finshPoit,count(*) as finshNum from tb_plan_item where plan_id=#{planId} and stage_name=#{stageName} and is_complete=1
+    </select>
+
+    <select id="sortStage" resultType="String">
+        select name from twf_stage order by px
+    </select>
 
 
 

@@ -70,6 +70,7 @@ public class PlanDetailService {
                         item.setPlanId(planId);
                         item.setDetailId(detail.getPkid());
                         item.setOperator(VisitInfoHolder.getShowName());
+                        item.setPoit(0d);
                         tbPlanItemMapper.insertPlanItem(item);
                     }
                 }
@@ -123,11 +124,9 @@ public class PlanDetailService {
                         tbPlanItems.add(planItem);
                         stage.setTbPlanItems(tbPlanItems);
                         stage.setStageName(planItem.getStageName());
-                        stage.setAllPoit(planItem.getPoit());
-                        if(planItem.getIsComplete()==1){
-                            stage.setPoit(planItem.getPoit());
-                        }else{
-                            stage.setPoit(0d);
+                        stage.setAllPoit(1d);
+                        if(planItem.getIsComplete()!=null&&planItem.getIsComplete()==1){
+                            stage.setPoit(1d);
                         }
                         if(planItem.getPlanTime()!=null){
                             stage.setPlanStartTime(planItem.getPlanTime());
@@ -137,9 +136,9 @@ public class PlanDetailService {
                     }else{
                         stage = stageMap.get(planItem.getStageName());
                         stage.getTbPlanItems().add(planItem);
-                        stage.setAllPoit(stage.getAllPoit()+planItem.getPoit());
-                        if(planItem.getIsComplete()==1){
-                            stage.setPoit(stage.getPoit()+planItem.getPoit());
+                        stage.setAllPoit(stage.getAllPoit()+1);
+                        if(planItem.getIsComplete()!=null&&planItem.getIsComplete()==1){
+                            stage.setPoit(stage.getPoit()+1);
                         }
                         if(planItem.getPlanTime()!=null){
                             if(stage.getPlanStartTime()!=null){
@@ -160,7 +159,12 @@ public class PlanDetailService {
                     }
                 }
                 List<TbPlanStage> stageList = new ArrayList<>();
-                stageList.addAll(stageMap.values());
+                List<String> sortList = tbPlanItemMapper.sortStage();
+                for(String stageName : sortList){
+                    if(stageMap.get(stageName)!=null){
+                        stageList.add(stageMap.get(stageName));
+                    }
+                }
                 detail.setTbPlanStages(stageList);
                 detail.setCheckRole(checkRole);
             }
@@ -248,7 +252,31 @@ public class PlanDetailService {
             param.put("itemId",item.getPkid());
             param.put("checkTag",item.getUserRole());
             tbPlanItemMapper.updateCheck(param);
-            if("|tag_check_XMZ|".equals(item.getUserRole())){
+            if("|tag_check_XMZ|".equals(item.getUserRole())&&item.getIsComplete()==0){
+                Double poit = 0d;
+                Double finshPoit = 0d;
+                Integer finshNum = 0;
+                Double sumPoit = tbPlanItemMapper.getTwfStagePoit(item);
+                if(sumPoit==null){
+                    sumPoit = 0d;
+                }
+
+                Integer sumNum = tbPlanItemMapper.getPlanStageCount(item);
+                if(sumNum==null){
+                    sumNum = 0;
+                }
+
+                Map<String,Object> finshMap = tbPlanItemMapper.getPlanPoitFinsh(item);
+                if(finshMap!=null&&finshMap.get("finshPoit")!=null){
+                    finshPoit = Double.parseDouble(finshMap.get("finshPoit").toString());
+                    finshNum = Integer.parseInt(finshMap.get("finshNum").toString());
+                }
+                if((sumNum-finshNum)==1){
+                    poit = sumPoit - finshPoit;
+                }else{
+                    poit = (sumPoit - finshPoit) / (sumNum-finshNum);
+                }
+                item.setPoit(poit);
                 tbPlanItemMapper.updateItemComplete(item);
                 //自动加入待确认产值
                 outputValueService.addOutputValue(item);
