@@ -3,6 +3,8 @@ package com.trasen.tsproject.util;
 import com.aspose.cells.License;
 import com.aspose.cells.SaveFormat;
 import com.aspose.cells.Workbook;
+import com.trasen.tsproject.controller.FileUploadController;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +18,8 @@ public class Excel2PDFUtil {
 
     private static InputStream license;
 
+    private static Logger logger = Logger.getLogger(Excel2PDFUtil.class);
+
     /**
      * 获取license
      *
@@ -26,7 +30,7 @@ public class Excel2PDFUtil {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             license = new FileInputStream(loader.getResource("license.xml").getPath());// 凭证文件
-            System.out.println("============excel转换PDF获取PDF许可证文件路径:"+loader.getResource("license.xml").getPath());
+            logger.info("============excel转换PDF获取PDF许可证文件路径:"+loader.getResource("license.xml").getPath());
             License aposeLic = new License();
             aposeLic.setLicense(license);
             result = true;
@@ -57,6 +61,7 @@ public class Excel2PDFUtil {
             System.out.println("excel转pdf共耗时：" + ((now - old) / 1000.0) + "秒");
             return true;
         } catch (Exception e) {
+            logger.info("===excel转换PDF异常:"+e.getMessage());
             e.printStackTrace();
             return false;
         }

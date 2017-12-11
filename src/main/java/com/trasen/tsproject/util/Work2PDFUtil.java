@@ -3,6 +3,7 @@ package com.trasen.tsproject.util;
 import com.aspose.words.Document;
 import com.aspose.words.License;
 import com.aspose.words.SaveFormat;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +14,8 @@ import java.io.InputStream;
  * Created by zhangxiahui on 17/11/24.
  */
 public class Work2PDFUtil {
+
+    private static Logger logger = Logger.getLogger(Work2PDFUtil.class);
 
     private static InputStream license;
 
@@ -26,7 +29,7 @@ public class Work2PDFUtil {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             license = new FileInputStream(loader.getResource("license.xml").getPath());// 凭证文件
-            System.out.println("============word转换PDF获取PDF许可证文件路径:"+loader.getResource("license.xml").getPath());
+            logger.info("============word转换PDF获取PDF许可证文件路径:"+loader.getResource("license.xml").getPath());
             License aposeLic = new License();
             aposeLic.setLicense(license);
             result = true;
@@ -51,6 +54,7 @@ public class Work2PDFUtil {
             System.out.println("word转pdf共耗时：" + ((now - old) / 1000.0) + "秒\n\n" + "文件保存在:" + outputFile.getPath());
             return true;
         } catch (Exception e) {
+            logger.info("===word转换PDF异常:"+e.getMessage());
             e.printStackTrace();
             return false;
         }
