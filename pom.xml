@@ -6,7 +6,7 @@
 
     <groupId>com.trasen.tsproject</groupId>
     <artifactId>ts-project</artifactId>
-    <version>1.0.19</version>
+    <version>1.0.20</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

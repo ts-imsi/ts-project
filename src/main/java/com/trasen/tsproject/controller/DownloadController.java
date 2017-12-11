@@ -31,6 +31,7 @@ public class DownloadController {
     @RequestMapping(value = "/file", method = RequestMethod.GET)
     public void fileUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam("fileName") String fileName) throws Exception{
         //一个简单的鉴权
+        logger.info("=====文件下载===="+fileName);
         String userSign = SecurityCheck.getCookieValue(request,"userSign");
         logger.info("userSign鉴权===获取到userSign[" + userSign + "]");
         if(userSign==null){
@@ -57,6 +58,7 @@ public class DownloadController {
     public void view(HttpServletRequest request, HttpServletResponse response, @RequestParam("fileName") String fileName) throws Exception{
         //一个简单的鉴权
         String userSign = SecurityCheck.getCookieValue(request,"userSign");
+        logger.info("=====文件在线预览===="+fileName);
         logger.info("userSign鉴权===获取到userSign[" + userSign + "]");
         if(userSign==null){
             return;
