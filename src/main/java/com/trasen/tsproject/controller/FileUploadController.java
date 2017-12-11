@@ -51,6 +51,7 @@ public class FileUploadController {
         result.setMessage("上传失败");
         if (!file.isEmpty()) {
             if (file.getContentType().contains("doc")) {
+                logger.info("上传文件类型为:"+file.getContentType());
                 try {
                     // 获取图片的文件名
                     String fileName = file.getOriginalFilename();
@@ -61,6 +62,7 @@ public class FileUploadController {
                     // 数据库保存的目录
                     // 文件路径
                     String filePath = env.getProperty("saveFileUrl");
+                    logger.info("文件保存路径为:"+filePath);
 
                     File dest = new File(filePath, newFileName);
                     if (!dest.getParentFile().exists()) {
@@ -75,10 +77,12 @@ public class FileUploadController {
 
                     if(extensionName.indexOf("doc")>-1){
                         boo = Work2PDFUtil.execute(new FileInputStream(filePath+newFileName),new File(filePath+id+".pdf"));
+                        logger.info("上传文件为DOC["+newFileName+"],转换PDF["+boo+"]");
                     }
 
                     if(extensionName.indexOf("xls")>-1){
                         boo = Excel2PDFUtil.execute(filePath+newFileName,filePath+id+".pdf");
+                        logger.info("上传文件为XLS["+newFileName+"],转换PDF["+boo+"]");
                     }
 
                     if(boo){
@@ -91,6 +95,8 @@ public class FileUploadController {
                         result.setMessage("上传成功!");
                     }
                 } catch (IOException e) {
+                    e.printStackTrace();
+                    logger.info("文档上传异常:"+e.getMessage());
                     result.setStatusCode(0);
                     result.setMessage("上传失败!");
                 }
