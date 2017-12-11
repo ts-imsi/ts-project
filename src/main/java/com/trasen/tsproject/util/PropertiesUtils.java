@@ -83,7 +83,7 @@ public class PropertiesUtils {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private static InputStream getResourceAsStream(final String name) {
+    public static InputStream getResourceAsStream(final String name) {
         return (InputStream) AccessController.doPrivileged(new PrivilegedAction() {
             public Object run() {
                 ClassLoader threadCL = getContextClassLoader();

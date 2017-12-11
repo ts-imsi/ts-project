@@ -28,13 +28,15 @@ public class Excel2PDFUtil {
     public static boolean getLicense() {
         boolean result = false;
         try {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            license = new FileInputStream(loader.getResource("license.xml").getPath());// 凭证文件
-            logger.info("============excel转换PDF获取PDF许可证文件路径:"+loader.getResource("license.xml").getPath());
+            //ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            //license = new FileInputStream(loader.getResource("license.xml").getPath());// 凭证文件
+            license = PropertiesUtils.getResourceAsStream("license.xml");
+            logger.info("============excel转换PDF获取PDF许可证文件路径======");
             License aposeLic = new License();
             aposeLic.setLicense(license);
             result = true;
         } catch (Exception e) {
+            logger.info("===excel转换PDF异常:"+e.getMessage());
             e.printStackTrace();
         }
         return result;
