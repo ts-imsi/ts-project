@@ -26,6 +26,7 @@ public class Excel2PDFUtil {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             license = new FileInputStream(loader.getResource("license.xml").getPath());// 凭证文件
+            System.out.println("============excel转换PDF获取PDF许可证文件路径:"+loader.getResource("license.xml").getPath());
             License aposeLic = new License();
             aposeLic.setLicense(license);
             result = true;
