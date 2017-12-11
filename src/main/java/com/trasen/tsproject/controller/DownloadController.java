@@ -1,5 +1,6 @@
 package com.trasen.tsproject.controller;
 
+import com.trasen.tsproject.common.SecurityCheck;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,14 @@ public class DownloadController {
     @RequestMapping(value = "/file", method = RequestMethod.GET)
     public void fileUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam("fileName") String fileName) throws Exception{
         //一个简单的鉴权
-        /*String userSign = SecurityCheck.getCookieValue(request,"userSign");
+        String userSign = SecurityCheck.getCookieValue(request,"userSign");
         logger.info("userSign鉴权===获取到userSign[" + userSign + "]");
         if(userSign==null){
             return;
         }
         if(!SecurityCheck.checkUserSigner(userSign)){
             return;
-        }*/
+        }
         String filePath = env.getProperty("saveFileUrl");
         File file = new File(filePath+fileName);
         if (!file.exists()) {
@@ -55,14 +56,14 @@ public class DownloadController {
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     public void view(HttpServletRequest request, HttpServletResponse response, @RequestParam("fileName") String fileName) throws Exception{
         //一个简单的鉴权
-        /*String userSign = SecurityCheck.getCookieValue(request,"userSign");
+        String userSign = SecurityCheck.getCookieValue(request,"userSign");
         logger.info("userSign鉴权===获取到userSign[" + userSign + "]");
         if(userSign==null){
             return;
         }
         if(!SecurityCheck.checkUserSigner(userSign)){
             return;
-        }*/
+        }
         String filePath = env.getProperty("saveFileUrl");
         String pdfName = fileName.split("\\.")[0]+".pdf";
         File file = new File(filePath+pdfName);
