@@ -107,4 +107,7 @@ public class TbMsg {
 
     @Transient
     private TbHtHandover handover;
+
+    @Transient
+    private TbHtChange tbHtChange;
 }

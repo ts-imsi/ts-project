@@ -11,8 +11,24 @@
     where t_u.pkid=#{userId}
     <if test="type!=null and type!=''"> and msg.`type`=#{type}</if>
     <if test="status!=null and status!=''">and msg.status=#{status}</if>
+    <if test="selectName!=null and selectName!=''"> and (msg.msg_content like CONCAT('%',#{selectName},'%')  or msg.msg_content like CONCAT('%',#{selectName},'%') or msg.msg_content like CONCAT('%',#{selectName},'%'))</if>
     order by msg.send_time desc
   </select>
+
+<!--  <select id="selectTodoMeg" parameterType="java.util.Map" resultType="com.trasen.tsproject.model.TbMsg">
+    SELECT
+    msg.*
+    FROM
+    tb_msg msg
+    LEFT JOIN tb_personnel per ON per.work_num = msg.work_num
+    LEFT JOIN t_user t_u ON t_u.per_id = per.per_id
+    LEFT JOIN tb_ht_handover hd ON hd.process_id=msg.process_id
+    where t_u.pkid=#{userId}
+    <if test="type!=null and type!=''"> and msg.`type`=#{type}</if>
+    <if test="status!=null and status!=''">and msg.status=#{status}</if>
+    <if test="selectName!=null and selectName!=''"> and (hd.ht_no like CONCAT('%',#{selectName},'%')  or hd.ht_name like CONCAT('%',#{selectName},'%') or hd.customer_name like CONCAT('%',#{selectName},'%'))</if>
+    order by msg.send_time desc
+  </select>-->
 
   <select id="getTbMsgById" parameterType="Integer" resultType="com.trasen.tsproject.model.TbMsg">
     select * from tb_msg where pkid=#{pkid}

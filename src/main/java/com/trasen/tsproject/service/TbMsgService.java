@@ -70,6 +70,10 @@ public class TbMsgService {
                 tbMsg.setHandOverId(handover.getPkid());
                 tbMsg.setHandover(handover);
             }
+            TbHtChange tbHtChange=tbMsgMapper.gethtChangeToProcessId(tbMsg.getProcessId());
+            if(tbHtChange!=null){
+                tbMsg.setTbHtChange(tbHtChange);
+            }
             Map<String,String> params=new HashMap<>();
             params.put("name",tbMsg.getTaskKey());
             params.put("type","12");
