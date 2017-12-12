@@ -78,6 +78,9 @@ public class HandoverController {
         result.setSuccess(false);
         try {
             if(tbHtHandover!=null){
+                if(tbHtHandover.getPkid()==null){
+                    handoverService.saveHandover(tbHtHandover);
+                }
                 boolean boo = handoverService.submitHandover(tbHtHandover);
                 TbHtHandover handover = handoverService.getHandoverToHtNo(tbHtHandover);
                 result.setSuccess(boo);
