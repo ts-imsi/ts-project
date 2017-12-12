@@ -342,7 +342,7 @@ public class HandoverService {
                     if(taskId!=null){
                         timeLineVo.setTaskId(taskId);
                         String taskKey = jsonObject.getString("taskDefKey");
-                        if("sale_commit".equals(taskKey)){
+                        /*if("sale_commit".equals(taskKey)){
                             timeLineVo.setColour("primary");
                         }else if("nk_check".equals(taskKey)){
                             timeLineVo.setColour("warning");
@@ -356,7 +356,7 @@ public class HandoverService {
                             timeLineVo.setColour("danger");
                         }else{
                             timeLineVo.setColour("white");
-                        }
+                        }*/
                         timeLineVo.setTaskKey(taskKey);
                         timeLineVo.setTaskName(jsonObject.getString("name"));
                         timeLineVo.setAssignee(jsonObject.getString("assignee"));
@@ -389,6 +389,16 @@ public class HandoverService {
                         }
                         timeLineVo.setRemark(content);
                         timeLineVo.setName(name);
+                        if(timeLineVo.getRemark()!=null){
+                            //驳回
+                            timeLineVo.setColour("danger");
+                        }else if(timeLineVo.getEndTime()==null){
+                            //待审批
+                            timeLineVo.setColour("light");
+                        }else{
+                            //通过
+                            timeLineVo.setColour("info");
+                        }
                         list.add(timeLineVo);
                     }
                 }
