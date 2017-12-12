@@ -63,17 +63,19 @@ public class TbMsgService {
         if(tbMsg!=null&&tbMsg.getType().equals("read")&&tbMsg.getStatus()==0){
             updateTbMsgStatus(pkid);
         }
-        if(tbMsg!=null&&tbMsg.getType().equals("todo")&&tbMsg.getStatus()==0){
+        if(tbMsg!=null&&tbMsg.getType().equals("todo")) {
             TbHtHandover handover = tbMsgMapper.getHandOverToProcessId(tbMsg.getProcessId());
-            if(handover!=null){
+            if (handover != null) {
                 tbMsg.setHtNo(handover.getHtNo());
                 tbMsg.setHandOverId(handover.getPkid());
                 tbMsg.setHandover(handover);
             }
-            TbHtChange tbHtChange=tbMsgMapper.gethtChangeToProcessId(tbMsg.getProcessId());
-            if(tbHtChange!=null){
+            TbHtChange tbHtChange = tbMsgMapper.gethtChangeToProcessId(tbMsg.getProcessId());
+            if (tbHtChange != null) {
                 tbMsg.setTbHtChange(tbHtChange);
             }
+        }
+        if(tbMsg!=null&&tbMsg.getType().equals("todo")&&tbMsg.getStatus()==0){
             Map<String,String> params=new HashMap<>();
             params.put("name",tbMsg.getTaskKey());
             params.put("type","12");
