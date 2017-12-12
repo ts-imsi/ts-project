@@ -78,4 +78,26 @@ public class DownloadController {
         OutputStream outputStream = response.getOutputStream();
         IOUtils.write(IOUtils.toByteArray(fileInputStream), outputStream);
     }
+
+    @RequestMapping(value = "/mobileView", method = RequestMethod.GET)
+    public void mobileView(HttpServletRequest request, HttpServletResponse response, @RequestParam("fileName") String fileName) throws Exception{
+        //一个简单的鉴权
+        String userSign = SecurityCheck.getCookieValue(request,"userSign");
+        logger.info("=====文件在线预览===="+fileName);
+        logger.info("userSign鉴权===获取到userSign[" + userSign + "]");
+        if(userSign==null){
+            return;
+        }
+        String filePath = env.getProperty("saveFileUrl");
+        String pdfName = fileName.split("\\.")[0]+".pdf";
+        File file = new File(filePath+pdfName);
+        if (!file.exists()) {
+            return;
+        }
+        FileInputStream fileInputStream = new FileInputStream(file);
+        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+        response.setContentType("multipart/form-data");
+        OutputStream outputStream = response.getOutputStream();
+        IOUtils.write(IOUtils.toByteArray(fileInputStream), outputStream);
+    }
 }
