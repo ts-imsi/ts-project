@@ -67,6 +67,11 @@ public class TbMsgService {
         if(tbMsg!=null&&tbMsg.getType().equals("todo")) {
             TbHtHandover handover = tbMsgMapper.getHandOverToProcessId(tbMsg.getProcessId());
             if (handover != null) {
+                if(handover.getContent()!=null){
+                    List<TbTemplateItem> list = JSON.parseArray(handover.getContent(), TbTemplateItem.class);
+                    List<TbTemplateItem> itemList=list.stream().sorted(Comparator.comparing(TbTemplateItem::getPx)).collect(Collectors.toList());
+                    handover.setContentJson(itemList);
+                }
                 tbMsg.setHtNo(handover.getHtNo());
                 tbMsg.setHandOverId(handover.getPkid());
                 tbMsg.setHandover(handover);
