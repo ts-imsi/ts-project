@@ -114,6 +114,8 @@ public class PlanDetailService {
 
                 }
 
+                //项目进场 项目调研 项目上线 项目验收
+                //approachTime surveyTime onlineTime checkTime
 
                 Map<String,TbPlanStage> stageMap = new HashMap<>();
                 for(TbPlanItem planItem: list){
@@ -128,6 +130,31 @@ public class PlanDetailService {
                         if(planItem.getIsComplete()!=null&&planItem.getIsComplete()==1){
                             stage.setPoit(1d);
                         }
+                        if("项目进场".equals(planItem.getStageName())){
+                            stage.setPlanStartTime(projectPlan.getApproachTime());
+                            stage.setPlanEndTime(projectPlan.getApproachTime());
+                            planItem.setPlanTime(projectPlan.getApproachTime());
+                            planItem.setTime(true);
+                        }
+                        if("项目调研".equals(planItem.getStageName())){
+                            stage.setPlanStartTime(projectPlan.getSurveyTime());
+                            stage.setPlanEndTime(projectPlan.getSurveyTime());
+                            planItem.setPlanTime(projectPlan.getSurveyTime());
+                            planItem.setTime(true);
+                        }
+                        if("项目上线".equals(planItem.getStageName())){
+                            stage.setPlanStartTime(projectPlan.getOnlineTime());
+                            stage.setPlanEndTime(projectPlan.getOnlineTime());
+                            planItem.setPlanTime(projectPlan.getOnlineTime());
+                            planItem.setTime(true);
+                        }
+                        if("项目验收".equals(planItem.getStageName())){
+                            stage.setPlanStartTime(projectPlan.getCheckTime());
+                            stage.setPlanEndTime(projectPlan.getCheckTime());
+                            planItem.setPlanTime(projectPlan.getCheckTime());
+                            planItem.setTime(true);
+                        }
+
                         if(planItem.getPlanTime()!=null){
                             stage.setPlanStartTime(planItem.getPlanTime());
                             stage.setPlanEndTime(planItem.getPlanTime());

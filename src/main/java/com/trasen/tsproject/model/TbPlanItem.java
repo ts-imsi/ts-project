@@ -113,6 +113,9 @@ public class TbPlanItem {
     @Transient
     private String userRole;
 
+    @Transient
+    private boolean isTime = false;
+
 
 
 
