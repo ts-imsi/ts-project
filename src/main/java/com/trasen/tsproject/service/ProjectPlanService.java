@@ -182,5 +182,9 @@ public class ProjectPlanService {
         return tbProjectPlanMapper.selectHandOverByPlanId(planId);
     }
 
+    public TbProjectPlan queryProjectByPlanId(Integer planId){
+        return tbProjectPlanMapper.queryProjectByPlanId(planId);
+    }
+
 
 }

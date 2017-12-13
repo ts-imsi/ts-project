@@ -21,4 +21,8 @@
     <select id="selectHandOverByPlanId" parameterType="Integer" resultType="com.trasen.tsproject.model.TbHtHandover">
         select hand.* from tb_project_plan pl,tb_ht_handover hand where hand.pkid=pl.handover_id and pl.plan_id=#{planId}
     </select>
+
+    <select id="queryProjectByPlanId" parameterType="Integer" resultType="com.trasen.tsproject.model.TbProjectPlan">
+        select * from tb_project_plan where plan_id=#{planId}
+    </select>
 </mapper>

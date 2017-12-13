@@ -4,6 +4,7 @@ import cn.trasen.core.entity.Result;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbPlanDetail;
+import com.trasen.tsproject.model.TbProjectPlan;
 import com.trasen.tsproject.service.PlanDetailService;
 import com.trasen.tsproject.service.ProjectArrangeService;
 import com.trasen.tsproject.service.ProjectPlanService;
@@ -69,8 +70,10 @@ public class MobileProjectController {
         try {
             TbPlanDetail tbPlanDetail = planDetailService.getPlanItemList(planId,"actualize");
             TbHtHandover htHandover=projectPlanService.selectHandOverByPlanId(planId);
+            TbProjectPlan tbProjectPlan=projectPlanService.queryProjectByPlanId(planId);
             result.put("handover",htHandover);
             result.put("planDetail",tbPlanDetail);
+            result.put("tbProjectPlan",tbProjectPlan);
             result.put("success",true);
         }catch (Exception e) {
             logger.error("获取计划详情异常" + e.getMessage(), e);
