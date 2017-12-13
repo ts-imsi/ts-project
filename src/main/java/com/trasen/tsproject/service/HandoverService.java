@@ -389,7 +389,7 @@ public class HandoverService {
                         }
                         timeLineVo.setRemark(content);
                         timeLineVo.setName(name);
-                        if(timeLineVo.getRemark()!=null){
+                        if(timeLineVo.getRemark()!=null&&!"审批通过".equals(timeLineVo.getRemark())&&!"已确认".equals(timeLineVo.getRemark())){
                             //驳回
                             timeLineVo.setColour("danger");
                         }else if(timeLineVo.getEndTime()==null){
