@@ -88,6 +88,7 @@
     <select id="selectMobileProjectArrangeList" parameterType="com.trasen.tsproject.model.TbHtHandover" resultType="com.trasen.tsproject.model.TbHtHandover">
         select * from tb_ht_handover where `status`=2
         <if test="isArrange!=null">and is_arrange=#{isArrange}</if>
+        <if test="htOwner!=null"> and ( ht_owner = #{htOwner} or pro_manager = #{htOwner} )</if>
           order by pkid desc
     </select>
 

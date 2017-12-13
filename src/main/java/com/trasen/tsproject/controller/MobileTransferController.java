@@ -36,6 +36,10 @@ public class MobileTransferController {
     public Result queryHandOverList(@RequestBody Map<String,String> param){
         Result result=new Result();
         try{
+            if(param.get("showAll")==null||!"all".equals(param.get("showAll"))){
+                //列表权限
+                param.put("htOwner",VisitInfoHolder.getShowName());
+            }
             param.put("htOwner",VisitInfoHolder.getShowName());
             List<TbHtHandover> tbHtHandoverList=handoverService.queryHandOverList(param);
             result.setObject(tbHtHandoverList);

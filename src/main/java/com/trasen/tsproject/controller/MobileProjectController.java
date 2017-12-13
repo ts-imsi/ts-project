@@ -1,6 +1,7 @@
 package com.trasen.tsproject.controller;
 
 import cn.trasen.core.entity.Result;
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbPlanDetail;
 import com.trasen.tsproject.service.PlanDetailService;
@@ -45,6 +46,12 @@ public class MobileProjectController {
             if(opS.isPresent()&&!opS.get().equals("")){
                 htHandover.setIsArrange(Integer.valueOf(opS.get()));
             }
+
+            if(param.get("showAll")==null||!"all".equals(param.get("showAll"))){
+                //列表权限
+                htHandover.setHtOwner(VisitInfoHolder.getShowName());
+            }
+
             List<TbHtHandover> tbHtHandoverList=projectArrangeService.selectMobileProjectArrangeList(htHandover);
             result.setObject(tbHtHandoverList);
             result.setSuccess(true);
