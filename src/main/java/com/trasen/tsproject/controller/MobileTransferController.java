@@ -60,7 +60,7 @@ public class MobileTransferController {
                 result.put("success",false);
                 result.put("message","参数传入错误");
             }else{
-                TbHtHandover tbHtHandover=tbMsgService.selectByProcessId(op.get());
+                TbHtHandover tbHtHandover=tbMsgService.selectMobileByProcessId(op.get());
                 List<TimeLineVo> timeLineVos=handoverService.getTimeLine(op.get());
                 result.put("tbHtHandover",tbHtHandover);
                 result.put("timeLineVos",timeLineVos);

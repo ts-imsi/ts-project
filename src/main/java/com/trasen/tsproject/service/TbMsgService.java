@@ -17,6 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author luoyun
@@ -339,6 +340,15 @@ public class TbMsgService {
         if(htHandover!=null&&htHandover.getContent()!=null){
             List<TbTemplateItem> list = JSON.parseArray(htHandover.getContent(), TbTemplateItem.class);
             htHandover.setContentJson(list);
+        }
+        return htHandover;
+    }
+    public TbHtHandover selectMobileByProcessId(String processId){
+        TbHtHandover htHandover= tbHtHandoverMapper.selectByProcessId(processId);
+        if(htHandover!=null&&htHandover.getContent()!=null){
+            List<TbTemplateItem> list = JSON.parseArray(htHandover.getContent(), TbTemplateItem.class);
+            List<TbTemplateItem> itemList=list.stream().sorted(Comparator.comparing(TbTemplateItem::getPx)).collect(Collectors.toList());
+            htHandover.setContentJson(itemList);
         }
         return htHandover;
     }
