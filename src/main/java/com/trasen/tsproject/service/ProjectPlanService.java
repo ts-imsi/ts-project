@@ -60,6 +60,16 @@ public class ProjectPlanService {
             boolean upBoo = false;
             if(plan.getWorkNum()!=null&&projectPlan.getWorkNum()!=null
                     &&!plan.getWorkNum().equals(projectPlan.getWorkNum())){
+                TbProjectPlanLog log = new TbProjectPlanLog();
+                log.setType("projectPlan");
+                log.setPlanId(plan.getPlanId());
+                log.setOldTime(projectPlan.getActualizeManager());
+                log.setNewTime(plan.getActualizeManager());
+                log.setCode("manager");// TODO: 17/11/2 类型写入常量类
+                log.setRemark(plan.getRemark());
+                log.setOperator(VisitInfoHolder.getShowName());
+                tbProjectPlanLogMapper.insertPlanLog(log);
+                plan.setIsManager(1);
                 upBoo = true;
             }
             if(plan.getSurveyTime()!=null&&projectPlan.getSurveyTime()!=null

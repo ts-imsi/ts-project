@@ -89,6 +89,8 @@ public class TbProjectPlan {
 
     private Integer isCheck;
 
+    private Integer isManager;
+
     /**
      * 进度
      */

@@ -10,7 +10,7 @@
         update tb_project_plan set actualize_manager=#{actualizeManager},work_num=#{workNum},survey_time=#{surveyTime},approach_time=#{approachTime},
         online_time=#{onlineTime},check_time=#{checkTime},
         is_survey=#{isSurvey},is_approach=#{isApproach},
-        is_online=#{isOnline},is_check=#{isCheck},
+        is_online=#{isOnline},is_check=#{isCheck},is_manager=#{isManager},
         operator=#{operator},updated=now() where plan_id=#{planId}
     </update>
 
