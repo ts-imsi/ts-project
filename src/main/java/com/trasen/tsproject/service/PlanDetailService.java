@@ -336,6 +336,8 @@ public class PlanDetailService {
                 }
                 //自动更新进度
                 updatePoit(item.getPlanId());
+                //自动更新总评分
+                updateTotalScore(item.getPlanId());
             }
             boo = true;
         }
@@ -354,6 +356,14 @@ public class PlanDetailService {
         handMap.put("poit",handPoin);
         handMap.put("handId",handId);
         tbPlanItemMapper.updateHandPoit(handMap);
+    }
+
+    public void updateTotalScore(Integer planId){
+        Double total = tbPlanItemMapper.getTotalScore(planId);
+        Map<String,Object> scoreMap = new HashMap<>();
+        scoreMap.put("total",total);
+        scoreMap.put("planId",planId);
+        tbPlanItemMapper.updatePlanDetailScore(scoreMap);
     }
 
     public boolean checkBack(TbPlanItem item){
