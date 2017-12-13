@@ -40,7 +40,6 @@ public class MobileTransferController {
                 //列表权限
                 param.put("htOwner",VisitInfoHolder.getShowName());
             }
-            param.put("htOwner",VisitInfoHolder.getShowName());
             List<TbHtHandover> tbHtHandoverList=handoverService.queryHandOverList(param);
             result.setObject(tbHtHandoverList);
             result.setSuccess(true);
