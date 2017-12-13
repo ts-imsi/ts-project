@@ -24,8 +24,8 @@
         where pkid=#{pkid}
     </update>
 
-    <update id="finishPlanDetail" parameterType="Integer">
-        update tb_plan_detail set is_plan = 1,updated=now() where plan_id = #{planId}
+    <update id="finishPlanDetail" parameterType="Map">
+        update tb_plan_detail set is_plan = 1,updated=now(),plan_cycle=#{planCycle} where plan_id = #{planId}
     </update>
 
 </mapper>
