@@ -211,6 +211,11 @@ public class MessageController {
                 tbTemplateItem.setModule(VisitInfoHolder.getShowName());
                 tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
             }
+        }else if(tbMsg.getTaskKey().equals("em_check")){
+            if(tbTemplateItem.getCode().equals("emSign")){
+                tbTemplateItem.setModule(VisitInfoHolder.getShowName());
+                tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
+            }
         }else if(tbMsg.getTaskKey().equals("pm_check")){
             if(tbTemplateItem.getCode().equals("proSign")){
                 tbTemplateItem.setModule(VisitInfoHolder.getShowName());

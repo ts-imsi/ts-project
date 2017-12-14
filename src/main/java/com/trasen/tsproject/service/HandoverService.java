@@ -314,7 +314,7 @@ public class HandoverService {
             resultMap.put("tempDataVoList",tempDataVoList);
             resultMap.put("total",total);
             resultMap.put("signList",signList);
-
+            resultMap.put("handover",htHandover);
 
         }
         return resultMap;
