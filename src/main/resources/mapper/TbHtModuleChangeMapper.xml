@@ -6,10 +6,10 @@
   </insert>
 
   <select id="selectOldModuleList" parameterType="String" resultType="String">
-    select CONCAT(mo.mod_id,",",pro.mod_name)  from tb_ht_module_change mo,tb_pro_module pro where mo.mod_id=pro.mod_id and mo.type='old' and mo.ht_no=#{htNo}
+    select CONCAT(mo.mod_id,":",pro.mod_name)  from tb_ht_module_change mo,tb_pro_module pro where mo.mod_id=pro.mod_id and mo.type='old' and mo.ht_no=#{htNo}
   </select>
 
   <select id="selectNewModuleList" parameterType="String" resultType="String">
-    select CONCAT(mo.mod_id,",",pro.mod_name)  from tb_ht_module_change mo,tb_pro_module pro where mo.mod_id=pro.mod_id and mo.type='new' and mo.ht_no=#{htNo}
+    select CONCAT(mo.mod_id,":",pro.mod_name)  from tb_ht_module_change mo,tb_pro_module pro where mo.mod_id=pro.mod_id and mo.type='new' and mo.ht_no=#{htNo}
   </select>
 </mapper>
