@@ -140,6 +140,14 @@
         select name from twf_stage order by px
     </select>
 
+    <select id="getTotalScore" parameterType="Integer" resultType="Double">
+        select sum(score) from tb_plan_item where is_complete=1 and plan_id=#{planId}
+    </select>
+
+    <update id="updatePlanDetailScore" parameterType="Map" >
+        update tb_plan_detail set total=#{total} where plan_id=#{planId}
+    </update>
+
 
 
 

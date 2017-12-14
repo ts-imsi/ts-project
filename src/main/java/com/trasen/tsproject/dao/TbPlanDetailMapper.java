@@ -4,6 +4,8 @@ import com.trasen.tsproject.model.TbPlanDetail;
 import com.trasen.tsproject.model.TbProjectPlan;
 import com.trasen.tsproject.util.MyMapper;
 
+import java.util.Map;
+
 public interface TbPlanDetailMapper extends MyMapper<TbPlanDetail> {
 
     TbPlanDetail getPlanDetail(Integer planId);
@@ -14,5 +16,5 @@ public interface TbPlanDetailMapper extends MyMapper<TbPlanDetail> {
 
     void updatePlanDetail(TbPlanDetail tbPlanDetail);
 
-    void finishPlanDetail(Integer planId);
+    void finishPlanDetail(Map<String,Object> param);
 }

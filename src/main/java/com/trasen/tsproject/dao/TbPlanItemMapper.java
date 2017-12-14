@@ -53,4 +53,8 @@ public interface TbPlanItemMapper extends MyMapper<TbPlanItem> {
     Map<String,Object> getPlanPoitFinsh(TbPlanItem item);
 
     List<String> sortStage();
+
+    Double getTotalScore(Integer planId);
+
+    void updatePlanDetailScore(Map<String,Object> param);
 }

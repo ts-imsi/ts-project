@@ -7,6 +7,7 @@ import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -208,15 +209,39 @@ public class PlanDetailService {
     }
 
     public void updatePlanItemTime(List<TbPlanItem> planItemList){
+        String startDate = null;
+        String endDate = null;
         for(TbPlanItem planItem : planItemList){
             if(planItem.getPlanTime()!=null){
                 planItem.setOperator(VisitInfoHolder.getShowName());
                 planItem.setIsUpdate(0);
                 tbPlanItemMapper.updatePlanItemTime(planItem);
+                if(startDate!=null){
+                    if(DateUtils.strToDate(startDate,"yyyy-MM-dd").getTime()>=DateUtils.strToDate(planItem.getPlanTime(),"yyyy-MM-dd").getTime()){
+                        startDate = planItem.getPlanTime();
+                    }
+                }else{
+                    startDate = planItem.getPlanTime();
+                }
+                if(endDate!=null){
+                    if(DateUtils.strToDate(endDate,"yyyy-MM-dd").getTime()<DateUtils.strToDate(planItem.getPlanTime(),"yyyy-MM-dd").getTime()){
+                        endDate = planItem.getPlanTime();
+                    }
+                }else{
+                    endDate = planItem.getPlanTime();
+                }
             }
         }
         if(planItemList!=null&&planItemList.size()>0){
-            tbPlanDetailMapper.finishPlanDetail(planItemList.get(0).getPlanId());
+            Map<String,Object> param = new HashMap<>();
+            param.put("planId",planItemList.get(0).getPlanId());
+            param.put("planCycle",0);
+
+            if(startDate!=null&&endDate!=null){
+                Integer planCycle = DateUtils.timeBettwen(startDate,endDate,"week");
+                param.put("planCycle",planCycle);
+            }
+            tbPlanDetailMapper.finishPlanDetail(param);
         }
 
 
@@ -311,6 +336,8 @@ public class PlanDetailService {
                 }
                 //自动更新进度
                 updatePoit(item.getPlanId());
+                //自动更新总评分
+                updateTotalScore(item.getPlanId());
             }
             boo = true;
         }
@@ -329,6 +356,14 @@ public class PlanDetailService {
         handMap.put("poit",handPoin);
         handMap.put("handId",handId);
         tbPlanItemMapper.updateHandPoit(handMap);
+    }
+
+    public void updateTotalScore(Integer planId){
+        Double total = tbPlanItemMapper.getTotalScore(planId);
+        Map<String,Object> scoreMap = new HashMap<>();
+        scoreMap.put("total",total);
+        scoreMap.put("planId",planId);
+        tbPlanItemMapper.updatePlanDetailScore(scoreMap);
     }
 
     public boolean checkBack(TbPlanItem item){
