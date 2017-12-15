@@ -158,6 +158,31 @@ public class HandoverController {
         return result;
     }
 
+
+    @RequestMapping(value="/getProModule/{handId}",method = RequestMethod.GET)
+    public Result getProModule(@PathVariable Integer handId){
+        //结果集
+        Result result = new Result();
+        result.setStatusCode(0);
+        result.setSuccess(false);
+        try {
+            Map<String,Object> map = handoverService.getProModuleList(handId);
+            result.setObject(map);
+            result.setSuccess(true);
+            result.setStatusCode(1);
+        } catch (IllegalArgumentException e) {
+            logger.error("获取合同模块数据异常" + e.getMessage(), e);
+            result.setMessage(e.getMessage());
+        } catch (Exception e) {
+            logger.error("获取合同模块数据异常" + e.getMessage(), e);
+            result.setMessage(e.getMessage());
+        }
+        return result;
+    }
+
+
+
+
     @RequestMapping(value="/timeLine/{processId}",method = RequestMethod.GET)
     public Result getTimeLine(@PathVariable String processId){
         //结果集

@@ -320,6 +320,42 @@ public class HandoverService {
         return resultMap;
     }
 
+    public Map<String,Object> getProModuleList(Integer handId){
+        Map<String,Object> reMap = new HashMap<>();
+        Map<String,List<String>> resultMap = new HashMap<>();
+        List<ProModuleVo> proModuleVoList = new ArrayList<>();
+        TbHtHandover htHandover = getHandoverToPkid(handId);
+        if(htHandover!=null&&htHandover.getChangeNo()!=null){
+            List<Map<String,Object>> moduleList = htHandoverMapper.getProModuleList(htHandover.getChangeNo());
+            for(Map<String,Object> map : moduleList){
+                if(map!=null&&map.get("proName")!=null&&map.get("modName")!=null){
+                    String proName = map.get("proName").toString();
+                    String modName = map.get("modName").toString();
+                    if(resultMap.get(proName)!=null){
+                        List<String> list = resultMap.get(proName);
+                        list.add(modName);
+                    }else{
+                        List<String> list = new ArrayList<>();
+                        list.add(modName);
+                        resultMap.put(proName,list);}
+                }
+            }
+
+            Set<String> proSet = resultMap.keySet();
+            for(String proName : proSet){
+                List<String> list = resultMap.get(proName);
+                ProModuleVo moduleVo = new ProModuleVo();
+                moduleVo.setProName(proName);
+                moduleVo.setModList(list);
+                moduleVo.setSize(list.size());
+                proModuleVoList.add(moduleVo);
+            }
+        }
+        reMap.put("list",proModuleVoList);
+        reMap.put("handover",htHandover);
+        return reMap;
+    }
+
 
     public List<TimeLineVo> getTimeLine(String processId){
         List<TimeLineVo> list = new ArrayList<>();

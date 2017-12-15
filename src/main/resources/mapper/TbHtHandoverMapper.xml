@@ -92,4 +92,12 @@
           order by pkid desc
     </select>
 
+
+    <select id="getProModuleList" resultType="Map" parameterType="String">
+        select p.pro_name as proName,d.mod_name as modName from tb_ht_module m
+        left join tb_product p on m.pro_code=p.pro_code
+        left join tb_pro_module d on m.mod_id = d.mod_id
+        where m.ht_no=#{htNo} order by pro_name
+    </select>
+
 </mapper>
