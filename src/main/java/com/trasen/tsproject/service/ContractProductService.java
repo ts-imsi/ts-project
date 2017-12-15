@@ -138,12 +138,22 @@ public class ContractProductService {
         if(dataJson.getBoolean("success")){
             String  jsonString=dataJson.getString("list");
             List<ContractInfo> list = JSON.parseArray(jsonString, ContractInfo.class);
-            List<String> htNoList=tbHtHandoverMapper.queryHandOverByOwerOfType(param);
-            if(Optional.ofNullable(list).isPresent()){
-                List<ContractInfo> contractInfoList=list.stream().filter(contractInfo -> filterList(contractInfo.getContractNo(),param.get("status"),htNoList)).collect(Collectors.toList());
-                return contractInfoList;
+            if(param.get("status").equals("3")){
+                List<String> htResole=tbHtResolveMapper.selectResolveGroupHtNo();
+                if(Optional.ofNullable(htResole).isPresent()){
+                    List<ContractInfo> resoleContractInfo=list.stream().filter(contractInfo -> filterResoleList(contractInfo.getContractNo(),htResole)).collect(Collectors.toList());
+                    return resoleContractInfo;
+                }
+                return list;
+            }else{
+                List<String> htNoList=tbHtHandoverMapper.queryHandOverByOwerOfType(param);
+                if(Optional.ofNullable(list).isPresent()){
+                    List<ContractInfo> contractInfoList=list.stream().filter(contractInfo -> filterList(contractInfo.getContractNo(),param.get("status"),htNoList)).collect(Collectors.toList());
+                    return contractInfoList;
+                }
+                return list;
             }
-            return list;
+
         }else{
             logger.info("============"+"查询数据失败");
             return null;
@@ -165,6 +175,14 @@ public class ContractProductService {
                 return false;
             }
         }
+    }
+    public boolean filterResoleList(String htNo,List<String> htResole){
+        boolean boo=htResole.contains(htNo);
+            if(!boo){
+                return true;
+            }else{
+                return false;
+            }
     }
 
     /*

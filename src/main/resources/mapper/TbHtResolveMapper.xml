@@ -19,4 +19,8 @@
     <update id="updateProMan" parameterType="com.trasen.tsproject.model.TbHtResolve">
         update tb_ht_resolve set pro_man=#{proMan} where ht_no=#{htNo}
     </update>
+
+    <select id="selectResolveGroupHtNo"  resultType="String">
+        select ht_no as htNo from tb_ht_resolve  group by ht_no
+    </select>
 </mapper>

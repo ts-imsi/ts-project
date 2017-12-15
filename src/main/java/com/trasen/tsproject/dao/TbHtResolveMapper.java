@@ -16,4 +16,6 @@ public interface TbHtResolveMapper extends MyMapper<TbHtResolve> {
     int updateResolveTotal(TbHtResolve tbHtResolve);
 
     int updateProMan(TbHtResolve tbHtResolve);
+
+    List<String> selectResolveGroupHtNo();
 }
