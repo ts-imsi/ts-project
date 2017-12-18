@@ -447,5 +447,9 @@ public class HandoverService {
         return htHandoverMapper.queryHandOverList(param);
     }
 
+    public void uploadHandoverFile(TbHtHandover htHandover){
+        htHandoverMapper.uploadHandoverFile(htHandover);
+    }
+
 
 }

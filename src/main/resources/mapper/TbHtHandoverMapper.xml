@@ -100,4 +100,9 @@
         where m.ht_no=#{htNo} order by pro_name
     </select>
 
+
+    <update id="uploadHandoverFile" parameterType="com.trasen.tsproject.model.TbHtHandover">
+        update  tb_ht_handover set file_url = #{fileUrl} ,updated = now(),operator=#{operator} where pkid=#{pkid}
+    </update>
+
 </mapper>

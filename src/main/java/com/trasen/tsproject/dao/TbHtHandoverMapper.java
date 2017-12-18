@@ -43,4 +43,6 @@ public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
     List<TbHtHandover> selectMobileProjectArrangeList(TbHtHandover tbHtHandover);
 
     List<Map<String,Object>> getProModuleList(String htNo);
+
+    void uploadHandoverFile(TbHtHandover htHandover);
 }

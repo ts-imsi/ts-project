@@ -127,5 +127,7 @@ public class TbHtHandover {
      */
     private Double poit;
 
+    private String fileUrl;
+
 
 }
