@@ -105,11 +105,11 @@ public class TbProductService {
     }
 
     public int saveOrUpdateProductList(){
-        String product_imis = env.getProperty("product_imis");
-        if(product_imis==null){
+        String module_imis = env.getProperty("module_imis");
+        if(module_imis==null){
             return 1;
         }
-        String json= HttpUtil.connectURL(product_imis,"","POST");
+        String json= HttpUtil.connectURL(module_imis,"","POST");
         JSONObject dataJson = (JSONObject) JSONObject.parse(json);
         boolean boo=dataJson.getBoolean("success");
         if(boo){
