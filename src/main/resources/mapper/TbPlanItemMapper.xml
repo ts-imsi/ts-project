@@ -4,6 +4,7 @@
     <select id="selectExceptionPlan" parameterType="java.util.Map" resultType="com.trasen.tsproject.model.ExceptionPlan">
         SELECT
           item.pkid,
+          item.plan_id,
 	      hand.ht_no,
 	      hand.customer_name,
 	      prop.pro_name,

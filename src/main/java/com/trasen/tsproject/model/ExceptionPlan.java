@@ -17,6 +17,11 @@ import java.util.Date;
 public class ExceptionPlan {
 
     private Integer pkid;
+
+    /**
+     * 计划id
+     */
+    private Integer planId;
     /**
      * 合同名称
      */
