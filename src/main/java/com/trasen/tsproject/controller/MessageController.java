@@ -79,6 +79,26 @@ public class MessageController {
         return result;
     }
 
+    @RequestMapping(value="/getTodoMsg/{pkid}",method = RequestMethod.GET)
+    public Result getTodoMsg(@PathVariable Integer pkid){
+        Result result=new Result();
+        try{
+            if(pkid==null){
+                result.setSuccess(false);
+                result.setMessage("参数错误");
+                return result;
+            }
+            TbMsg tbMsg=tbMsgService.getTodoMsg(pkid);
+            result.setSuccess(true);
+            result.setObject(tbMsg);
+        }catch (Exception e){
+            logger.error("getTodoMsg查询失败=="+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("查询数据失败");
+        }
+        return result;
+    }
+
     @RequestMapping(value="/submitFlow",method = RequestMethod.POST)
     public Result submitFlow(@RequestBody TbMsg tbMsg){
         Result result=new Result();

@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.Transient;
 import java.util.Date;
+import java.util.Map;
 
 @Setter
 @Getter
@@ -110,4 +111,12 @@ public class TbMsg {
 
     @Transient
     private TbHtChange tbHtChange;
+
+    @Transient
+    private Map<String,Object> handoverData;
+
+    @Transient
+    private Map<String,Object> moduleData;
+
+
 }

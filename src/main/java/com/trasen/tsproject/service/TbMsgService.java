@@ -41,6 +41,9 @@ public class TbMsgService {
     @Autowired
     private Environment env;
 
+    @Autowired
+    private HandoverService handoverService;
+
 
 
     public PageInfo<TbMsg> selectTbMsg(int page,int rows,Map<String,String> param){
@@ -93,6 +96,48 @@ public class TbMsgService {
         }
         return tbMsg;
     }
+
+
+    public TbMsg getTodoMsg(Integer pkid){
+        TbMsg tbMsg  = tbMsgMapper.getTbMsgById(pkid);
+        if(tbMsg!=null&&tbMsg.getType().equals("todo")) {
+            TbHtHandover handover = tbMsgMapper.getHandOverToProcessId(tbMsg.getProcessId());
+            if (handover != null) {
+                tbMsg.setHandover(handover);
+                Map<String,Object> handoverData = handoverService.getTempDataList(handover.getPkid());
+                if (handoverData != null) {
+                    tbMsg.setHandoverData(handoverData);
+                }
+                Map<String,Object> moduleData = handoverService.getProModuleList(handover.getPkid());
+                if (moduleData != null) {
+                    tbMsg.setModuleData(moduleData);
+                }
+            }
+
+            TbHtChange tbHtChange = tbMsgMapper.gethtChangeToProcessId(tbMsg.getProcessId());
+            if (tbHtChange != null) {
+                tbMsg.setTbHtChange(tbHtChange);
+            }
+        }
+        if(tbMsg!=null&&tbMsg.getType().equals("todo")&&tbMsg.getStatus()==0){
+            Map<String,String> params=new HashMap<>();
+            params.put("name",tbMsg.getTaskKey());
+            params.put("type","12");
+            tbMsg.setReturnStatus(tbMsgMapper.getButtonStatus(params));
+            params.put("type","13");
+            tbMsg.setResolveStatus(tbMsgMapper.getButtonStatus(params));
+            params.put("type","14");
+            tbMsg.setProductStatus(tbMsgMapper.getButtonStatus(params));
+        }
+        return tbMsg;
+    }
+
+
+
+
+
+
+
 
     public int updateTbMsgStatus(Integer pkid){
        return tbMsgMapper.updateTbMsgStatus(pkid);
