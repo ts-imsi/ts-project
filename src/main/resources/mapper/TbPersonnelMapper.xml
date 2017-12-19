@@ -28,7 +28,7 @@
     WHERE
 	t_u.per_id = per.per_id
     AND we.work_num = per.work_num
-    AND we.open_id =#{openId}
+    AND we.open_id =#{openId} AND t_u.app_id='ts-mobile'
     </select>
 
     <select id="getParentTree" resultType="com.trasen.tsproject.model.TbTree">

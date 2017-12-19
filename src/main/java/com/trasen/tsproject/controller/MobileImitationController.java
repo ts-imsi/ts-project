@@ -39,16 +39,17 @@ public class MobileImitationController {
     @RequestMapping(value="/imitationLogin/{openId}",method = RequestMethod.POST)
     public Result imitationLogin(@PathVariable String openId){
         Result result=new Result();
-        String imitationLogin=env.getProperty("imitation_login");
+        //String imitationLogin=env.getProperty("imitation_login");
         TbUser user=new TbUser();
-        if(Optional.ofNullable(imitationLogin).isPresent()&&Optional.ofNullable(openId).isPresent()){
+        if(Optional.ofNullable(openId).isPresent()){
             TbUser tbUser=tbPersonnelService.selectTbuserByOpenId(openId);
-            String parameterJson = JSONObject.toJSONString(tbUser);
+            /*String parameterJson = JSONObject.toJSONString(tbUser);
             String json= HttpUtil.connectURL(imitationLogin,parameterJson,"POST");
             JSONObject dataJson = (JSONObject) JSONObject.parse(json);
             if(dataJson.getBoolean("success")){
                 user=dataJson.getObject("object",TbUser.class);
-            }
+            }*/
+            user=tbPersonnelService.ctreateXToken(tbUser);
         }
         if(user==null){
             result.setMessage("用户名或密码有误");
