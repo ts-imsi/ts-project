@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbPersonnelMapper" >
-<select id="selectTbPersonnel" parameterType="String" resultType="com.trasen.tsproject.model.TbPersonnel">
-   select per.* from tb_personnel per,t_user t_u where  t_u.per_id=per.per_id and t_u.pkid=#{userId}
-</select>
+    <select id="selectTbPersonnel" parameterType="String" resultType="com.trasen.tsproject.model.TbPersonnel">
+       select per.* from tb_personnel per,t_user t_u where  t_u.per_id=per.per_id and t_u.pkid=#{userId}
+    </select>
    <select id="selectTbPersonnelList" parameterType="String" resultType="com.trasen.tsproject.model.Select">
       SELECT
 	    per.work_num AS id,
@@ -41,4 +41,13 @@
     <select id="selectTwfDictByType" parameterType="String" resultType="com.trasen.tsproject.model.TwfDict">
         select * from twf_dict where `type`=#{type}
     </select>
+
+
+
+    <select id="weixinToPersonnel" parameterType="String" resultType="com.trasen.tsproject.model.TbPersonnel">
+        select p.* from tb_personnel p
+        left join tb_weixin_user w on p.work_num = w.work_num
+        where w.open_id = #{openId}
+    </select>
+
 </mapper>

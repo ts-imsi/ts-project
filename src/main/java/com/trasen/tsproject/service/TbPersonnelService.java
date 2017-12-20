@@ -42,6 +42,11 @@ public class TbPersonnelService {
         return tbPersonnel;
     }
 
+    public TbPersonnel weixinToPersonnel(String openId){
+        return tbPersonnelMapper.weixinToPersonnel(openId);
+
+    }
+
     public List<Select> selectTbPersonnel(String depId){
         return tbPersonnelMapper.selectTbPersonnelList(depId);
     }
@@ -51,6 +56,9 @@ public class TbPersonnelService {
     }
 
     public TbUser ctreateXToken(TbUser tbUser){
+        if(tbUser==null){
+            return null;
+        }
         Map<String, String> parameters = new HashedMap();
         parameters.put("name", tbUser.getName());
         parameters.put("pwd", tbUser.getPassword());

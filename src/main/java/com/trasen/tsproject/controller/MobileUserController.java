@@ -5,6 +5,7 @@ import com.trasen.tsproject.model.TbPersonnel;
 import com.trasen.tsproject.service.TbPersonnelService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,21 @@ public class MobileUserController {
         Result result=new Result();
         try{
             TbPersonnel tbPersonnel=tbPersonnelService.selectTbPersonnel();
+            result.setSuccess(true);
+            result.setObject(tbPersonnel);
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("数据查询失败");
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/weixinToPersonnel/{openId}",method = RequestMethod.POST)
+    public Result weixinToPersonnel(@PathVariable String openId){
+        Result result=new Result();
+        try{
+            TbPersonnel tbPersonnel=tbPersonnelService.weixinToPersonnel(openId);
             result.setSuccess(true);
             result.setObject(tbPersonnel);
         }catch (Exception e){

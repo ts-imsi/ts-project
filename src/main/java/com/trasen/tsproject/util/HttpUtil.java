@@ -84,6 +84,35 @@ public class HttpUtil {
         return rec_string;
     }
 
+    public static String connectURLGET(String address) {
+        String rec_string = "";
+        URL url = null;
+        HttpURLConnection urlConn = null;
+        try {
+            url = new URL(address);
+            urlConn = (HttpURLConnection) url.openConnection();
+            urlConn.setConnectTimeout(1000 * 60 * 5);
+            urlConn.setReadTimeout(1000 * 60 * 5);
+            urlConn.setRequestProperty(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+            urlConn.connect();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), "UTF-8"));
+            StringBuffer sb = new StringBuffer();
+            int ch;
+            while ((ch = rd.read()) > -1) {
+                sb.append((char) ch);
+            }
+            rec_string = sb.toString().trim();
+            rd.close();
+        } catch (Exception e) {
+            logger.info("http请求连接异常", e);
+        } finally {
+            if (urlConn != null) {
+                urlConn.disconnect();
+            }
+        }
+        return rec_string;
+    }
+
     /**
      * 上传文件
      * @param urlStr
