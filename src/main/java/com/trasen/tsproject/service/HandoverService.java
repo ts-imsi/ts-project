@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -236,7 +237,7 @@ public class HandoverService {
                             tempDataVo.setValue(tbHtResolve.getOutputValue());
                             tempDataVo.setTotal(tbHtResolve.getTotal());
                             if(tbHtResolve.getTotal()!=null){
-                                total = total + tbHtResolve.getTotal();
+                                total = add(total,tbHtResolve.getTotal());
                             }
                             if(resolveMap.get(tbHtResolve.getDepName())==null){
                                 List<TempDataVo> tempDataVos = new ArrayList<>();
@@ -452,4 +453,9 @@ public class HandoverService {
     }
 
 
+    public double add(double v1,double v2){
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.add(b2).doubleValue();
+    }
 }
