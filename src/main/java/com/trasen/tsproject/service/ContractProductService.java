@@ -275,7 +275,7 @@ public class ContractProductService {
             price_output=Double.valueOf(df.format(price_output));
             outPutCount=outPutCount+(int)(price_output*100);
             htResolve.setOutputValue((int)(price_output*100)+"%");
-            double subtotal=price_output*contractPrice;
+            double subtotal=mul(price_output,contractPrice);
             subtotal=Double.valueOf(df.format(subtotal));
 
             htResolve.setSubtotal(subtotal);
@@ -287,7 +287,7 @@ public class ContractProductService {
                 String out=htResolveList.get(k).getOutputValue().substring(0, htResolveList.get(k).getOutputValue().length() - 1);
                 int out_l = Double.valueOf(out).intValue() + 1;
                 htResolveList.get(k).setOutputValue(out_l + "%");
-                double subtotal_js = out_l * 0.01 * contractPrice;
+                double subtotal_js = mul(out_l * 0.01,contractPrice);
                 subtotal_js=Double.valueOf(df.format(subtotal_js));
 
                 htResolveList.get(k).setSubtotal(subtotal_js);
@@ -344,6 +344,10 @@ public class ContractProductService {
          return boo;
      }
 
-
+    public double mul(double v1,double v2){
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.multiply(b2).doubleValue();
+    }
 
 }
