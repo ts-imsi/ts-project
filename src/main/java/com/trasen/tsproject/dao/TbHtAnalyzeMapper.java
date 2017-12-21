@@ -11,7 +11,7 @@ public interface TbHtAnalyzeMapper extends MyMapper<TbHtAnalyze> {
 
     String selectPersonJson(TbHtAnalyze tbHtAnalyze);
 
-    List<Select> getSelectJson(TbHtAnalyze tbHtAnalyze);
+    List<Select> getSelectJson(String htNo);
 
     int saveAnaly(TbHtAnalyze tbHtAnalyze);
 

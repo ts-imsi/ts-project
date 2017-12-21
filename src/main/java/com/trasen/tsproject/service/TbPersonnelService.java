@@ -47,9 +47,7 @@ public class TbPersonnelService {
 
     }
 
-    public List<Select> selectTbPersonnel(String depId){
-        return tbPersonnelMapper.selectTbPersonnelList(depId);
-    }
+
 
     public TbUser selectTbuserByOpenId(String openId){
         return tbPersonnelMapper.selectTbuserByOpenId(openId);

@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface TbPersonnelMapper extends MyMapper<TbPersonnel> {
     TbPersonnel selectTbPersonnel(String userId);
-    List<Select> selectTbPersonnelList(String depId);
+    List<Select> selectTbPersonnelList();
     TbUser selectTbuserByOpenId(String openId);
     TbTree getParentTree();
     List<TbTree> getDeptTreeList(String pkid);

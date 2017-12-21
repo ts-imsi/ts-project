@@ -22,14 +22,14 @@ AND re.ht_no =#{htNo}
 	</delete>
 
 	<insert id="saveAnaly" parameterType="com.trasen.tsproject.model.TbHtAnalyze">
-		insert into tb_ht_analyze(ht_no,handover_id,dep_id,pro_code,operator,status,process_id) values(#{htNo},#{handoverId},#{depId},#{proCode},#{operator},#{status},#{processId})
+		insert into tb_ht_analyze(ht_no,handover_id,operator,status,process_id) values(#{htNo},#{handoverId},#{operator},#{status},#{processId})
 	</insert>
 	
 	<select id="selectPersonJson" parameterType="com.trasen.tsproject.model.TbHtAnalyze" resultType="String">
 		select GROUP_CONCAT(an.operator SEPARATOR ',') from tb_ht_analyze an where ht_no=#{htNo} and pro_code=#{proCode}
 	</select>
 
-	<select id="getSelectJson" parameterType="com.trasen.tsproject.model.TbHtAnalyze" resultType="com.trasen.tsproject.model.Select">
+	<select id="getSelectJson" parameterType="String" resultType="com.trasen.tsproject.model.Select">
 		SELECT
 		an.operator AS id,
 		per.`name` AS text
@@ -38,6 +38,6 @@ AND re.ht_no =#{htNo}
 		tb_personnel per
 		WHERE
 		an.operator = per.work_num
-		AND ht_no=#{htNo} AND pro_code=#{proCode}
+		AND an.ht_no = #{htNo}
 	</select>
 </mapper>

@@ -6,8 +6,10 @@ import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbMsg;
+import com.trasen.tsproject.model.TbPersonnel;
 import com.trasen.tsproject.model.TbTemplateItem;
 import com.trasen.tsproject.service.TbMsgService;
+import com.trasen.tsproject.service.TbPersonnelService;
 import com.trasen.tsproject.util.DateUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
@@ -33,6 +35,9 @@ public class MessageController {
 
     @Autowired
     private TbMsgService tbMsgService;
+
+    @Autowired
+    private TbPersonnelService tbPersonnelService;
 
     @RequestMapping(value="/selectTbMsg",method = RequestMethod.POST)
     public Map<String,Object> selectTbMsg(@RequestBody Map<String,String> param){
@@ -122,17 +127,20 @@ public class MessageController {
                         tbMsgService.updateRecount(para);
                     }
                 }
-                if(tbMsg.getProcessKey().contains("handover")){
-                    TbHtHandover tbHtHandover=tbMsgService.selectByProcessId(tbMsg.getProcessId());
-                    if(Optional.ofNullable(tbHtHandover).isPresent()){
-                        List<TbTemplateItem> tbTemplateItems=tbHtHandover.getContentJson();
-                        tbTemplateItems.stream().forEach(tbTemplateItem -> addContentJson(tbTemplateItem,tbMsg));
-                    }
-                    tbMsgService.updateHandOverByProcessId(tbHtHandover);
-                }
+
                 boolean boo=tbMsgService.submitFlow(tbMsg);
 
                 if(boo){
+                    if(tbMsg.getProcessKey().contains("handover")){
+                        TbHtHandover tbHtHandover=tbMsgService.selectByProcessId(tbMsg.getProcessId());
+                        if(Optional.ofNullable(tbHtHandover).isPresent()){
+                            List<TbTemplateItem> tbTemplateItems=tbHtHandover.getContentJson();
+                            tbTemplateItems.stream().forEach(tbTemplateItem -> addContentJson(tbTemplateItem,tbMsg));
+                            addPdSign(tbTemplateItems,tbMsg);
+                        }
+                        tbMsgService.updateHandOverByProcessId(tbHtHandover);
+                    }
+
                     result.setMessage("流程提交成功");
                     result.setSuccess(true);
 
@@ -241,11 +249,6 @@ public class MessageController {
                 tbTemplateItem.setModule(VisitInfoHolder.getShowName());
                 tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
             }
-        }else if(tbMsg.getTaskKey().equals("pd_check")){
-            /*if(tbTemplateItem.getCode().equals("implementSign")){
-                tbTemplateItem.setModule(VisitInfoHolder.getShowName());
-                tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
-            }*/
         }else if(tbMsg.getTaskKey().equals("gm_check")){
             if(tbTemplateItem.getCode().equals("zjlSign")){
                 tbTemplateItem.setModule(VisitInfoHolder.getShowName());
@@ -253,6 +256,21 @@ public class MessageController {
             }
         }
     }
+
+    public void addPdSign(List<TbTemplateItem> tbTemplateItems,TbMsg tbMsg){
+        if(tbMsg.getTaskKey().equals("pd_check")){
+            TbPersonnel tbPersonnel=tbPersonnelService.selectTbPersonnel();
+            //生产部门特殊处理,自动签名
+            TbTemplateItem tbTemplateItem = new TbTemplateItem();
+            tbTemplateItem.setLevel(0);
+            tbTemplateItem.setModule(VisitInfoHolder.getShowName());
+            tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
+            tbTemplateItem.setName(tbPersonnel.getDepName()+"签字");
+            tbTemplateItems.add(tbTemplateItem);
+        }
+    }
+
+
 
     @RequestMapping(value="/getMsgCount",method = RequestMethod.GET)
     public Result getMsgCount(){
