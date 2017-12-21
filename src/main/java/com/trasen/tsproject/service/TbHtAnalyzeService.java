@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author luoyun
@@ -34,16 +36,16 @@ public class TbHtAnalyzeService {
     private TbHtResolveMapper tbHtResolveMapper;
 
 
-    public List<TbHtAnalyze> selectAnalyzeList(String htNo){
+    public Map<String,Object> selectAnalyzeList(String htNo){
+        Map<String,Object> resultMap = new HashMap<>();
         List<TbHtAnalyze> tbHtAnalyzeList= tbHtAnalyzeMapper.selectAnalyzeList(htNo);
-        for(TbHtAnalyze tbHtAnalyze:tbHtAnalyzeList){
-            tbHtAnalyze.setData(tbPersonnelMapper.selectTbPersonnelList(tbHtAnalyze.getDepId()));
-            List<Select> selectList=tbHtAnalyzeMapper.getSelectJson(tbHtAnalyze);
-            if(selectList!=null&&selectList.size()>0){
-                tbHtAnalyze.setSelectJson(selectList);
-            }
-        }
-        return tbHtAnalyzeList;
+        List<Select> data = tbPersonnelMapper.selectTbPersonnelList();
+        List<Select> selectJson = tbHtAnalyzeMapper.getSelectJson(htNo);
+        resultMap.put("list",tbHtAnalyzeList);
+        resultMap.put("data",data);
+        resultMap.put("selectJson",selectJson);
+
+        return resultMap;
     }
 
     @Transactional(rollbackFor=Exception.class)
@@ -53,22 +55,13 @@ public class TbHtAnalyzeService {
         tbHtAnalyzeMapper.deleteAnaly(tbHtAnalyzes.get(0).getHtNo());
         //保存数据
         for(TbHtAnalyze tbHtAnalyze:tbHtAnalyzes){
-            List<Select> selectList=tbHtAnalyze.getSelectJson();
-            for(Select select:selectList){
-                tbHtAnalyze.setOperator(select.getId());
-                tbHtAnalyze.setStatus(0);
-                tbHtAnalyzeMapper.saveAnaly(tbHtAnalyze);
-            }
+            tbHtAnalyze.setStatus(0);
+            tbHtAnalyzeMapper.saveAnaly(tbHtAnalyze);
         }
         //更新分解表分解人数据
         TbHtResolve tbHtResolve=new TbHtResolve();
         tbHtResolve.setHtNo(tbHtAnalyzes.get(0).getHtNo());
-        TbPersonnel tbPersonnel=tbPersonnelMapper.selectTbPersonnel(VisitInfoHolder.getUserId());
-        if(tbPersonnel!=null){
-            tbHtResolve.setProMan(tbPersonnel.getWorkNum());
-        }else{
-            tbHtResolve.setProMan(VisitInfoHolder.getUserId());
-        }
+        tbHtResolve.setProMan(VisitInfoHolder.getShowName());
         tbHtResolveMapper.updateProMan(tbHtResolve);
         boo=true;
         return boo;
