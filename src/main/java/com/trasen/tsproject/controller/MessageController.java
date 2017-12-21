@@ -136,7 +136,6 @@ public class MessageController {
                         if(Optional.ofNullable(tbHtHandover).isPresent()){
                             List<TbTemplateItem> tbTemplateItems=tbHtHandover.getContentJson();
                             tbTemplateItems.stream().forEach(tbTemplateItem -> addContentJson(tbTemplateItem,tbMsg));
-                            addPdSign(tbTemplateItems,tbMsg);
                         }
                         tbMsgService.updateHandOverByProcessId(tbHtHandover);
                     }
@@ -213,6 +212,14 @@ public class MessageController {
             }else{
                 boolean boo=tbMsgService.pdConfirm(tbMsg);
                 if(boo){
+                    if(tbMsg.getProcessKey().contains("handover")){
+                        TbHtHandover tbHtHandover=tbMsgService.selectByProcessId(tbMsg.getProcessId());
+                        if(Optional.ofNullable(tbHtHandover).isPresent()){
+                            List<TbTemplateItem> tbTemplateItems=tbHtHandover.getContentJson();
+                            addPdSign(tbTemplateItems,tbMsg);
+                        }
+                        tbMsgService.updateHandOverByProcessId(tbHtHandover);
+                    }
                     result.setMessage("确认成功");
                     result.setSuccess(true);
                 }else{
