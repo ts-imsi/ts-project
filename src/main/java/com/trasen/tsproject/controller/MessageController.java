@@ -273,7 +273,8 @@ public class MessageController {
             tbTemplateItem.setModule(VisitInfoHolder.getShowName());
             tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
             tbTemplateItem.setName(tbPersonnel.getDepName()+"签字");
-            tbTemplateItem.setPx(99);
+            tbTemplateItem.setPx(22);
+            tbTemplateItem.setCode("pdSign");
             tbTemplateItems.add(tbTemplateItem);
         }
     }

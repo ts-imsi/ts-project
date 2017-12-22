@@ -405,19 +405,29 @@ public class HandoverService {
                         String content = "";
                         String name = "";
                         if(tbMsgList.size()>1){
-                            //生成部门确认
                             timeLineVo.setTitle(tbMsgList.get(0).getTitle());
-                            name = "生产部门";
-                            for(TbMsg msg : tbMsgList){
-                                String str = "";
-                                if(msg.getUpdated()==null&&msg.getStatus()==0){
-                                    str = "未确认";
-                                }else{
-                                    str = DateUtils.getTime(msg.getUpdated(),"yyyy-MM-dd HH:mm:ss")+" 确认";
-                                }
-                                content = content + "确认人:"+msg.getName()+","+str+";";
+                            if("pd_check".equals(taskKey)){
+                                //生成部门确认
+                                name = "生产部门";
+                                for(TbMsg msg : tbMsgList){
+                                    String str = "";
+                                    if(msg.getUpdated()==null&&msg.getStatus()==0){
+                                        str = "未确认";
+                                    }else{
+                                        str = DateUtils.getTime(msg.getUpdated(),"yyyy-MM-dd HH:mm:ss")+" 确认";
+                                    }
+                                    content = content + "确认人:"+msg.getName()+","+str+";";
 
+                                }
+                            }else{
+                                for(TbMsg msg : tbMsgList){
+                                    if(msg.getStatus()==1){
+                                        name = msg.getName();
+                                        content = msg.getRemark();
+                                    }
+                                }
                             }
+
                         }else if(tbMsgList.size()==1){
                             TbMsg msg = tbMsgList.get(0);
                             name = msg.getName();
