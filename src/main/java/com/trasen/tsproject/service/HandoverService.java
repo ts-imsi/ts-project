@@ -426,7 +426,7 @@ public class HandoverService {
                         }
                         timeLineVo.setRemark(content);
                         timeLineVo.setName(name);
-                        if(!StringUtil.isEmpty(timeLineVo.getRemark())&&!"审批通过".equals(timeLineVo.getRemark())&&!"已确认".equals(timeLineVo.getRemark())){
+                        if(!"待生产部门确认".equals(timeLineVo.getTaskName())&&!StringUtil.isEmpty(timeLineVo.getRemark())&&!"审批通过".equals(timeLineVo.getRemark())&&!"已确认".equals(timeLineVo.getRemark())){
                             //驳回
                             timeLineVo.setColour("danger");
                         }else if(timeLineVo.getEndTime()==null){
