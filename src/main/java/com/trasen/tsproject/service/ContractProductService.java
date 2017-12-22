@@ -294,6 +294,16 @@ public class ContractProductService {
                 htResolveList.get(k).setTotal(subtotal_js);
             }
         }
+
+        Double sumSub=htResolveList.stream().mapToDouble(TbHtResolve::getSubtotal).sum();
+        if(sumSub!=contractPrice){
+            logger.info("========="+htResolveList.get(0).getSubtotal());
+            logger.info("========="+sub(contractPrice,sumSub));
+            logger.info("=========="+Double.valueOf(df.format(sub(contractPrice,sumSub))));
+            double sumXj=htResolveList.get(0).getSubtotal()+Double.valueOf(df.format(sub(contractPrice,sumSub)));
+            htResolveList.get(0).setSubtotal(sumXj);
+            htResolveList.get(0).setTotal(sumXj);
+        }
         //保存产值
         for(TbHtResolve htResolve : htResolveList){
             tbHtResolveMapper.saveHtResolve(htResolve);
@@ -348,6 +358,12 @@ public class ContractProductService {
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
         return b1.multiply(b2).doubleValue();
+    }
+
+    public  double sub(double v1,double v2){
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.subtract(b2).doubleValue();
     }
 
 }
