@@ -4,4 +4,26 @@
   <select id="getManageByType" resultType="com.trasen.tsproject.model.TbProjectManager" parameterType="String">
     select * from tb_project_manager where is_vaild=1 and `type`=#{type}
   </select>
+
+  <select id="selectProjectManagerList" parameterType="com.trasen.tsproject.model.TbProjectManager" resultType="com.trasen.tsproject.model.TbProjectManager">
+    select * from tb_project_manager where is_vaild=1
+    <if test="type!=null">and `type`=#{type}</if>
+    <if test="name!=null">and  `name` like CONCAT('%',#{name},'%')</if>
+  </select>
+
+  <select id="selectCount" parameterType="com.trasen.tsproject.model.TbProjectManager" resultType="Integer">
+     select count(*) from  tb_project_manager where is_vaild=1 and `type`=#{type} and work_num=#{workNum}
+  </select>
+
+  <delete id="deleteManager" parameterType="Integer">
+    update tb_project_manager set  is_vaild=0 where pkid=#{pkid}
+  </delete>
+
+  <insert id="saveProjectManager" parameterType="com.trasen.tsproject.model.TbProjectManager">
+     insert into tb_project_manager(`name`,work_num,pre_id,`type`,created,phone,e_mail,sex) values(#{name},#{workNum},#{preId},#{type},#{created},#{phone},#{email},#{sex})
+  </insert>
+
+  <update id="updateProjectManager" parameterType="com.trasen.tsproject.model.TbProjectManager">
+    update  tb_project_manager set `name`=#{name},work_num=#{workNum},pre_id=#{preId},`type`=#{type},phone=#{phone},e_mail=#{email},sex=#{sex} where pkid=#{pkid}
+  </update>
 </mapper>

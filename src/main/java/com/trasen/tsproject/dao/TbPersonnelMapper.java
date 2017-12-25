@@ -17,8 +17,11 @@ public interface TbPersonnelMapper extends MyMapper<TbPersonnel> {
     TbUser selectTbuserByOpenId(String openId);
     TbTree getParentTree();
     List<TbTree> getDeptTreeList(String pkid);
+    List<TbTree> getTreeList(String pkid);
     List<TwfDict> selectTwfDictByType(String type);
 
     TbPersonnel weixinToPersonnel(String openId);
+
+    TbPersonnel queryPersonById(String perId);
 
 }

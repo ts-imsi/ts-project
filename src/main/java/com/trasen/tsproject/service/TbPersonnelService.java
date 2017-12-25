@@ -93,8 +93,28 @@ public class TbPersonnelService {
         return vo;
     }
 
+    public TreeVo getTreeList(TbTree tbTree){
+        TreeVo vo = new TreeVo();
+        if (tbTree!=null) {
+            vo.setLabel(tbTree.getName());
+            vo.setData(tbTree);
+            List<TbTree> treeList = tbPersonnelMapper.getTreeList(tbTree.getPkid());
+            List<TreeVo> children = new ArrayList<>();
+            for (TbTree tree : treeList) {
+                TreeVo childrenVo = getTreeList(tree);
+                children.add(childrenVo);
+            }
+            vo.setChildren(children);
+        }
+        return vo;
+    }
+
     public TbTree getParentTree(){
         return tbPersonnelMapper.getParentTree();
+    }
+
+    public TbPersonnel queryPersonById(String perId){
+        return tbPersonnelMapper.queryPersonById(perId);
     }
 
     public List<TwfDict> selectTwfDictByType(String type){

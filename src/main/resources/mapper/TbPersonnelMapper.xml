@@ -38,6 +38,10 @@
         select * from tb_tree where parent = #{pkid} and is_vaild=1 and `type`='dept'
     </select>
 
+    <select id="getTreeList" parameterType="String" resultType="com.trasen.tsproject.model.TbTree">
+        select * from tb_tree where parent = #{pkid} and is_vaild=1
+    </select>
+
     <select id="selectTwfDictByType" parameterType="String" resultType="com.trasen.tsproject.model.TwfDict">
         select * from twf_dict where `type`=#{type}
     </select>
@@ -48,6 +52,10 @@
         select p.* from tb_personnel p
         left join tb_weixin_user w on p.work_num = w.work_num
         where w.open_id = #{openId}
+    </select>
+
+    <select id="queryPersonById" parameterType="String" resultType="com.trasen.tsproject.model.TbPersonnel">
+        select * from tb_personnel where per_id=#{perId}
     </select>
 
 </mapper>

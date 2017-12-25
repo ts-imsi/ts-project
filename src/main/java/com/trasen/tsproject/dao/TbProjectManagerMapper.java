@@ -7,4 +7,9 @@ import java.util.List;
 
 public interface TbProjectManagerMapper extends MyMapper<TbProjectManager> {
     List<TbProjectManager> getManageByType(String type);
+    List<TbProjectManager> selectProjectManagerList(TbProjectManager tbProjectManager);
+    int selectCount(TbProjectManager tbProjectManager);
+    int deleteManager(Integer pkid);
+    int saveProjectManager(TbProjectManager tbProjectManager);
+    int updateProjectManager(TbProjectManager tbProjectManager);
 }

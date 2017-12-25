@@ -45,6 +45,8 @@ public class TbProjectManager {
 
     private String phone;
 
-    private String eMail;
+    private String email;
+
+    private Integer sex;
 
 }
