@@ -85,6 +85,11 @@ public class TbMsgService {
             }
         }
         if(tbMsg!=null&&tbMsg.getType().equals("todo")&&tbMsg.getStatus()==0){
+            List<TimeLineVo> timeLineVos=handoverService.getTimeLine(tbMsg.getProcessId());
+            TimeLineVo BhTimeLineVo=timeLineVos.get(timeLineVos.size()-2);
+            if(BhTimeLineVo.getColour().equals("danger")){
+                tbMsg.setRemark("驳回理由："+BhTimeLineVo.getRemark());
+            }
             Map<String,String> params=new HashMap<>();
             params.put("name",tbMsg.getTaskKey());
             params.put("type","12");
