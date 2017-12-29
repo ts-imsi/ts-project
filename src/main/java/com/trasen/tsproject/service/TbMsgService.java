@@ -437,6 +437,7 @@ public class TbMsgService {
         map.put("msgCount",count);
         map.put("msgList",tbMsgList);
         map.put("userId",VisitInfoHolder.getUserId());
+        map.put("showName",VisitInfoHolder.getShowName());
         return map;
     }
     public Map<String,Object> indexMsgCount(String userId){
@@ -450,6 +451,7 @@ public class TbMsgService {
     }
 
     public List<TbMsg> queryMobileTransactList(Map<String,Object> param){
+        synTodoHandOver(VisitInfoHolder.getUserId());
         return tbMsgMapper.queryMobileTransactList(param);
     }
 

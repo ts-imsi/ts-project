@@ -2,10 +2,12 @@ package com.trasen.tsproject.controller;
 
 import cn.trasen.commons.util.StringUtil;
 import cn.trasen.core.entity.Result;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.*;
 import com.trasen.tsproject.service.HandoverService;
+import com.trasen.tsproject.util.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by zhangxiahui on 17/9/27.
@@ -81,6 +84,12 @@ public class HandoverController {
                 if(tbHtHandover.getPkid()==null){
                     handoverService.saveHandover(tbHtHandover);
                 }
+                List<TbTemplateItem> tbTemplateItems=tbHtHandover.getContentJson();
+                tbTemplateItems.stream().forEach(tbTemplateItem -> addContentJson(tbTemplateItem));
+                if(Optional.ofNullable(tbHtHandover.getContentJson()).isPresent()){
+                    String content = JSON.toJSONString(tbHtHandover.getContentJson());
+                    tbHtHandover.setContent(content);
+                }
                 boolean boo = handoverService.submitHandover(tbHtHandover);
                 TbHtHandover handover = handoverService.getHandoverToHtNo(tbHtHandover);
                 result.setSuccess(boo);
@@ -92,6 +101,13 @@ public class HandoverController {
             result.setMessage("提交交接单失败");
         }
         return  result;
+    }
+
+    public void addContentJson(TbTemplateItem tbTemplateItem){
+        if(tbTemplateItem.getCode().equals("saleSign")){
+            tbTemplateItem.setModule(VisitInfoHolder.getShowName());
+            tbTemplateItem.setValue(DateUtils.getDate("yyyy-MM-dd"));
+        }
     }
 
     @RequestMapping(value="/getHtHandoverList",method = RequestMethod.POST)

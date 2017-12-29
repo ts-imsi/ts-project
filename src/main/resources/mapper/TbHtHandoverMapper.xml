@@ -31,7 +31,7 @@
     </update>
     
     <update id="submitHandover" parameterType="com.trasen.tsproject.model.TbHtHandover">
-        update tb_ht_handover set process_id=#{processId},status=1,updated=now(),operator=#{operator}  where pkid=#{pkid}
+        update tb_ht_handover set process_id=#{processId},status=1,updated=now(),operator=#{operator},now_step='待内控审批',content=#{content}  where pkid=#{pkid}
     </update>
 
     <select id="getHtHandoverList" parameterType="com.trasen.tsproject.model.TbHtHandover" resultType="com.trasen.tsproject.model.TbHtHandover">

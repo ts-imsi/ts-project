@@ -16,7 +16,7 @@
   </insert>
 
   <update id="updateHtChange" parameterType="com.trasen.tsproject.model.TbHtChange">
-    update tb_ht_change set process_id=#{processId} where pkid=#{pkid}
+    update tb_ht_change set process_id=#{processId},now_step ='待销售经理审批增补变更' where pkid=#{pkid}
   </update>
   
   <select id="queryHtChangeByProcess" resultType="com.trasen.tsproject.model.TbHtChange" parameterType="String">
