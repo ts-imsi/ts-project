@@ -3,6 +3,7 @@ package com.trasen.tsproject.controller;
 import cn.trasen.core.entity.Result;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.TbHtHandover;
+import com.trasen.tsproject.model.TempDataVo;
 import com.trasen.tsproject.model.TimeLineVo;
 import com.trasen.tsproject.service.HandoverService;
 import com.trasen.tsproject.service.TbMsgService;
@@ -61,9 +62,12 @@ public class MobileTransferController {
                 result.put("message","参数传入错误");
             }else{
                 TbHtHandover tbHtHandover=tbMsgService.selectMobileByProcessId(op.get());
+                Map<String,Object> handoverMap=handoverService.getTempDataList(tbHtHandover.getPkid());
+                List<TempDataVo> tempVo=(List<TempDataVo>)handoverMap.get("tempDataVoList");
                 List<TimeLineVo> timeLineVos=handoverService.getTimeLine(op.get());
                 result.put("tbHtHandover",tbHtHandover);
                 result.put("timeLineVos",timeLineVos);
+                result.put("tempVo",tempVo);
                 result.put("success",true);
             }
         }catch (Exception e){
