@@ -8,13 +8,11 @@ import com.trasen.tsproject.model.TbHtHandover;
 import com.trasen.tsproject.model.TbTemplateItem;
 import com.trasen.tsproject.service.ContractProductService;
 import com.trasen.tsproject.service.HandoverService;
+import com.trasen.tsproject.service.TbHtChangeService;
 import com.trasen.tsproject.util.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +37,9 @@ public class MobileMakeInController {
     @Autowired
     HandoverService handoverService;
 
+    @Autowired
+    TbHtChangeService tbHtChangeService;
+
     @RequestMapping(value="/getOaContractListByOwner")
     public Map<String,Object> getOaContractListByOwner(@RequestBody Map<String,String> param){
         Map<String,Object> result=new HashMap<>();
@@ -62,15 +63,31 @@ public class MobileMakeInController {
         return result;
     }
 
-    @RequestMapping(value="/getMobileHandover", method = RequestMethod.POST)
-    public Result getMobileHandover(@RequestBody ContractInfo conInfo)  {
+    @RequestMapping(value="/getMobileHandover/{htNo}", method = RequestMethod.POST)
+    public Result getMobileHandover(@PathVariable String htNo)  {
         Result result=new Result();
         result.setSuccess(false);
         try {
-            if(conInfo!=null){
-                TbHtHandover tbHtHandover = handoverService.getHandover(conInfo);
-                result.setObject(tbHtHandover);
-                result.setSuccess(true);
+            if(htNo!=null){
+                Map<String,Object> htMap=tbHtChangeService.getContractByHtNo(htNo);
+                if(!htMap.isEmpty()){
+                    boolean boo=(Boolean)htMap.get("success");
+                    if(boo){
+                        ContractInfo conInfo=(ContractInfo)htMap.get("object");
+                        conInfo.setType("NEW");
+                        conInfo.setChangeNo(htNo);
+                        TbHtHandover tbHtHandover = handoverService.getHandover(conInfo);
+                        result.setObject(tbHtHandover);
+                        result.setSuccess(true);
+                    }else{
+                        result.setMessage("获取交接单失败");
+                        result.setSuccess(false);
+                    }
+                }else{
+                    result.setMessage("获取交接单失败");
+                    result.setSuccess(false);
+                }
+
             }
         }catch (Exception e) {
             logger.error("获取交接单异常" + e.getMessage(), e);
