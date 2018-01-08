@@ -44,7 +44,7 @@ public class HtChangeController {
         Map<String,Object> paramMap=new HashMap<String,Object>();
         try {
             if(param.get("page")==null||param.get("rows")==null){
-                paramMap.put("messages","参数错误");
+                paramMap.put("message","参数错误");
                 paramMap.put("success",false);
                 return paramMap;
             }
@@ -75,7 +75,7 @@ public class HtChangeController {
             paramMap.put("success",true);
             return paramMap;
         }catch (Exception e) {
-            paramMap.put("messages","查询合同变更错误");
+            paramMap.put("message","查询合同变更错误");
             paramMap.put("success",false);
             return paramMap;
         }

@@ -179,7 +179,7 @@ public class ProductController {
         Map<String,Object> mapParam=new HashMap<>();
         try{
             if(param.get("page")==null||param.get("rows")==null){
-                mapParam.put("messages","参数错误");
+                mapParam.put("message","参数错误");
                 mapParam.put("success",false);
             }else{
                 PageInfo<TbProduct> productPageInfo=tbProductService.queryProductModelList(Integer.valueOf(param.get("rows")),Integer.valueOf(param.get("page")),param);
@@ -193,7 +193,7 @@ public class ProductController {
             }
         }catch (Exception e){
             logger.error("数据查询失败"+e.getMessage(),e);
-            mapParam.put("messages","数据查询失败");
+            mapParam.put("message","数据查询失败");
             mapParam.put("success",false);
         }
         return mapParam;
@@ -249,7 +249,7 @@ public class ProductController {
         Map<String,Object> result=new HashMap<>();
         try{
             if(param.isEmpty()||param.get("page")==null||param.get("rows")==null||param.get("proCode")==null) {
-                result.put("messages", "参数错误");
+                result.put("message", "参数错误");
                 result.put("success", false);
             }else{
                 PageInfo<TbProModule> tbProModulePageInfo=tbProductService.queryTbProModuleList(Integer.valueOf(param.get("rows")),Integer.valueOf(param.get("page")),param.get("proCode"));
@@ -264,7 +264,7 @@ public class ProductController {
 
         }catch (Exception e){
             logger.error("数据查询失败"+e.getMessage(),e);
-            result.put("messages","数据查询失败");
+            result.put("message","数据查询失败");
             result.put("success",false);
         }
         return result;
@@ -315,7 +315,7 @@ public class ProductController {
         Map<String,Object> result=new HashMap<>();
         try{
             if(param.isEmpty()||param.get("page")==null||param.get("rows")==null||param.get("modId")==null) {
-                result.put("messages", "参数错误");
+                result.put("message", "参数错误");
                 result.put("success", false);
             }else{
                 PageInfo<TbProModulePrice> tbProModulePricePageInfo=tbProductService.queryModelPriceList(Integer.valueOf(param.get("rows")),Integer.valueOf(param.get("page")),param.get("modId"));
@@ -330,7 +330,7 @@ public class ProductController {
 
         }catch (Exception e){
             logger.error("数据查询失败"+e.getMessage(),e);
-            result.put("messages","数据查询失败");
+            result.put("message","数据查询失败");
             result.put("success",false);
         }
         return result;

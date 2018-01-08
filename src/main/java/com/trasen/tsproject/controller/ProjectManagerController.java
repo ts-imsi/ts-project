@@ -35,7 +35,7 @@ public class ProjectManagerController {
         Map<String,Object> result=new HashMap<>();
         try {
             if (param.get("page") == null || param.get("rows") == null) {
-                result.put("messages", "参数错误");
+                result.put("message", "参数错误");
                 result.put("success", false);
                 return result;
             }

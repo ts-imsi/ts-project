@@ -115,7 +115,7 @@ public class HandoverController {
         Map<String,Object> paramMap=new HashMap<String,Object>();
         try {
             if(param.get("page")==null||param.get("rows")==null){
-                paramMap.put("messages","参数错误");
+                paramMap.put("message","参数错误");
                 paramMap.put("success",false);
                 return paramMap;
             }
@@ -147,7 +147,7 @@ public class HandoverController {
             return paramMap;
         }catch (Exception e) {
             logger.error("交接单查询异常" + e.getMessage(), e);
-            paramMap.put("messages","查询交接单错误");
+            paramMap.put("message","查询交接单错误");
             paramMap.put("success",false);
             return paramMap;
         }

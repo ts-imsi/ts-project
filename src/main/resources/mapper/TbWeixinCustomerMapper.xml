@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.trasen.tsproject.dao.TbWeixinCustomerMapper" >
+  <select id="selectWeixinCustomerList" resultType="com.trasen.tsproject.model.TbWeixinCustomer" parameterType="com.trasen.tsproject.model.TbWeixinCustomer">
+    select * from tb_weixin_customer where is_vaild=1
+     <if test="name!=null and name!=''"> and (`name` like CONCAT('%',#{name},'%') or link_man like CONCAT('%',#{linkMan},'%'))</if>
+  </select>
+
+<update id="deleteWxCus" parameterType="Integer">
+   update tb_weixin_customer set is_vaild=0 where pkid=#{pkid}
+</update>
+
+  <update id="updateWxCus" parameterType="com.trasen.tsproject.model.TbWeixinCustomer">
+    update tb_weixin_customer set `name`=#{name},address=#{address},link_man=#{linkMan},phone=#{phone},updated=#{updated},operator=#{operator} where pkid=#{pkid}
+  </update>
+
+  <insert id="saveWxCus" parameterType="com.trasen.tsproject.model.TbWeixinCustomer" useGeneratedKeys="true" keyProperty="pkid">
+      insert into tb_weixin_customer(`name`,address,link_man,phone,created,operator) values(#{name},#{address},#{linkMan},#{phone},#{created},#{operator})
+  </insert>
+
+    <update id="updateWxCusCode" parameterType="com.trasen.tsproject.model.TbWeixinCustomer">
+        update tb_weixin_customer set invite_code=#{inviteCode} where pkid=#{pkid}
+    </update>
+</mapper>
