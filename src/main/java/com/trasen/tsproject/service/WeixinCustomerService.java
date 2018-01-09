@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbWeixinCustomerMapper;
+import com.trasen.tsproject.model.TbPersonnel;
 import com.trasen.tsproject.model.TbPlanTemplate;
+import com.trasen.tsproject.model.TbUser;
 import com.trasen.tsproject.model.TbWeixinCustomer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +60,23 @@ public class WeixinCustomerService {
     public int updateWxCusCode(TbWeixinCustomer tbWeixinCustomer){
         tbWeixinCustomer.setInviteCode(tbWeixinCustomer.getPkid()+"-"+(int)((Math.random()*9+1)*1000));
         return tbWeixinCustomerMapper.updateWxCusCode(tbWeixinCustomer);
+    }
+
+    public TbUser selectWxCusByOpenId(String openId){
+        TbUser tbUser=new TbUser();
+        TbWeixinCustomer tbWeixinCustomer=tbWeixinCustomerMapper.selectWxCusByOpenId(openId);
+        if(tbWeixinCustomer!=null){
+            tbUser.setName(tbWeixinCustomer.getName());
+            tbUser.setDisplayName(tbWeixinCustomer.getLinkMan());
+            tbUser.setPassword(tbWeixinCustomer.getPhone());
+            tbUser.setPkid(tbWeixinCustomer.getPkid());
+            tbUser.setPerId("p_cus_1");
+        }
+        return tbUser;
+    }
+
+    public TbWeixinCustomer selectWxCus(String openId){
+        TbWeixinCustomer tbWeixinCustomer=tbWeixinCustomerMapper.selectWxCusByOpenId(openId);
+        return tbWeixinCustomer;
     }
 }

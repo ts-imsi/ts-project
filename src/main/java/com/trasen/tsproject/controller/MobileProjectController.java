@@ -48,6 +48,10 @@ public class MobileProjectController {
                 htHandover.setIsArrange(Integer.valueOf(opS.get()));
             }
 
+            if(param.get("customerName")!=null&&!param.get("customerName").equals("")){
+                htHandover.setCustomerName(param.get("customerName"));
+            }
+
             if(param.get("showAll")==null||!"all".equals(param.get("showAll"))){
                 //列表权限
                 htHandover.setHtOwner(VisitInfoHolder.getShowName());

@@ -21,4 +21,8 @@
     <update id="updateWxCusCode" parameterType="com.trasen.tsproject.model.TbWeixinCustomer">
         update tb_weixin_customer set invite_code=#{inviteCode} where pkid=#{pkid}
     </update>
+    
+    <select id="selectWxCusByOpenId" parameterType="String" resultType="com.trasen.tsproject.model.TbWeixinCustomer">
+        select * from tb_weixin_customer where open_id=#{openId} limit 1
+    </select>
 </mapper>

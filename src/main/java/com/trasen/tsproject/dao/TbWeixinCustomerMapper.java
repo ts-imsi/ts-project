@@ -11,4 +11,5 @@ public interface TbWeixinCustomerMapper extends MyMapper<TbWeixinCustomer> {
     int updateWxCus(TbWeixinCustomer tbWeixinCustomer);
     int saveWxCus(TbWeixinCustomer tbWeixinCustomer);
     int updateWxCusCode(TbWeixinCustomer tbWeixinCustomer);
+    TbWeixinCustomer selectWxCusByOpenId(String openId);
 }

@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.TbUser;
 import com.trasen.tsproject.service.TbPersonnelService;
+import com.trasen.tsproject.service.WeixinCustomerService;
 import com.trasen.tsproject.util.HttpUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class MobileImitationController {
     @Autowired
     TbPersonnelService tbPersonnelService;
 
+    @Autowired
+    WeixinCustomerService weixinCustomerService;
+
     private static final Logger logger = Logger.getLogger(MobileImitationController.class);
 
     @RequestMapping(value="/imitationLogin/{openId}",method = RequestMethod.POST)
@@ -45,6 +49,12 @@ public class MobileImitationController {
         TbUser user=new TbUser();
         if(Optional.ofNullable(openId).isPresent()){
             TbUser tbUser=tbPersonnelService.selectTbuserByOpenId(openId);
+            result.setStatusCode(1);
+            //查询客户数据
+            if(tbUser==null){
+                result.setStatusCode(0);
+                tbUser=weixinCustomerService.selectWxCusByOpenId(openId);
+            }
             user=tbPersonnelService.ctreateXToken(tbUser);
         }
         if(user==null){

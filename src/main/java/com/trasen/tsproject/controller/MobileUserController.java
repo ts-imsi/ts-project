@@ -2,7 +2,9 @@ package com.trasen.tsproject.controller;
 
 import cn.trasen.core.entity.Result;
 import com.trasen.tsproject.model.TbPersonnel;
+import com.trasen.tsproject.model.TbWeixinCustomer;
 import com.trasen.tsproject.service.TbPersonnelService;
+import com.trasen.tsproject.service.WeixinCustomerService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +26,9 @@ public class MobileUserController {
 
     @Autowired
     TbPersonnelService tbPersonnelService;
+
+    @Autowired
+    WeixinCustomerService weixinCustomerService;
 
     @RequestMapping(value="/selectTbPersonnel",method = RequestMethod.POST)
     public Result selectTbPersonnel(){
@@ -47,6 +52,21 @@ public class MobileUserController {
             TbPersonnel tbPersonnel=tbPersonnelService.weixinToPersonnel(openId);
             result.setSuccess(true);
             result.setObject(tbPersonnel);
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("数据查询失败");
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/weixinCusToPersonnel/{openId}",method = RequestMethod.POST)
+    public Result weixinCusToPersonnel(@PathVariable String openId){
+        Result result=new Result();
+        try{
+            TbWeixinCustomer weixinCustomer=weixinCustomerService.selectWxCus(openId);
+            result.setSuccess(true);
+            result.setObject(weixinCustomer);
         }catch (Exception e){
             logger.error("数据查询失败"+e.getMessage(),e);
             result.setSuccess(false);
