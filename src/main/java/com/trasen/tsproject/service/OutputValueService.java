@@ -126,7 +126,12 @@ public class OutputValueService {
     }
 
     public List<TbOutputValue> queryProLine(){
-        return tbOutputValueMapper.queryProLine();
+        List<TbOutputValue> list = tbOutputValueMapper.queryProLine();
+        for(TbOutputValue outputValue : list){
+            List<TbOutputValue> productList = tbOutputValueMapper.queryProLineToProduct(outputValue.getProLine());
+            outputValue.setProductList(productList);
+        }
+        return list;
     }
 
     public List<TbOutputValue> queryHtProduct(String htNo){

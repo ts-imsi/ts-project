@@ -96,6 +96,10 @@
     select pro_line,dep_id,dep_name from tb_product where pro_line is not null GROUP BY pro_line
   </select>
 
+  <select id="queryProLineToProduct" resultType="com.trasen.tsproject.model.TbOutputValue">
+    select pro_line,dep_id,dep_name,pro_code,pro_name from tb_product where pro_line =#{proLine} and is_vaild=1
+  </select>
+
   <select id="queryHtPro" parameterType="String" resultType="com.trasen.tsproject.model.TbOutputValue">
     select r.pro_code,p.pro_name,p.pro_line,p.dep_id,p.dep_name,r.total from tb_ht_resolve r
     left join tb_product p on p.pro_code = r.pro_code where r.ht_no=#{htNo}

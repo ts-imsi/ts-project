@@ -143,6 +143,30 @@ public class OutputValueController {
         return result;
     }
 
+    @RequestMapping(value="/saveProductOutput",method = RequestMethod.POST)
+    public Result saveProductOutput(@RequestBody TbOutputValue outputValue){
+        Result result=new Result();
+        result.setSuccess(false);
+        result.setMessage("产值添加失败!");
+        try{
+            if(outputValue!=null&&outputValue.getProLine()!=null&&outputValue.getTotal()!=null){
+                outputValue.setStatus(1);
+                outputValue.setOperator(VisitInfoHolder.getShowName());
+                List<TbOutputValue> list = new ArrayList<>();
+                list.add(outputValue);
+                outputValueService.insertOutputValue(list);
+                result.setSuccess(true);
+                result.setMessage("产值添加成功!");
+
+            }
+        }catch (Exception e){
+            logger.error("保存无合同产值失败"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("保存无合同产值失败!");
+        }
+        return result;
+    }
+
 
     @RequestMapping(value="/queryHtProduct",method = RequestMethod.POST)
     public Result queryHtProduct(@RequestBody Map<String,String> map){
