@@ -45,6 +45,10 @@ public class CountReportController {
                 return paramMap;
             }
             TbOutputValueCount tbOutputValueCount=new TbOutputValueCount();
+            if(Optional.ofNullable(param.get("year")).isPresent()&&!Optional.ofNullable(param.get("year")).get().equals("")){
+                tbOutputValueCount.setYear(param.get("year"));
+            }
+
             PageInfo<TbOutputValueCount> valueCountPageInfo=countReportService.getcountReportList(Integer.valueOf(param.get("page")),Integer.valueOf(param.get("rows")),tbOutputValueCount);
             logger.info("数据查询条数"+valueCountPageInfo.getList().size());
             paramMap.put("totalPages",valueCountPageInfo.getPages());
