@@ -58,7 +58,7 @@ public class TbMsgService {
         TbMsg tbMsg  = tbMsgMapper.getTbMsgById(pkid);
         if(tbMsg!=null&&tbMsg.getType().equals("read")&&tbMsg.getStatus()==0){
             if(tbMsg.getTitle().indexOf("合同生产确认")>0){
-                pdConfirm(tbMsg);
+                newPdConfirm(tbMsg);
             }else{
                 updateTbMsgStatus(pkid);
             }
@@ -240,6 +240,29 @@ public class TbMsgService {
                     para.put("processId",tbMsg.getProcessId());
                     tbMsgMapper.updateConfirm(para);
                 }
+            }
+            boo = true;
+            tbMsg.setStatus(1);
+            updateTbMsgStatusAndRemark(tbMsg);
+        }
+        return boo;
+    }
+
+    public boolean newPdConfirm(TbMsg tbMsg){
+        boolean boo = false;
+        if(tbMsg!=null&&tbMsg.getProcessId()!=null){
+            Map<String,Object> param = new HashMap();
+            param.put("operator",tbMsg.getWorkNum());
+            param.put("processId",tbMsg.getProcessId());
+            //生产部门确认
+            tbMsgMapper.confirmAnalyze(param);
+            //生产部门负责人全部确认完之后提交流程节点到下一步
+            Integer count = tbMsgMapper.queryNoConfirm(tbMsg.getProcessId());
+            if(count==0){
+                Map<String,Object> para = new HashMap<>();
+                para.put("operator", VisitInfoHolder.getShowName());
+                para.put("processId",tbMsg.getProcessId());
+                tbMsgMapper.updateConfirm(para);
             }
             boo = true;
             tbMsg.setStatus(1);
