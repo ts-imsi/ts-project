@@ -4,11 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.dao.TbHtAnalyzeMapper;
 import com.trasen.tsproject.dao.TbHtResolveMapper;
+import com.trasen.tsproject.dao.TbMsgMapper;
 import com.trasen.tsproject.dao.TbPersonnelMapper;
-import com.trasen.tsproject.model.Select;
-import com.trasen.tsproject.model.TbHtAnalyze;
-import com.trasen.tsproject.model.TbHtResolve;
-import com.trasen.tsproject.model.TbPersonnel;
+import com.trasen.tsproject.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +33,9 @@ public class TbHtAnalyzeService {
     @Autowired
     private TbHtResolveMapper tbHtResolveMapper;
 
+    @Autowired
+    private TbMsgMapper tbMsgMapper;
+
 
     public Map<String,Object> selectAnalyzeList(String htNo){
         Map<String,Object> resultMap = new HashMap<>();
@@ -49,7 +50,7 @@ public class TbHtAnalyzeService {
     }
 
     @Transactional(rollbackFor=Exception.class)
-    public boolean saveAnaly(List<TbHtAnalyze> tbHtAnalyzes){
+    public boolean saveAnaly(List<TbHtAnalyze> tbHtAnalyzes,List<TbMsg> tbMsgs){
         boolean boo=false;
         //删除数据
         tbHtAnalyzeMapper.deleteAnaly(tbHtAnalyzes.get(0).getHtNo());
@@ -57,6 +58,10 @@ public class TbHtAnalyzeService {
         for(TbHtAnalyze tbHtAnalyze:tbHtAnalyzes){
             tbHtAnalyze.setStatus(0);
             tbHtAnalyzeMapper.saveAnaly(tbHtAnalyze);
+        }
+        //发送待阅消息
+        for(TbMsg tbMsg : tbMsgs){
+            tbMsgMapper.insertMsg(tbMsg);
         }
         //更新分解表分解人数据
         TbHtResolve tbHtResolve=new TbHtResolve();

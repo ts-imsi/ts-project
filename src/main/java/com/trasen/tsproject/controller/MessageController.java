@@ -151,7 +151,7 @@ public class MessageController {
                         tbMsgService.updatehtChangeStatus(param);
                     }
 
-                    if(tbMsg.getTaskKey()!=null&&"gm_check".equals(tbMsg.getTaskKey())){
+                    if(tbMsg.getTaskKey()!=null&&"pm_check".equals(tbMsg.getTaskKey())){
                         Map<String,Object> para = new HashMap<>();
                         para.put("operator", VisitInfoHolder.getShowName());
                         para.put("processId",tbMsg.getProcessId());
@@ -290,6 +290,21 @@ public class MessageController {
             result.setObject(map);
         }catch (Exception e){
             logger.error("getMsgCount查询失败=="+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("查询数据失败");
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/getAllMsgCount",method = RequestMethod.GET)
+    public Result getAllMsgCount(){
+        Result result=new Result();
+        try{
+            List<Map<String,Object>> list = tbMsgService.getAllMsgCount();
+            result.setSuccess(true);
+            result.setObject(list);
+        }catch (Exception e){
+            logger.error("getAllMsgCount查询失败=="+e.getMessage(),e);
             result.setSuccess(false);
             result.setMessage("查询数据失败");
         }

@@ -106,4 +106,8 @@
         update  tb_ht_handover set file_url = #{fileUrl} ,updated = now(),operator=#{operator} where pkid=#{pkid}
     </update>
 
+    <select id="getPDConfirm" resultType="Map" parameterType="Integer">
+        select p.name,p.dep_name as depName,a.`status` from tb_ht_analyze a join tb_personnel p on a.operator = p.work_num where a.handover_id = #{handId}
+    </select>
+
 </mapper>

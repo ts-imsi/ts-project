@@ -47,14 +47,6 @@ public class TbMsgService {
 
 
     public PageInfo<TbMsg> selectTbMsg(int page,int rows,Map<String,String> param){
-        //待办消息同步由websocket统一处理
-        /*if(param!=null&&param.get("type")!=null&&param.get("status")!=null){
-            if("todo".equals(param.get("type"))&&"0".equals(param.get("status"))){
-                //待办
-                synTodoHandOver(VisitInfoHolder.getUserId(),VisitInfoHolder.getShowName());
-            }
-        }*/
-
         param.put("userId", VisitInfoHolder.getUserId());
         PageHelper.startPage(page,rows);
         List<TbMsg> tbHtChangeList=tbMsgMapper.selectTbMsg(param);
@@ -65,7 +57,11 @@ public class TbMsgService {
     public TbMsg getTbMsgById(Integer pkid){
         TbMsg tbMsg  = tbMsgMapper.getTbMsgById(pkid);
         if(tbMsg!=null&&tbMsg.getType().equals("read")&&tbMsg.getStatus()==0){
-            updateTbMsgStatus(pkid);
+            if(tbMsg.getTitle().indexOf("合同生产确认")>0){
+                pdConfirm(tbMsg);
+            }else{
+                updateTbMsgStatus(pkid);
+            }
         }
         if(tbMsg!=null&&tbMsg.getType().equals("todo")) {
             TbHtHandover handover = tbMsgMapper.getHandOverToProcessId(tbMsg.getProcessId());
@@ -439,6 +435,52 @@ public class TbMsgService {
         map.put("userId",VisitInfoHolder.getUserId());
         map.put("showName",VisitInfoHolder.getShowName());
         return map;
+    }
+
+    public List<Map<String,Object>> getAllMsgCount(){
+        List<Map<String,Object>> list = new ArrayList<>();
+        Integer todoCount = tbMsgMapper.countTodoMsg(VisitInfoHolder.getUserId());
+        Integer readCount = tbMsgMapper.countReadMsg(VisitInfoHolder.getUserId());
+        Integer allCount = todoCount + readCount;
+
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("name","全部");
+        map1.put("type","all");
+        map1.put("status","all");
+        map1.put("num",allCount);
+
+        Map<String,Object> map2 = new HashMap<>();
+        map2.put("name","待办");
+        map2.put("type","todo");
+        map2.put("status","0");
+        map2.put("num",todoCount);
+
+        Map<String,Object> map3 = new HashMap<>();
+        map3.put("name","待阅");
+        map3.put("type","read");
+        map3.put("status","0");
+        map3.put("num",readCount);
+
+        Map<String,Object> map4 = new HashMap<>();
+        map4.put("name","已办");
+        map4.put("type","todo");
+        map4.put("status","1");
+        map4.put("num",0);
+
+        Map<String,Object> map5 = new HashMap<>();
+        map5.put("name","已阅");
+        map5.put("type","read");
+        map5.put("status","1");
+        map5.put("num",0);
+
+        list.add(map1);
+        list.add(map2);
+        list.add(map3);
+        list.add(map4);
+        list.add(map5);
+
+        return list;
+
     }
     public Map<String,Object> indexMsgCount(String userId){
         synTodoHandOver(userId);

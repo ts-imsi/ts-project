@@ -220,6 +220,27 @@ public class HandoverController {
         return result;
     }
 
+    @RequestMapping(value="/getPDConfirm/{handId}",method = RequestMethod.GET)
+    public Result getPDConfirm(@PathVariable Integer handId){
+        //结果集
+        Result result = new Result();
+        result.setStatusCode(0);
+        result.setSuccess(false);
+        try {
+            List<Map<String,Object>> pdList = handoverService.getPDConfirm(handId);
+            result.setObject(pdList);
+            result.setSuccess(true);
+            result.setStatusCode(1);
+        } catch (IllegalArgumentException e) {
+            logger.error("获取生产确认待阅情况数据异常" + e.getMessage(), e);
+            result.setMessage(e.getMessage());
+        } catch (Exception e) {
+            logger.error("获取生产确认待阅情况数据异常" + e.getMessage(), e);
+            result.setMessage(e.getMessage());
+        }
+        return result;
+    }
+
 
 
 }

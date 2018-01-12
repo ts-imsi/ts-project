@@ -468,4 +468,8 @@ public class HandoverService {
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
         return b1.add(b2).doubleValue();
     }
+
+    public List<Map<String,Object>> getPDConfirm(Integer handId){
+        return htHandoverMapper.getPDConfirm(handId);
+    }
 }

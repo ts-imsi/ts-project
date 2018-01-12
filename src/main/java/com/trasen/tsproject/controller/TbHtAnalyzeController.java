@@ -2,8 +2,10 @@ package com.trasen.tsproject.controller;
 
 import cn.trasen.core.entity.Result;
 import com.alibaba.fastjson.JSON;
+import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.Select;
 import com.trasen.tsproject.model.TbHtAnalyze;
+import com.trasen.tsproject.model.TbMsg;
 import com.trasen.tsproject.model.TbPersonnel;
 import com.trasen.tsproject.service.TbHtAnalyzeService;
 import com.trasen.tsproject.service.TbPersonnelService;
@@ -12,10 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author luoyun
@@ -64,24 +63,43 @@ public class TbHtAnalyzeController {
                 result.setMessage("参数错误");
             }else{
                 List<TbHtAnalyze> htAnalyzes = new ArrayList<>();
+                List<TbMsg> tbMsgs = new ArrayList<>();
                 for(Map<String,Object> map : selectJson){
                     TbHtAnalyze analyze = new TbHtAnalyze();
+                    TbMsg tbMsg=new TbMsg();
+
+
+                    tbMsg.setSendName(VisitInfoHolder.getShowName());
+                    tbMsg.setType("read");
+                    tbMsg.setStatus(0);
+                    tbMsg.setSendTime(new Date());
+
+
                     if(map.get("handoverId")!=null){
                         analyze.setHandoverId(map.get("handoverId").toString());
                     }
                     if(map.get("processId")!=null){
                         analyze.setProcessId(map.get("processId").toString());
+                        tbMsg.setProcessId(map.get("processId").toString());
                     }
                     if(map.get("htNo")!=null){
                         analyze.setHtNo(map.get("htNo").toString());
+                        tbMsg.setHtNo(map.get("htNo").toString());
+                        tbMsg.setTitle(map.get("htNo").toString()+"合同生产确认");
+                        tbMsg.setMsgContent("请确认合同["+map.get("htNo").toString()+"],如有出入请联系内控。");
                     }
                     if(map.get("id")!=null){
                         analyze.setOperator(map.get("id").toString());
+                        tbMsg.setWorkNum(map.get("id").toString());
+                    }
+                    if(map.get("text")!=null){
+                        tbMsg.setName(map.get("text").toString());
                     }
                     htAnalyzes.add(analyze);
+                    tbMsgs.add(tbMsg);
 
                 }
-                tbHtAnalyzeService.saveAnaly(htAnalyzes);
+                tbHtAnalyzeService.saveAnaly(htAnalyzes,tbMsgs);
                 result.setSuccess(true);
                 result.setMessage("数据保存成功");
             }
