@@ -19,4 +19,14 @@ public interface TbOutputValueCountMapper extends MyMapper<TbOutputValueCount> {
     CountReportVo getUnfinishdByPro(String year);
     CountReportVo getUnfinishdByProline(String year);
 
+    List<TbOutputValueCount> countOutputValue(String year);
+
+    void insertOutputValue(TbOutputValueCount count);
+
+    void updateOutputValue(TbOutputValueCount count);
+
+    TbOutputValueCount getOutputValue(TbOutputValueCount count);
+
+
+
 }

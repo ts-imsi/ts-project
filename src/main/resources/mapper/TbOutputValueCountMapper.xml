@@ -46,7 +46,7 @@
 			`year` = #{year} GROUP BY pro_name order by pro_line
 
     </select>
-    
+
     <select id="getCountRByProline" parameterType="Map" resultType="com.trasen.tsproject.model.TbOutputValueCount">
         SELECT
 	pro_line AS NAME,
@@ -83,5 +83,30 @@
     </select>
 
 
-    
+
+
+    <select id="countOutputValue" parameterType="String" resultType="com.trasen.tsproject.model.TbOutputValueCount">
+        select ht_no,ht_name,customer_name,pro_code,pro_name,pro_line,dep_id,dep_name,total,sum(subtotal) as finished,total-sum(subtotal) as unfinished from tb_output_value
+        where status=1 and created > #{year} and ht_no is not null and pro_code is not null
+        GROUP BY ht_no,pro_code
+    </select>
+
+    <insert id="insertOutputValue" parameterType="com.trasen.tsproject.model.TbOutputValueCount">
+        insert into tb_output_value_count (ht_no,ht_name,customer_name,sign_date,pro_code,pro_name,pro_line,
+        dep_name,dep_id,total,finished,unfinished,`year`)
+        values
+        (#{htNo},#{htName},#{customerName},#{signDate},#{proCode},#{proName},#{proLine},
+        #{depName},#{depId},#{total},#{finished},#{unfinished},#{year})
+    </insert>
+
+    <update id="updateOutputValue" parameterType="com.trasen.tsproject.model.TbOutputValueCount">
+        update tb_output_value_count set finished=#{finished},unfinished=#{unfinished},updated=now()
+        where ht_no=#{htNo} and pro_code=#{proCode} and `year` = #{year}
+    </update>
+
+    <select id="getOutputValue" parameterType="com.trasen.tsproject.model.TbOutputValueCount" resultType="com.trasen.tsproject.model.TbOutputValueCount">
+        select * from tb_output_value_count where ht_no=#{htNo} and pro_code=#{proCode} and `year` = #{year}
+    </select>
+
+
 </mapper>

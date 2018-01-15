@@ -9,10 +9,7 @@ import com.trasen.tsproject.model.TbOutputValueCount;
 import com.trasen.tsproject.service.CountReportService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -99,6 +96,26 @@ public class CountReportController {
             logger.error("数据查询失败"+e.getMessage(),e);
             result.setMessage("数据查询失败");
             result.setSuccess(false);
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/countOutputValue",method = RequestMethod.GET)
+    public Result countOutputValue(){
+        //结果集
+        Result result = new Result();
+        result.setStatusCode(0);
+        result.setSuccess(false);
+        try {
+            countReportService.countOutputValue();
+            result.setSuccess(true);
+            result.setStatusCode(1);
+        } catch (IllegalArgumentException e) {
+            logger.error("产值统计异常" + e.getMessage(), e);
+            result.setMessage(e.getMessage());
+        } catch (Exception e) {
+            logger.error("产值统计异常" + e.getMessage(), e);
+            result.setMessage(e.getMessage());
         }
         return result;
     }

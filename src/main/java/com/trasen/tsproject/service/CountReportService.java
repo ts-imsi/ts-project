@@ -6,6 +6,8 @@ import com.trasen.tsproject.dao.TbOutputValueCountMapper;
 import com.trasen.tsproject.model.CountReportVo;
 import com.trasen.tsproject.model.ExceptionPlan;
 import com.trasen.tsproject.model.TbOutputValueCount;
+import com.trasen.tsproject.util.DateUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,8 @@ import java.util.Optional;
  */
 @Service
 public class CountReportService {
+
+    Logger logger = Logger.getLogger(CountReportService.class);
 
     @Autowired
     TbOutputValueCountMapper tbOutputValueCountMapper;
@@ -68,6 +72,42 @@ public class CountReportService {
             tbOutputValueCount.setTotal(tbOutputValueCount.getTotal()- Optional.ofNullable(tbOutputValueCount.getLastUnFinished()).orElse(0.0));
         });
         return tbOutputValueCounts;
+    }
+
+    public void countOutputValue(){
+        String thisYear = DateUtils.getDate("yyyy");
+        String lastYear = (Integer.parseInt(thisYear)-1)+"";
+        List<TbOutputValueCount> list = tbOutputValueCountMapper.countOutputValue(thisYear);
+        logger.info("======更新产值======开始");
+        for(TbOutputValueCount count : list){
+            count.setYear(thisYear);
+            TbOutputValueCount valueCount = tbOutputValueCountMapper.getOutputValue(count);
+            if(valueCount!=null){
+                if(valueCount.getFinished().doubleValue() == count.getFinished().doubleValue()){
+                    logger.info("更新产值[无更新]==合同["+count.getHtNo()+count.getHtName()+"]==产品["+count.getProName()+"]==["+count.getYear()+"]年==无更新===");
+                }else{
+                    tbOutputValueCountMapper.updateOutputValue(count);
+                    logger.info("更新产值[更新]==合同["+count.getHtNo()+"]==产值["+count.getFinished()+"]==");
+                }
+            }else{
+                count.setYear(lastYear);
+                TbOutputValueCount last = tbOutputValueCountMapper.getOutputValue(count);
+                if(last!=null){
+                    last.setTotal(last.getUnfinished());
+                    last.setFinished(count.getFinished());
+                    last.setUnfinished(last.getUnfinished()-count.getFinished());
+                    last.setYear(thisYear);
+                    tbOutputValueCountMapper.insertOutputValue(last);
+                    logger.info("更新产值[上年结转]==合同["+last.getHtNo()+"]==结转额["+last.getTotal()+"]==产值["+last.getFinished()+"]==");
+                }else{
+                    count.setYear(thisYear);
+                    tbOutputValueCountMapper.insertOutputValue(count);
+                    logger.info("更新产值[新合同]==合同["+count.getHtNo()+"]==分配额["+count.getTotal()+"]==产值["+count.getFinished()+"]==");
+                }
+            }
+        }
+        logger.info("======更新产值======结束");
+
     }
 
 }
