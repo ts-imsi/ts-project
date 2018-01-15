@@ -113,6 +113,28 @@ public class CountReportService {
         return tbOutputValueCountMapper.getcountReportList(tbOutputValueCount);
     }
 
+    public  List<TbOutputValue> excelOutPutByDept(String year,String depName){
+        Map<String,String> param=new HashMap<>();
+        param.put("year",year);
+        param.put("depName",depName);
+        List<TbOutputValue> tbOutputValues=tbOutputValueCountMapper.getOutPutByDept(param);
+        return tbOutputValues;
+    }
+    public  List<TbOutputValue> excelOutPutByPro(String year,String proName){
+        Map<String,String> param=new HashMap<>();
+        param.put("year",year);
+        param.put("proName",proName);
+        List<TbOutputValue> tbOutputValues=tbOutputValueCountMapper.getOutPutByPro(param);
+        return tbOutputValues;
+    }
+    public  List<TbOutputValue> excelOutPutByProLine(String year,String proLine){
+        Map<String,String> param=new HashMap<>();
+        param.put("year",year);
+        param.put("proLine",proLine);
+        List<TbOutputValue> tbOutputValues=tbOutputValueCountMapper.getOutPutByProLine(param);
+        return tbOutputValues;
+    }
+
     public void countOutputValue(){
         String thisYear = DateUtils.getDate("yyyy");
         String lastYear = (Integer.parseInt(thisYear)-1)+"";
