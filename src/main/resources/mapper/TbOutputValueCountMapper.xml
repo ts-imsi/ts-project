@@ -67,6 +67,17 @@
     </select>
 
 
+	<select id="getOutPutByDept" parameterType="Map" resultType="com.trasen.tsproject.model.TbOutputValue">
+		select * from tb_output_value where updated like CONCAT(#{year},'%') and dep_name=#{depName}
+	</select>
+
+	<select id="getOutPutByPro" parameterType="Map" resultType="com.trasen.tsproject.model.TbOutputValue">
+		select * from tb_output_value where updated like CONCAT(#{year},'%') and pro_name=#{proName}
+	</select>
+
+	<select id="getOutPutByProLine" parameterType="Map" resultType="com.trasen.tsproject.model.TbOutputValue">
+		select * from tb_output_value where updated like CONCAT(#{year},'%') and pro_line=#{proLine}
+	</select>
 
 
 

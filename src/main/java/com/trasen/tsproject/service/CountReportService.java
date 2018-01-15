@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.dao.TbOutputValueCountMapper;
 import com.trasen.tsproject.model.CountReportVo;
 import com.trasen.tsproject.model.ExceptionPlan;
+import com.trasen.tsproject.model.TbOutputValue;
 import com.trasen.tsproject.model.TbOutputValueCount;
 import com.trasen.tsproject.util.DateUtils;
 import org.apache.log4j.Logger;
@@ -72,6 +73,44 @@ public class CountReportService {
             tbOutputValueCount.setTotal(tbOutputValueCount.getTotal()- Optional.ofNullable(tbOutputValueCount.getLastUnFinished()).orElse(0.0));
         });
         return tbOutputValueCounts;
+    }
+
+
+
+
+
+    public  PageInfo<TbOutputValue> getOutPutByDept(Integer page,Integer rows,String year,String depName){
+        Map<String,String> param=new HashMap<>();
+        param.put("year",year);
+        param.put("depName",depName);
+        PageHelper.startPage(page,rows);
+        List<TbOutputValue> tbOutputValues=tbOutputValueCountMapper.getOutPutByDept(param);
+        PageInfo<TbOutputValue> pagehelper = new PageInfo<TbOutputValue>(tbOutputValues);
+        return pagehelper;
+    }
+    public  PageInfo<TbOutputValue> getOutPutByPro(Integer page,Integer rows,String year,String proName){
+        Map<String,String> param=new HashMap<>();
+        param.put("year",year);
+        param.put("proName",proName);
+        PageHelper.startPage(page,rows);
+        List<TbOutputValue> tbOutputValues=tbOutputValueCountMapper.getOutPutByPro(param);
+        PageInfo<TbOutputValue> pagehelper = new PageInfo<TbOutputValue>(tbOutputValues);
+        return pagehelper;
+    }
+    public  PageInfo<TbOutputValue> getOutPutByProLine(Integer page,Integer rows,String year,String proLine){
+        Map<String,String> param=new HashMap<>();
+        param.put("year",year);
+        param.put("proLine",proLine);
+        PageHelper.startPage(page,rows);
+        List<TbOutputValue> tbOutputValues=tbOutputValueCountMapper.getOutPutByProLine(param);
+        PageInfo<TbOutputValue> pagehelper = new PageInfo<TbOutputValue>(tbOutputValues);
+        return pagehelper;
+    }
+
+    public List<TbOutputValueCount> excelCountReportExport(String year){
+        TbOutputValueCount tbOutputValueCount=new TbOutputValueCount();
+        tbOutputValueCount.setYear(year);
+        return tbOutputValueCountMapper.getcountReportList(tbOutputValueCount);
     }
 
     public void countOutputValue(){

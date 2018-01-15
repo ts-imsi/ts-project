@@ -1,6 +1,7 @@
 package com.trasen.tsproject.dao;
 
 import com.trasen.tsproject.model.CountReportVo;
+import com.trasen.tsproject.model.TbOutputValue;
 import com.trasen.tsproject.model.TbOutputValueCount;
 import com.trasen.tsproject.util.MyMapper;
 
@@ -14,6 +15,10 @@ public interface TbOutputValueCountMapper extends MyMapper<TbOutputValueCount> {
     List<TbOutputValueCount> getCountRByDept(Map<String,String> param);
     List<TbOutputValueCount> getCountRByPro(Map<String,String> param);
     List<TbOutputValueCount> getCountRByProline(Map<String,String> param);
+
+    List<TbOutputValue> getOutPutByDept(Map<String,String> param);
+    List<TbOutputValue> getOutPutByPro(Map<String,String> param);
+    List<TbOutputValue> getOutPutByProLine(Map<String,String> param);
 
     CountReportVo getUnfinishdByDept(String year);
     CountReportVo getUnfinishdByPro(String year);
