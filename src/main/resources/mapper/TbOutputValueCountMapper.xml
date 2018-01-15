@@ -5,4 +5,83 @@
         select * from tb_output_value_count where 1=1
         <if test="year!=null"> and `year`=#{year}</if>
     </select>
+
+    <select id="getCountRByDept" parameterType="Map" resultType="com.trasen.tsproject.model.TbOutputValueCount">
+
+    SELECT
+	  dep_name AS NAME,
+	  sum(total) AS total,
+      (SELECT
+	    sum(unfinished)
+        FROM
+	      tb_output_value_count
+          WHERE
+	        `year`=#{lastYear} and dep_name=t.dep_name) as lastUnFinished,
+	  sum(finished) AS finished,
+	  sum(unfinished) AS unfinished
+      FROM
+	    tb_output_value_count t
+      WHERE
+	    `year` = #{year} GROUP BY dep_name
+
+    </select>
+
+    <select id="getCountRByPro" parameterType="Map" resultType="com.trasen.tsproject.model.TbOutputValueCount">
+        SELECT
+	pro_name AS NAME,
+	(
+		SELECT
+			sum(unfinished)
+		FROM
+			tb_output_value_count
+		WHERE
+			`year` = #{lastYear} and pro_name=t.pro_name) as lastUnFinished,
+			pro_line AS proLine,
+			sum(total) AS total,
+			sum(finished) AS finished,
+			sum(unfinished) AS unfinished
+		FROM
+			tb_output_value_count t
+		WHERE
+			`year` = #{year} GROUP BY pro_name order by pro_line
+
+    </select>
+    
+    <select id="getCountRByProline" parameterType="Map" resultType="com.trasen.tsproject.model.TbOutputValueCount">
+        SELECT
+	pro_line AS NAME,
+	(
+		SELECT
+			sum(unfinished)
+		FROM
+			tb_output_value_count
+		WHERE
+			`year` = #{lastYear} and pro_line=t.pro_line) as lastUnFinished,
+			sum(total) AS total,
+			sum(finished) AS finished,
+			sum(unfinished) AS unfinished
+		FROM
+			tb_output_value_count t
+		WHERE
+			`year` = #{year} GROUP BY pro_line
+    </select>
+
+
+
+
+
+    <select id="getUnfinishdByDept" resultType="String" parameterType="com.trasen.tsproject.model.CountReportVo">
+        select dep_name as name,sum(unfinished) as unfinished from tb_output_value_count where `year`=#{year} group by dep_name
+    </select>
+
+    <select id="getUnfinishdByPro" resultType="String" parameterType="com.trasen.tsproject.model.CountReportVo">
+        select pro_name as name,sum(unfinished) as unfinished from tb_output_value_count where `year`=#{year} GROUP BY pro_name order by pro_line
+    </select>
+
+    <select id="getUnfinishdByProline" resultType="String" parameterType="com.trasen.tsproject.model.CountReportVo">
+        select pro_line as name,sum(unfinished) as unfinished from tb_output_value_count where `year`=#{year} GROUP BY pro_line
+    </select>
+
+
+    
 </mapper>

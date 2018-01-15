@@ -1,5 +1,6 @@
 package com.trasen.tsproject.controller;
 
+import cn.trasen.core.entity.Result;
 import com.github.pagehelper.PageInfo;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.model.ContractInfo;
@@ -13,10 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by zhangxiahui on 18/1/9.
@@ -64,6 +62,45 @@ public class CountReportController {
             paramMap.put("message","数据查询失败");
         }
         return paramMap;
+    }
+
+    @RequestMapping(value="/getCountReport",method = RequestMethod.POST)
+    public Result getCountReport(@RequestBody  Map<String,String> param){
+        Result result=new Result();
+        try{
+            if(param.isEmpty()){
+                result.setMessage("数据参数失败");
+                result.setSuccess(false);
+            }else{
+                if(!param.get("selectType").equals("")&&param.get("selectType")!=null){
+                    List<TbOutputValueCount> tbOutputValueCounts=new ArrayList<>();
+                    if(param.get("selectType").equals("dept")){
+                        tbOutputValueCounts=countReportService.getCountRByDept(param.get("year"));
+                        result.setObject(tbOutputValueCounts);
+                        result.setSuccess(true);
+                    }else if(param.get("selectType").equals("pro")){
+                        tbOutputValueCounts=countReportService.getCountRByPro(param.get("year"));
+                        result.setObject(tbOutputValueCounts);
+                        result.setSuccess(true);
+                    }else if(param.get("selectType").equals("proLine")){
+                        tbOutputValueCounts=countReportService.getCountRByProline(param.get("year"));
+                        result.setObject(tbOutputValueCounts);
+                        result.setSuccess(true);
+                    }else{
+                        result.setMessage("数据参数错误");
+                        result.setSuccess(false);
+                    }
+                }else{
+                    result.setSuccess(false);
+                    result.setMessage("数据参数失败");
+                }
+            }
+        }catch (Exception e){
+            logger.error("数据查询失败"+e.getMessage(),e);
+            result.setMessage("数据查询失败");
+            result.setSuccess(false);
+        }
+        return result;
     }
 
 }

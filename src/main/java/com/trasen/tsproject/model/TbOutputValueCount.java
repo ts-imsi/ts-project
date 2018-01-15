@@ -82,4 +82,9 @@ public class TbOutputValueCount {
     private Date updated;
 
 
+    private String name;
+
+    private Double lastUnFinished;
+
+
 }
