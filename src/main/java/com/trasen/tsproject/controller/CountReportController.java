@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -295,21 +296,21 @@ public class CountReportController {
                         downloadExcelUtil.addCell(2,i+1,"",CellType.LABEL,dateFormat,false,false);
                     }else{
                         //上年未结转合同额
-                        nextUnCount=nextUnCount+tbOutputValueCounts.get(i).getLastUnFinished();
+                        nextUnCount=add(nextUnCount,tbOutputValueCounts.get(i).getLastUnFinished());
                         downloadExcelUtil.addCell(2,i+1,tbOutputValueCounts.get(i).getLastUnFinished(),CellType.LABEL,dateFormat,false,false);
                     }
                     if(tbOutputValueCounts.get(i).getTotal()==null){
                         downloadExcelUtil.addCell(3,i+1,"",CellType.LABEL,dateFormat,false,false);
                     }else{
                         //今年新增合同额
-                        totalCount=totalCount+tbOutputValueCounts.get(i).getTotal();
+                        totalCount=add(totalCount,tbOutputValueCounts.get(i).getTotal());
                         downloadExcelUtil.addCell(3,i+1,tbOutputValueCounts.get(i).getTotal(),CellType.LABEL,dateFormat,false,false);
                     }
                     if(tbOutputValueCounts.get(i).getFinished()==null){
                         downloadExcelUtil.addCell(4,i+1,"",CellType.LABEL,dateFormat,false,false);
                     }else{
                         //已完成合同额
-                        finishedCount=finishedCount+tbOutputValueCounts.get(i).getFinished();
+                        finishedCount=add(finishedCount,tbOutputValueCounts.get(i).getFinished());
 
                         downloadExcelUtil.addCell(4,i+1,tbOutputValueCounts.get(i).getFinished(),CellType.LABEL,dateFormat,false,false);
                     }
@@ -317,7 +318,7 @@ public class CountReportController {
                         downloadExcelUtil.addCell(5,i+1,"",CellType.LABEL,dateFormat,false,false);
                     }else{
                         //今年未完成
-                        unfinishedCount=unfinishedCount+tbOutputValueCounts.get(i).getUnfinished();
+                        unfinishedCount=add(unfinishedCount,tbOutputValueCounts.get(i).getUnfinished());
 
                         downloadExcelUtil.addCell(5,i+1,tbOutputValueCounts.get(i).getUnfinished(),CellType.LABEL,dateFormat,false,false);
                     }
@@ -326,7 +327,7 @@ public class CountReportController {
                         downloadExcelUtil.addCell(1,i+1,"",CellType.LABEL,dateFormat,false,false);
                     }else{
                         //上年未结转合同额
-                        nextUnCount=nextUnCount+tbOutputValueCounts.get(i).getLastUnFinished();
+                        nextUnCount=add(nextUnCount,tbOutputValueCounts.get(i).getLastUnFinished());
                         downloadExcelUtil.addCell(1,i+1,tbOutputValueCounts.get(i).getLastUnFinished(),CellType.LABEL,dateFormat,false,false);
                     }
                     if(tbOutputValueCounts.get(i).getTotal()==null){
@@ -334,7 +335,7 @@ public class CountReportController {
                     }else{
 
                         //今年新增合同额
-                        totalCount=totalCount+tbOutputValueCounts.get(i).getTotal();
+                        totalCount=add(totalCount,tbOutputValueCounts.get(i).getTotal());
                         downloadExcelUtil.addCell(2,i+1,tbOutputValueCounts.get(i).getTotal(),CellType.LABEL,dateFormat,false,false);
                     }
                     if(tbOutputValueCounts.get(i).getFinished()==null){
@@ -342,7 +343,7 @@ public class CountReportController {
                     }else{
 
                         //已完成合同额
-                        finishedCount=finishedCount+tbOutputValueCounts.get(i).getFinished();
+                        finishedCount=add(finishedCount,tbOutputValueCounts.get(i).getFinished());
 
                         downloadExcelUtil.addCell(3,i+1,tbOutputValueCounts.get(i).getFinished(),CellType.LABEL,dateFormat,false,false);
                     }
@@ -351,7 +352,7 @@ public class CountReportController {
                     }else{
 
                         //今年未完成
-                        unfinishedCount=unfinishedCount+tbOutputValueCounts.get(i).getUnfinished();
+                        unfinishedCount=add(unfinishedCount,tbOutputValueCounts.get(i).getUnfinished());
 
                         downloadExcelUtil.addCell(4,i+1,tbOutputValueCounts.get(i).getUnfinished(),CellType.LABEL,dateFormat,false,false);
                     }
@@ -485,5 +486,9 @@ public class CountReportController {
             }
         }
 
-
+    public double add(double v1,double v2){
+        BigDecimal b1 = new BigDecimal(Double.toString(v1));
+        BigDecimal b2 = new BigDecimal(Double.toString(v2));
+        return b1.add(b2).doubleValue();
+    }
 }

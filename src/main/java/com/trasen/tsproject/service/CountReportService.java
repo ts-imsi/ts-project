@@ -45,7 +45,7 @@ public class CountReportService {
         param.put("lastYear",lastYear.toString());
         List<TbOutputValueCount> tbOutputValueCounts= tbOutputValueCountMapper.getCountRByDept(param);
         tbOutputValueCounts.stream().forEach(tbOutputValueCount->{
-
+            if(!Optional.ofNullable(tbOutputValueCount.getLastUnFinished()).isPresent()) tbOutputValueCount.setLastUnFinished(0.0);
             tbOutputValueCount.setTotal(tbOutputValueCount.getTotal()- Optional.ofNullable(tbOutputValueCount.getLastUnFinished()).orElse(0.0));
 
         });
@@ -59,6 +59,7 @@ public class CountReportService {
         param.put("lastYear",lastYear.toString());
         List<TbOutputValueCount> tbOutputValueCounts= tbOutputValueCountMapper.getCountRByPro(param);
         tbOutputValueCounts.stream().forEach(tbOutputValueCount->{
+            if(!Optional.ofNullable(tbOutputValueCount.getLastUnFinished()).isPresent()) tbOutputValueCount.setLastUnFinished(0.0);
             tbOutputValueCount.setTotal(tbOutputValueCount.getTotal()- Optional.ofNullable(tbOutputValueCount.getLastUnFinished()).orElse(0.0));
         });
         return tbOutputValueCounts;
@@ -70,6 +71,7 @@ public class CountReportService {
         param.put("lastYear",lastYear.toString());
         List<TbOutputValueCount> tbOutputValueCounts= tbOutputValueCountMapper.getCountRByProline(param);
         tbOutputValueCounts.stream().forEach(tbOutputValueCount->{
+            if(!Optional.ofNullable(tbOutputValueCount.getLastUnFinished()).isPresent()) tbOutputValueCount.setLastUnFinished(0.0);
             tbOutputValueCount.setTotal(tbOutputValueCount.getTotal()- Optional.ofNullable(tbOutputValueCount.getLastUnFinished()).orElse(0.0));
         });
         return tbOutputValueCounts;
