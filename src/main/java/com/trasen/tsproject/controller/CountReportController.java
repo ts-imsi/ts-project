@@ -98,10 +98,12 @@ public class CountReportController {
                     double finishedCount=0.0;
                     double totalCount=0.0;
                     double nextUnCount=0.0;
-                    unfinishedCount=tbOutputValueCounts.stream().mapToDouble(tb->tb.getUnfinished()).sum();
-                    finishedCount=tbOutputValueCounts.stream().mapToDouble(tb->tb.getFinished()).sum();
-                    totalCount=tbOutputValueCounts.stream().mapToDouble(tb->tb.getTotal()).sum();
-                    nextUnCount=tbOutputValueCounts.stream().mapToDouble(tb->tb.getLastUnFinished()).sum();
+                    for(TbOutputValueCount tbOutputValueCount:tbOutputValueCounts){
+                        unfinishedCount=add(tbOutputValueCount.getUnfinished(),unfinishedCount);
+                        finishedCount=add(tbOutputValueCount.getFinished(),finishedCount);
+                        totalCount=add(tbOutputValueCount.getTotal(),totalCount);
+                        nextUnCount=add(tbOutputValueCount.getLastUnFinished(),nextUnCount);
+                    }
                     pMap.put("unfinishedCount",unfinishedCount);
                     pMap.put("finishedCount",finishedCount);
                     pMap.put("totalCount",totalCount);
