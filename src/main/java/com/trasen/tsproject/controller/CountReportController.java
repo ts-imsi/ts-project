@@ -10,6 +10,7 @@ import com.trasen.tsproject.model.ExceptionPlan;
 import com.trasen.tsproject.model.TbOutputValue;
 import com.trasen.tsproject.model.TbOutputValueCount;
 import com.trasen.tsproject.service.CountReportService;
+import com.trasen.tsproject.util.DateUtils;
 import jxl.CellType;
 import jxl.write.DateFormat;
 import jxl.write.WriteException;
@@ -424,66 +425,69 @@ public class CountReportController {
                 String fileName = year + "产值统计明细" + ".xls";
                 downloadExcelUtil = new DownloadExcelUtil(response, fileName, "产值统计");
                 DateFormat dateFormat = new DateFormat("yyyy-mm-dd");
-                downloadExcelUtil.addCell(0, 0, "合同名", CellType.LABEL, dateFormat, false, false);
-                downloadExcelUtil.addCell(1, 0, "产品名称", CellType.LABEL, dateFormat, false, false);
-                downloadExcelUtil.addCell(2, 0, "产品线", CellType.LABEL, dateFormat, false, false);
-                downloadExcelUtil.addCell(3, 0, "部门名称", CellType.LABEL, dateFormat, false, false);
-                downloadExcelUtil.addCell(4, 0, "阶段报告", CellType.LABEL, dateFormat, false, false);
-                downloadExcelUtil.addCell(5, 0, "核算比例", CellType.LABEL, dateFormat, false, false);
-                downloadExcelUtil.addCell(6, 0, "本次产值", CellType.LABEL, dateFormat, false, false);
-                downloadExcelUtil.addCell(7, 0, "是否确认产值", CellType.LABEL, dateFormat, false, false);
+                downloadExcelUtil.addCell(0, 0, "时间", CellType.LABEL, dateFormat, false, false);
+                downloadExcelUtil.addCell(1, 0, "合同号", CellType.LABEL, dateFormat, false, false);
+                downloadExcelUtil.addCell(2, 0, "医院名称", CellType.LABEL, dateFormat, false, false);
+                downloadExcelUtil.addCell(3, 0, "合同名称", CellType.LABEL, dateFormat, false, false);
+                downloadExcelUtil.addCell(4, 0, "产品", CellType.LABEL, dateFormat, false, false);
+                downloadExcelUtil.addCell(5, 0, "阶段报告", CellType.LABEL, dateFormat, false, false);
+                downloadExcelUtil.addCell(6, 0, "核算比例", CellType.LABEL, dateFormat, false, false);
+                downloadExcelUtil.addCell(7, 0, "分配合同额", CellType.LABEL, dateFormat, false, false);
+                downloadExcelUtil.addCell(8, 0, "本次产值", CellType.LABEL, dateFormat, false, false);
                 for (int i = 0; i < tbOutputValues.size(); i++) {
-                    if(tbOutputValues.get(i).getHtName()==null){
-                        downloadExcelUtil.addCell(0,i+1,"",CellType.LABEL,dateFormat,false,false);
+                    if(tbOutputValues.get(i).getCreated()==null){
+                        downloadExcelUtil.addCell(0,i+1,"",CellType.DATE,dateFormat,false,false);
                     }else{
-                        downloadExcelUtil.addCell(0,i+1,tbOutputValues.get(i).getHtName(),CellType.LABEL,dateFormat,false,false);
+                        String date=DateUtils.getDate(tbOutputValues.get(i).getCreated(),"yyyy-MM-dd");
+                        downloadExcelUtil.addCell(0,i+1,date,CellType.LABEL,dateFormat,false,false);
+                    }
+
+                    if(tbOutputValues.get(i).getHtNo()==null){
+                        downloadExcelUtil.addCell(1,i+1,"",CellType.LABEL,dateFormat,false,false);
+                    }else{
+                        downloadExcelUtil.addCell(1,i+1,tbOutputValues.get(i).getHtNo(),CellType.LABEL,dateFormat,false,false);
+                    }
+
+                    if(tbOutputValues.get(i).getCustomerName()==null){
+                        downloadExcelUtil.addCell(2,i+1,"",CellType.LABEL,dateFormat,false,false);
+                    }else{
+                        downloadExcelUtil.addCell(2,i+1,tbOutputValues.get(i).getCustomerName(),CellType.LABEL,dateFormat,false,false);
+                    }
+
+                    if(tbOutputValues.get(i).getHtName()==null){
+                        downloadExcelUtil.addCell(3,i+1,"",CellType.LABEL,dateFormat,false,false);
+                    }else{
+                        downloadExcelUtil.addCell(3,i+1,tbOutputValues.get(i).getHtName(),CellType.LABEL,dateFormat,false,false);
                     }
 
                     if(tbOutputValues.get(i).getProName()==null){
-                        downloadExcelUtil.addCell(1,i+1,"",CellType.LABEL,dateFormat,false,false);
+                        downloadExcelUtil.addCell(4,i+1,"",CellType.LABEL,dateFormat,false,false);
                     }else{
-                        downloadExcelUtil.addCell(1,i+1,tbOutputValues.get(i).getProName(),CellType.LABEL,dateFormat,false,false);
-                    }
-
-                    if(tbOutputValues.get(i).getProLine()==null){
-                        downloadExcelUtil.addCell(2,i+1,"",CellType.LABEL,dateFormat,false,false);
-                    }else{
-                        downloadExcelUtil.addCell(2,i+1,tbOutputValues.get(i).getProLine(),CellType.LABEL,dateFormat,false,false);
-                    }
-
-                    if(tbOutputValues.get(i).getDepName()==null){
-                        downloadExcelUtil.addCell(3,i+1,"",CellType.LABEL,dateFormat,false,false);
-                    }else{
-                        downloadExcelUtil.addCell(3,i+1,tbOutputValues.get(i).getDepName(),CellType.LABEL,dateFormat,false,false);
+                        downloadExcelUtil.addCell(4,i+1,tbOutputValues.get(i).getProName(),CellType.LABEL,dateFormat,false,false);
                     }
 
                     if(tbOutputValues.get(i).getDocName()==null){
-                        downloadExcelUtil.addCell(4,i+1,"",CellType.LABEL,dateFormat,false,false);
+                        downloadExcelUtil.addCell(5,i+1,"",CellType.LABEL,dateFormat,false,false);
                     }else{
-                        downloadExcelUtil.addCell(4,i+1,tbOutputValues.get(i).getDocName(),CellType.LABEL,dateFormat,false,false);
+                        downloadExcelUtil.addCell(5,i+1,tbOutputValues.get(i).getDocName(),CellType.LABEL,dateFormat,false,false);
                     }
 
                     if(tbOutputValues.get(i).getOutput()==null){
-                        downloadExcelUtil.addCell(5,i+1,"",CellType.LABEL,dateFormat,false,false);
+                        downloadExcelUtil.addCell(6,i+1,"",CellType.LABEL,dateFormat,false,false);
                     }else{
-                        downloadExcelUtil.addCell(5,i+1,tbOutputValues.get(i).getOutput(),CellType.LABEL,dateFormat,false,false);
+                        downloadExcelUtil.addCell(6,i+1,tbOutputValues.get(i).getOutput(),CellType.LABEL,dateFormat,false,false);
+                    }
+
+                    if(tbOutputValues.get(i).getTotal()==null){
+                        downloadExcelUtil.addCell(7,i+1,"",CellType.LABEL,dateFormat,false,false);
+                    }else{
+                        downloadExcelUtil.addCell(7,i+1,tbOutputValues.get(i).getTotal(),CellType.LABEL,dateFormat,false,false);
                     }
 
                     if(tbOutputValues.get(i).getSubtotal()==null){
-                        downloadExcelUtil.addCell(6,i+1,"",CellType.LABEL,dateFormat,false,false);
+                        downloadExcelUtil.addCell(8,i+1,"",CellType.LABEL,dateFormat,false,false);
                     }else{
-                        downloadExcelUtil.addCell(6,i+1,tbOutputValues.get(i).getSubtotal(),CellType.LABEL,dateFormat,false,false);
-                    }
-
-                    if(tbOutputValues.get(i).getStatus()==null){
-                        downloadExcelUtil.addCell(7,i+1,"",CellType.LABEL,dateFormat,false,false);
-                    }else{
-                        if(tbOutputValues.get(i).getStatus()==0){
-                            status="否";
-                        }else{
-                            status="是";
-                        }
-                        downloadExcelUtil.addCell(7,i+1,status,CellType.LABEL,dateFormat,false,false);
+                        downloadExcelUtil.addCell(8,i+1,tbOutputValues.get(i).getSubtotal(),CellType.LABEL,dateFormat,false,false);
                     }
                 }
             } catch (Exception e) {
