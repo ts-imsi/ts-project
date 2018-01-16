@@ -81,22 +81,33 @@ public class CountReportController {
             }else{
                 if(!param.get("selectType").equals("")&&param.get("selectType")!=null){
                     List<TbOutputValueCount> tbOutputValueCounts=new ArrayList<>();
+                    Map<String,Object> pMap=new HashMap<>();
                     if(param.get("selectType").equals("dept")){
                         tbOutputValueCounts=countReportService.getCountRByDept(param.get("year"));
-                        result.setObject(tbOutputValueCounts);
-                        result.setSuccess(true);
                     }else if(param.get("selectType").equals("pro")){
                         tbOutputValueCounts=countReportService.getCountRByPro(param.get("year"));
-                        result.setObject(tbOutputValueCounts);
-                        result.setSuccess(true);
                     }else if(param.get("selectType").equals("proLine")){
                         tbOutputValueCounts=countReportService.getCountRByProline(param.get("year"));
-                        result.setObject(tbOutputValueCounts);
-                        result.setSuccess(true);
                     }else{
                         result.setMessage("数据参数错误");
                         result.setSuccess(false);
+                        return result;
                     }
+                    pMap.put("tbOutputValueCounts",tbOutputValueCounts);
+                    double unfinishedCount=0.0;
+                    double finishedCount=0.0;
+                    double totalCount=0.0;
+                    double nextUnCount=0.0;
+                    unfinishedCount=tbOutputValueCounts.stream().mapToDouble(tb->tb.getUnfinished()).sum();
+                    finishedCount=tbOutputValueCounts.stream().mapToDouble(tb->tb.getFinished()).sum();
+                    totalCount=tbOutputValueCounts.stream().mapToDouble(tb->tb.getTotal()).sum();
+                    nextUnCount=tbOutputValueCounts.stream().mapToDouble(tb->tb.getLastUnFinished()).sum();
+                    pMap.put("unfinishedCount",unfinishedCount);
+                    pMap.put("finishedCount",finishedCount);
+                    pMap.put("totalCount",totalCount);
+                    pMap.put("nextUnCount",nextUnCount);
+                    result.setObject(pMap);
+                    result.setSuccess(true);
                 }else{
                     result.setSuccess(false);
                     result.setMessage("数据参数失败");
