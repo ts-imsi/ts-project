@@ -7,6 +7,7 @@ import com.trasen.tsproject.model.ContractInfo;
 import com.trasen.tsproject.model.TbHtModule;
 import com.trasen.tsproject.model.TbHtResolve;
 import com.trasen.tsproject.service.ContractProductService;
+import com.trasen.tsproject.util.ArithmeticUtil;
 import com.trasen.tsproject.util.JsonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,8 +99,24 @@ public class ContractProductController {
                 contractProductService.getOutputValueOrSubtotal(param.get("contractNo"),Double.parseDouble(param.get("contractPrice")));
                 list = contractProductService.queryHtResolve(param.get("contractNo"));
             }
+            Map<String,Object> sumMap=new HashMap<>();
+            double suTotal=0.0;
+            double xjTotal=0.0;
+            double bfTotal=0.0;
+            double priceTotal=0.0;
+            for(TbHtResolve tbHtResolve:list){
+                suTotal=ArithmeticUtil.add(suTotal,tbHtResolve.getTotal());
+                xjTotal=ArithmeticUtil.add(xjTotal,tbHtResolve.getSubtotal());
+                bfTotal=ArithmeticUtil.add(bfTotal,Double.valueOf(tbHtResolve.getOutputValue().substring(0,tbHtResolve.getOutputValue().length()-1)));
+                priceTotal=ArithmeticUtil.add(priceTotal,tbHtResolve.getPrice());
+            }
             result.setSuccess(true);
-            result.setObject(list);
+            sumMap.put("list",list);
+            sumMap.put("suTotal",suTotal);
+            sumMap.put("xjTotal",xjTotal);
+            sumMap.put("bfTotal",bfTotal);
+            sumMap.put("priceTotal",priceTotal);
+            result.setObject(sumMap);
         }catch (Exception e) {
             logger.error("获取合同分解异常" + e.getMessage(), e);
             result.setSuccess(false);
@@ -208,10 +226,24 @@ public class ContractProductController {
         return  result;
     }
 
-
-
-
-
-
+    @RequestMapping(value="/queryHtSumPrice",method = RequestMethod.POST)
+    public Result queryHtSumPrice(@RequestBody List<TbHtResolve> resolves){
+        Result result=new Result();
+        try{
+            double suTotal=0.0;
+            if(resolves!=null&&resolves.size()!=0){
+                for(TbHtResolve tbHtResolve:resolves) {
+                    suTotal = ArithmeticUtil.add(suTotal, tbHtResolve.getTotal());
+                }
+            }
+            result.setSuccess(true);
+            result.setObject(suTotal);
+        }catch (Exception e){
+            logger.error("数据相加异常"+e.getMessage(),e);
+            result.setSuccess(false);
+            result.setMessage("数据相加异常");
+        }
+        return result;
+    }
 
 }

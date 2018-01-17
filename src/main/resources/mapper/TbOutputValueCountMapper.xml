@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.trasen.tsproject.dao.TbOutputValueCountMapper" >
     <select id="getcountReportList" parameterType="com.trasen.tsproject.model.TbOutputValueCount" resultType="com.trasen.tsproject.model.TbOutputValueCount">
-        select * from tb_output_value_count where 1=1
+		select ht_no as htNo,ht_name as htName,customer_name as customerName,sum(total) as total,sum(finished) as finished,sum(unfinished) as unfinished from tb_output_value_count  where 1=1
         <if test="year!=null"> and `year`=#{year}</if>
+		group by ht_no
     </select>
 
     <select id="getCountRByDept" parameterType="Map" resultType="com.trasen.tsproject.model.TbOutputValueCount">
@@ -68,15 +69,15 @@
 
 
 	<select id="getOutPutByDept" parameterType="Map" resultType="com.trasen.tsproject.model.TbOutputValue">
-		select * from tb_output_value where created like CONCAT(#{year},'%') and dep_name=#{depName} order by ht_no
+		select * from tb_output_value where created like CONCAT(#{year},'%') and dep_name=#{depName} and status=1 order by ht_no
 	</select>
 
 	<select id="getOutPutByPro" parameterType="Map" resultType="com.trasen.tsproject.model.TbOutputValue">
-		select * from tb_output_value where created like CONCAT(#{year},'%') and pro_name=#{proName} order by ht_no
+		select * from tb_output_value where created like CONCAT(#{year},'%') and pro_name=#{proName} and status=1 order by ht_no
 	</select>
 
 	<select id="getOutPutByProLine" parameterType="Map" resultType="com.trasen.tsproject.model.TbOutputValue">
-		select * from tb_output_value where created like CONCAT(#{year},'%') and pro_line=#{proLine} order by ht_no
+		select * from tb_output_value where created like CONCAT(#{year},'%') and pro_line=#{proLine} and status=1 order by ht_no
 	</select>
 
 
