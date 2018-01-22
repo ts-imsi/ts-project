@@ -157,4 +157,8 @@
     and msg.status=#{status}
   </select>
 
+  <select id="getIndexMsgByDate" parameterType="String" resultType="com.trasen.tsproject.model.TbMsg">
+      select * from tb_msg where `name`=#{name} and process_key like CONCAT('handover','%') order by send_time desc limit 1
+  </select>
+
 </mapper>
