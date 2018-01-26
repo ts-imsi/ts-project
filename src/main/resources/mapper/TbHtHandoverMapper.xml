@@ -110,4 +110,8 @@
         select p.name,p.dep_name as depName,a.`status` from tb_ht_analyze a join tb_personnel p on a.operator = p.work_num where a.handover_id = #{handId}
     </select>
 
+    <select id="getJxProNum" parameterType="String" resultType="Integer">
+        select count(*) from tb_ht_handover where pro_manager=#{name}  and poit!=100
+    </select>
+
 </mapper>

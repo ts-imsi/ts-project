@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.trasen.tsproject.dao.TwfDictMapper" >
+	<select id="selectTwfDictByType" resultType="com.trasen.tsproject.model.TwfDict" parameterType="com.trasen.tsproject.model.TwfDict">
+		select * from twf_dict where `type`=#{type}
+		<if test="name!=null"> and `name` like CONCAT('%',#{name},'%')</if>
+	</select>
+
+	<insert id="saveTwfDict" parameterType="com.trasen.tsproject.model.TwfDict">
+		insert into twf_dict(`name`,code,`type`,is_vaild) values(#{name},#{code},#{type},#{isVaild})
+	</insert>
+
+	<update id="updateTwfDict" parameterType="com.trasen.tsproject.model.TwfDict">
+		update twf_dict set `name`=#{name},code=#{code},`type`=#{type},is_vaild=#{isVaild} where pkid=#{pkid}
+	</update>
+
+	<update id="deleteTwfDict" parameterType="Integer">
+		update twf_dict set is_vaild=0 where pkid=#{pkid}
+	</update>
+</mapper>

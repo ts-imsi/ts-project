@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.trasen.tsproject.common.VisitInfoHolder;
 import com.trasen.tsproject.controller.IndexController;
+import com.trasen.tsproject.dao.TbHtHandoverMapper;
 import com.trasen.tsproject.dao.TbMsgMapper;
 import com.trasen.tsproject.model.ContractInfo;
 import com.trasen.tsproject.model.TbMsg;
@@ -30,6 +31,9 @@ public class IndexService {
 
     @Autowired
     TbMsgMapper tbMsgMapper;
+
+    @Autowired
+    TbHtHandoverMapper tbHtHandoverMapper;
 
     @Autowired
     HandoverService handoverService;
@@ -79,6 +83,11 @@ public class IndexService {
         }else{
             result.put("conInfoSize",0);
         }
+        Integer count=tbHtHandoverMapper.getJxProNum(VisitInfoHolder.getShowName());
+        if(count==null){
+            count=0;
+        }
+        result.put("jxPro",count);
         return result;
     }
 }

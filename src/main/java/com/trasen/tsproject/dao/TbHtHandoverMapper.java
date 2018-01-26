@@ -47,4 +47,6 @@ public interface TbHtHandoverMapper extends MyMapper<TbHtHandover> {
     void uploadHandoverFile(TbHtHandover htHandover);
 
     List<Map<String,Object>> getPDConfirm(Integer handId);
+
+    Integer getJxProNum(String name);
 }
