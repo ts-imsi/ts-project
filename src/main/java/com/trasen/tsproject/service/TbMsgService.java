@@ -239,6 +239,11 @@ public class TbMsgService {
                     para.put("operator", VisitInfoHolder.getShowName());
                     para.put("processId",tbMsg.getProcessId());
                     tbMsgMapper.updateConfirm(para);
+                    Map<String,Object> paraStatus = new HashMap<>();
+                    paraStatus.put("operator", VisitInfoHolder.getShowName());
+                    paraStatus.put("processId",tbMsg.getProcessId());
+                    paraStatus.put("status",2);//完成交接单流程
+                    tbMsgMapper.updateStatus(paraStatus);
                 }
             }
             boo = true;
