@@ -60,9 +60,9 @@ public class TbHtAnalyzeService {
             tbHtAnalyzeMapper.saveAnaly(tbHtAnalyze);
         }
         //发送待阅消息
-        for(TbMsg tbMsg : tbMsgs){
+        /*for(TbMsg tbMsg : tbMsgs){
             tbMsgMapper.insertMsg(tbMsg);
-        }
+        }*/
         //更新分解表分解人数据
         TbHtResolve tbHtResolve=new TbHtResolve();
         tbHtResolve.setHtNo(tbHtAnalyzes.get(0).getHtNo());
